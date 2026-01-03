@@ -939,6 +939,102 @@ header{
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+<!-- Banner Download App Notícias CLD -->
+<style>
+#appBannerCLD {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 16px;
+    z-index: 99999;
+    display: none;
+    animation: slideUp 0.5s ease;
+    font-family: Arial, sans-serif;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translate(-50%, 30px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+#appBannerCLD h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #0a3d62;
+}
+
+#appBannerCLD p {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: #444;
+}
+
+#appBannerCLD .buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#appBannerCLD a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#btnDownloadCLD {
+    background: #1e90ff;
+    color: #fff;
+}
+
+#btnDownloadCLD:hover {
+    background: #187bcd;
+}
+
+#btnRecusarCLD {
+    background: #eee;
+    color: #555;
+}
+</style>
+
+<div id="appBannerCLD">
+    <h3>📱 Baixe o App Notícias CLD</h3>
+    <p>Receba as principais notícias de Moçambique em um só aplicativo, rápido e leve.</p>
+    <div class="buttons">
+        <a id="btnDownloadCLD" href="https://noticiascld.online/apk.html">Baixar App</a>
+        <a href="javascript:void(0)" id="btnRecusarCLD">Recusar</a>
+    </div>
+</div>
+
+<script>
+(function() {
+    const banner = document.getElementById("appBannerCLD");
+    const recusar = document.getElementById("btnRecusarCLD");
+
+    const today = new Date().toISOString().split('T')[0];
+    const lastShown = localStorage.getItem("cldBannerShown");
+
+    if (lastShown !== today) {
+        setTimeout(() => {
+            banner.style.display = "block";
+            localStorage.setItem("cldBannerShown", today);
+        }, 5000);
+    }
+
+    recusar.addEventListener("click", () => {
+        banner.style.display = "none";
+    });
+})();
+</script>
+<!-- Fim Banner Download App -->
 <header>
 <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
 Notícias CLD
