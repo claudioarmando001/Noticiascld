@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Notícias CLD - Agregador de Notícias</title>
+<title>Notícias CLD - Agregador de Notícias de Moçambique</title>
 <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
 <meta name="robots" content="index, follow">
 <style>
@@ -941,7 +941,7 @@ function generateSlug(text) {
 function generateNewsLink(article) {
     const slug = generateSlug(article.title);
     const sourceSlug = generateSlug(article.source);
-    return `noticia.html?source=${encodeURIComponent(sourceSlug)}&slug=${encodeURIComponent(slug)}&id=${article.hash}`;
+    return `leitura.html?source=${encodeURIComponent(sourceSlug)}&slug=${encodeURIComponent(slug)}&id=${article.hash}`;
 }
 
 /* ========== FUNÇÕES DE INTERFACE ========== */
@@ -1321,6 +1321,36 @@ function renderSingleNews(article) {
     
     // Armazena a data como atributo para futuras ordenações
     c.dataset.date = article.date;
+    
+    // Salva no localStorage para acesso na página de leitura
+    saveNewsToLocalStorage(article);
+}
+
+/* ========== LOCALSTORAGE FUNCTIONS ========== */
+
+function saveNewsToLocalStorage(article) {
+    try {
+        // Pega notícias existentes
+        let savedNews = JSON.parse(localStorage.getItem('cld_news') || '[]');
+        
+        // Verifica se já existe
+        const exists = savedNews.some(n => n.hash === article.hash);
+        
+        if (!exists) {
+            // Adiciona a nova notícia
+            savedNews.push(article);
+            
+            // Mantém apenas as 200 notícias mais recentes
+            if (savedNews.length > 200) {
+                savedNews = savedNews.slice(-200);
+            }
+            
+            // Salva no localStorage
+            localStorage.setItem('cld_news', JSON.stringify(savedNews));
+        }
+    } catch (e) {
+        console.error('Erro ao salvar no localStorage:', e);
+    }
 }
 
 /* ========== CARREGAMENTO DE NOTÍCIAS EM TEMPO REAL ========== */
