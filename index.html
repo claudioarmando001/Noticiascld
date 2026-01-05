@@ -1,78 +1,6 @@
 <!doctype html>
 <html lang="pt">
 <head>
-    <script>
-(function () {
-  const adLink = "https://www.effectivegatecpm.com/qvdzdmrk6?key=c41207cda3bc64bcc9b3569afc89d708";
-  const imageUrl = "https://claudionews.neocities.org/IMG-20251226-WA0124.jpg";
-
-  let delay = 30000; // 30s
-  const maxDelay = 60000;
-  let timer = null;
-
-  // 🔥 PRÉ-CARREGAMENTO DA IMAGEM
-  const preloadedImg = new Image();
-  preloadedImg.src = imageUrl;
-
-  function createPopup() {
-    if (document.getElementById("popupAd")) return;
-
-    const overlay = document.createElement("div");
-    overlay.id = "popupAd";
-    overlay.style.cssText = `
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 999999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    `;
-
-    const img = document.createElement("img");
-    img.src = preloadedImg.src; // usa imagem já carregada
-    img.style.cssText = `
-      max-width: 90%;
-      max-height: 90%;
-      cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 0 20px #000;
-    `;
-
-    img.onclick = () => {
-      window.open(adLink, "_blank");
-      overlay.remove();
-      delay = Math.min(delay + 10000, maxDelay);
-      startTimer();
-    };
-
-    overlay.onclick = (e) => {
-      if (e.target === overlay) {
-        overlay.remove();
-        startTimer();
-      }
-    };
-
-    overlay.appendChild(img);
-    document.body.appendChild(overlay);
-  }
-
-  function startTimer() {
-    clearTimeout(timer);
-
-    // ⏱️ Timer preciso
-    const start = performance.now();
-
-    timer = setTimeout(() => {
-      const elapsed = performance.now() - start;
-      if (elapsed >= delay - 5) createPopup();
-      else startTimer();
-    }, delay);
-  }
-
-  document.addEventListener("DOMContentLoaded", startTimer);
-})();
-      </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notícias CLD</title>
@@ -939,102 +867,6 @@ header{
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<!-- Banner Download App Notícias CLD -->
-<style>
-#appBannerCLD {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 92%;
-    max-width: 420px;
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    padding: 16px;
-    z-index: 99999;
-    display: none;
-    animation: slideUp 0.5s ease;
-    font-family: Arial, sans-serif;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translate(-50%, 30px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-}
-
-#appBannerCLD h3 {
-    margin: 0 0 6px;
-    font-size: 18px;
-    color: #0a3d62;
-}
-
-#appBannerCLD p {
-    margin: 0 0 14px;
-    font-size: 14px;
-    color: #444;
-}
-
-#appBannerCLD .buttons {
-    display: flex;
-    gap: 10px;
-}
-
-#appBannerCLD a {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-#btnDownloadCLD {
-    background: #1e90ff;
-    color: #fff;
-}
-
-#btnDownloadCLD:hover {
-    background: #187bcd;
-}
-
-#btnRecusarCLD {
-    background: #eee;
-    color: #555;
-}
-</style>
-
-<div id="appBannerCLD">
-    <h3>📱 Baixe o App Notícias CLD</h3>
-    <p>Receba as principais notícias de Moçambique em um só aplicativo, rápido e leve.</p>
-    <div class="buttons">
-        <a id="btnDownloadCLD" href="https://noticiascld.online/apk.html">Baixar App</a>
-        <a href="javascript:void(0)" id="btnRecusarCLD">Recusar</a>
-    </div>
-</div>
-
-<script>
-(function() {
-    const banner = document.getElementById("appBannerCLD");
-    const recusar = document.getElementById("btnRecusarCLD");
-
-    const today = new Date().toISOString().split('T')[0];
-    const lastShown = localStorage.getItem("cldBannerShown");
-
-    if (lastShown !== today) {
-        setTimeout(() => {
-            banner.style.display = "block";
-            localStorage.setItem("cldBannerShown", today);
-        }, 5000);
-    }
-
-    recusar.addEventListener("click", () => {
-        banner.style.display = "none";
-    });
-})();
-</script>
-<!-- Fim Banner Download App -->
 <header>
 <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
 Notícias CLD
@@ -1234,6 +1066,36 @@ const sources = [
         isFetching: false
     }
 ];
+
+/* ========== FUNÇÃO PARA GERAR LINKS REAIS ========== */
+
+// Função para gerar links reais no formato correto
+function generateRealLink(article) {
+    // Remove caracteres especiais e formata como URL amigável
+    const cleanTitle = article.title
+        .toLowerCase()
+        .replace(/[^\w\s-àáâãèéêìíîòóôõùúûñç]/g, '') // Permite acentos e cedilha
+        .replace(/[àáâã]/g, 'a')
+        .replace(/[èéê]/g, 'e')
+        .replace(/[ìíî]/g, 'i')
+        .replace(/[òóôõ]/g, 'o')
+        .replace(/[ùúû]/g, 'u')
+        .replace(/ñ/g, 'n')
+        .replace(/ç/g, 'c')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .substring(0, 100); // Limita o tamanho
+    
+    // Cria o slug com fonte para unicidade
+    const sourceSlug = article.source
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]/g, '');
+    
+    // Gera o link real no formato correto
+    return `https://www.noticiascld.online/${sourceSlug}/${cleanTitle}/`;
+}
 
 /* ========== DETECÇÃO BOTÃO VOLTAR TELEFONE ========== */
 
@@ -1749,13 +1611,16 @@ function openModal(article) {
     // Adiciona ao histórico para controle do botão "voltar"
     modalHistory.push('modal');
     
+    // GERA UM LINK REAL SEM "#" NO MEIO
+    const realLink = generateRealLink(article);
+    
     // Atualiza URL para permitir botão "voltar" do navegador
     history.pushState({ modal: true }, '', `#${article.hash}`);
     
     const category = article.category || determineCategory(article.title, article.content);
     
-    // Cria um URL único para esta notícia na modal
-    const shareUrl = `${PLATFORM_URL}#${article.hash}`;
+    // Usa o link real para compartilhamento
+    const shareUrl = realLink;
     const shareText = `📰 ${article.title} | Notícias de Moçambique`;
     
     const modalContent = `
@@ -1765,6 +1630,13 @@ function openModal(article) {
         `<img src="${article.image}" style="width:100%;border-radius:10px;margin:15px 0; max-height: 400px; object-fit: cover;" alt="${article.title}" onerror="this.style.display='none'">` : ''
     }
     <div style="line-height:1.6;font-size:15px;color:#333; margin-top: 20px;">${article.content}</div>
+    
+    <div style="margin: 25px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #1a73e8;">
+        <p style="margin: 0; color: #1a73e8; font-weight: 500;">
+            <i class="fas fa-link"></i> <strong>Link permanente desta notícia:</strong><br>
+            <a href="${realLink}" target="_blank" style="color: #1a73e8; word-break: break-all; font-size: 14px;">${realLink}</a>
+        </p>
+    </div>
     
     <div class="share-section">
         <div class="share-title">Partilhar esta notícia:</div>
@@ -2073,13 +1945,66 @@ function checkUrlHash() {
     }
 }
 
+/* ========== VERIFICAÇÃO DE URLS REAIS ========== */
+
+function checkRealUrlAndOpenModal() {
+    const currentPath = window.location.pathname;
+    
+    // Verifica se a URL é um link de notícia real (formato: /fonte/titulo/)
+    if (currentPath && currentPath !== '/' && !currentPath.includes('#')) {
+        // Extrai informações da URL
+        const pathParts = currentPath.split('/').filter(p => p);
+        
+        if (pathParts.length >= 2) {
+            const sourceSlug = pathParts[0];
+            const titleSlug = pathParts.slice(1).join('-');
+            
+            // Tenta encontrar a notícia correspondente
+            const matchingArticle = news.find(article => {
+                const articleSource = article.source
+                    .toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w-]/g, '');
+                
+                const articleCleanTitle = article.title
+                    .toLowerCase()
+                    .replace(/[^\w\s-àáâãèéêìíîòóôõùúûñç]/g, '')
+                    .replace(/[àáâã]/g, 'a')
+                    .replace(/[èéê]/g, 'e')
+                    .replace(/[ìíî]/g, 'i')
+                    .replace(/[òóôõ]/g, 'o')
+                    .replace(/[ùúû]/g, 'u')
+                    .replace(/ñ/g, 'n')
+                    .replace(/ç/g, 'c')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-+|-+$/g, '')
+                    .substring(0, 100);
+                
+                return articleSource === sourceSlug && 
+                       articleCleanTitle.includes(titleSlug);
+            });
+            
+            if (matchingArticle) {
+                // Aguarda um momento para garantir que tudo está carregado
+                setTimeout(() => {
+                    openModal(matchingArticle);
+                }, 500);
+            }
+        }
+    }
+}
+
 /* ========== INICIALIZAÇÃO ========== */
 
 // Inicia o carregamento
 loadAllSources();
 
-// Verifica se há hash na URL após carregamento
-setTimeout(checkUrlHash, 1500);
+// Verifica se há hash na URL ou URL real após carregamento
+setTimeout(() => {
+    checkUrlHash();
+    checkRealUrlAndOpenModal();
+}, 1500);
 
 // Atualiza a cada 5 minutos se a página estiver visível
 setInterval(() => {
@@ -2142,4 +2067,4 @@ function updateCategoryStats() {
 setInterval(updateCategoryStats, 10000);
 </script>
 </body>
-    </html>
+</html>
