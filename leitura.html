@@ -7,7 +7,6 @@
 <meta name="description" content="Leia notícias completas de Moçambique">
 <meta name="robots" content="index, follow">
 <style>
-/* [Todo o CSS anterior permanece igual] */
 body{
     font-family:Arial,sans-serif;
     background:#f2f3f5;
@@ -368,8 +367,8 @@ header{
     background:#0d62d9;
 }
 
-/* SKELETON LOADING - MELHORADO */
-.skeleton-container {
+/* SKELETON LOADING */
+.skeleton {
     animation: skeleton-loading 1s linear infinite alternate;
 }
 
@@ -420,16 +419,16 @@ Notícias CLD
 </header>
 
 <div id="news-content">
-<!-- SKELETON LOADER - MOSTRADO INICIALMENTE -->
+<!-- SKELETON LOADER -->
 <div id="skeleton-loader">
-    <div class="skeleton-container skeleton-title"></div>
-    <div class="skeleton-container skeleton-meta"></div>
-    <div class="skeleton-container skeleton-image"></div>
-    <div class="skeleton-container skeleton-text"></div>
-    <div class="skeleton-container skeleton-text"></div>
-    <div class="skeleton-container skeleton-text short"></div>
-    <div class="skeleton-container skeleton-text"></div>
-    <div class="skeleton-container skeleton-text short"></div>
+    <div class="skeleton skeleton-title"></div>
+    <div class="skeleton skeleton-meta"></div>
+    <div class="skeleton skeleton-image"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text short"></div>
+    <div class="skeleton skeleton-text"></div>
+    <div class="skeleton skeleton-text short"></div>
 </div>
 
 <div class="loader" id="loader" style="display:none;">
@@ -450,7 +449,7 @@ Notícias CLD
 </div>
 
 <script>
-// ========== CONFIGURAÇÕES INICIAIS ==========
+// ========== CONFIGURAÇÕES ==========
 const CATEGORIES = {
     'sociedade': { name: 'Sociedade', class: 'sociedade-tag' },
     'política': { name: 'Política', class: 'politica-tag' },
@@ -461,23 +460,26 @@ const CATEGORIES = {
     'tecnologia': { name: 'Tecnologia', class: 'tech-tag' }
 };
 
-// Cache em memória
-let newsCache = new Map();
-let currentArticle = null;
+// Fontes de API para fallback
+const NEWS_SOURCES = [
+    { name: "O País", baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts" },
+    { name: "Jornal Notícias", baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts" },
+    { name: "Canal de Moçambique", baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts" },
+    { name: "Time de Todos", baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts" },
+    { name: "Carta de Moçambique", baseUrl: "https://cartamz.com/wp-json/wp/v2/posts" }
+];
 
 // ========== FUNÇÕES UTILITÁRIAS ==========
 
-// Função para obter todos os parâmetros da URL
-function getAllUrlParams() {
+function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     return {
-        source: params.get('source'),
-        slug: params.get('slug'),
-        id: params.get('id')
+        n: params.get('n'), // ID curto da notícia
+        t: params.get('t'), // Título (opcional, para fallback)
+        s: params.get('s')  // Fonte (opcional, para fallback)
     };
 }
 
-// Função para formatar data
 function formatDate(d) {
     if (!d) return '';
     try {
@@ -494,7 +496,6 @@ function formatDate(d) {
     }
 }
 
-// Função para determinar categoria (simplificada)
 function determineCategory(title) {
     const text = title.toLowerCase();
     
@@ -562,96 +563,24 @@ function shareOnWhatsApp() {
     window.open(`https://wa.me/?text=${title}%20-%20${url}`, '_blank');
 }
 
-// ========== SISTEMA DE CACHE ==========
+// ========== CACHE E BUSCA ==========
 
-// Função para gerar hash consistente (igual ao usado na página principal)
-function generateHash(title, link) {
-    return (title + link).replace(/\W/g, "").toLowerCase();
-}
-
-// Buscar notícia em todos os caches disponíveis
-function findNewsInAllCaches(params) {
-    const { id, source, slug } = params;
-    
-    // 1. Primeiro tentar por ID exato
-    if (id) {
-        // Cache em memória
-        if (newsCache.has(id)) {
-            return newsCache.get(id);
-        }
-        
-        // SessionStorage
-        try {
-            const sessionData = sessionStorage.getItem(`news_${id}`);
-            if (sessionData) {
-                const article = JSON.parse(sessionData);
-                newsCache.set(id, article);
-                return article;
-            }
-        } catch (e) {
-            console.warn('Erro no sessionStorage:', e);
-        }
-        
-        // LocalStorage individual
-        try {
-            const localData = localStorage.getItem(`news_${id}`);
-            if (localData) {
-                const article = JSON.parse(localData);
-                newsCache.set(id, article);
-                return article;
-            }
-        } catch (e) {
-            console.warn('Erro no localStorage individual:', e);
-        }
-    }
-    
-    // 2. Buscar em todas as notícias do localStorage
+// Buscar notícia no cache local
+function findNewsInCache(newsId) {
     try {
-        const allNews = JSON.parse(localStorage.getItem('cld_news') || '[]');
-        
-        // Tentar por ID
-        if (id) {
-            const byId = allNews.find(news => news.hash === id);
-            if (byId) {
-                newsCache.set(id, byId);
-                return byId;
-            }
+        // 1. Buscar no localStorage
+        const cached = localStorage.getItem(`news_${newsId}`);
+        if (cached) {
+            return JSON.parse(cached);
         }
         
-        // Tentar por combinação de source e slug
-        if (source && slug) {
-            const bySourceSlug = allNews.find(news => {
-                const newsSource = news.source.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
-                const newsTitle = news.title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-');
-                return newsSource === source && newsTitle.includes(slug);
-            });
-            if (bySourceSlug) {
-                newsCache.set(bySourceSlug.hash, bySourceSlug);
-                return bySourceSlug;
-            }
-        }
-        
-        // Tentar apenas por slug
-        if (slug) {
-            const bySlug = allNews.find(news => {
-                const newsTitle = news.title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, '-');
-                return newsTitle.includes(slug);
-            });
-            if (bySlug) {
-                newsCache.set(bySlug.hash, bySlug);
-                return bySlug;
-            }
-        }
-        
-        // Tentar por título similar (última tentativa)
-        if (slug) {
-            const searchSlug = slug.replace(/-/g, ' ');
-            const bySimilar = allNews.find(news => 
-                news.title.toLowerCase().includes(searchSlug)
-            );
-            if (bySimilar) {
-                newsCache.set(bySimilar.hash, bySimilar);
-                return bySimilar;
+        // 2. Buscar na lista geral de cache
+        const allCached = JSON.parse(localStorage.getItem('cached_news') || '[]');
+        if (allCached.includes(newsId)) {
+            // Tentar buscar individualmente
+            const individual = localStorage.getItem(`news_${newsId}`);
+            if (individual) {
+                return JSON.parse(individual);
             }
         }
     } catch (e) {
@@ -661,169 +590,82 @@ function findNewsInAllCaches(params) {
     return null;
 }
 
-// Salvar notícia em todos os caches
-function saveNewsToAllCaches(article) {
-    if (!article || !article.hash) return;
+// Buscar notícia nas APIs (fallback)
+async function fetchNewsFromAPI(newsId, titleHint, sourceHint) {
+    // Se temos dicas de título ou fonte, tentamos fontes específicas primeiro
+    let sourcesToTry = NEWS_SOURCES;
     
-    const hash = article.hash;
-    
-    // 1. Cache em memória
-    newsCache.set(hash, article);
-    
-    // 2. SessionStorage
-    try {
-        sessionStorage.setItem(`news_${hash}`, JSON.stringify(article));
-    } catch (e) {
-        // Limpar sessionStorage se estiver cheio
-        try {
-            sessionStorage.clear();
-            sessionStorage.setItem(`news_${hash}`, JSON.stringify(article));
-        } catch (e2) {
-            console.warn('Não foi possível salvar no sessionStorage:', e2);
-        }
-    }
-    
-    // 3. LocalStorage individual
-    try {
-        localStorage.setItem(`news_${hash}`, JSON.stringify(article));
-    } catch (e) {
-        console.warn('Erro ao salvar individualmente:', e);
-    }
-    
-    // 4. Lista de notícias no localStorage
-    try {
-        let allNews = JSON.parse(localStorage.getItem('cld_news') || '[]');
-        
-        // Remover duplicatas
-        allNews = allNews.filter(n => n.hash !== hash);
-        
-        // Adicionar no início
-        allNews.unshift(article);
-        
-        // Manter apenas as 100 mais recentes
-        if (allNews.length > 100) {
-            allNews = allNews.slice(0, 100);
-        }
-        
-        localStorage.setItem('cld_news', JSON.stringify(allNews));
-    } catch (e) {
-        console.warn('Erro ao salvar na lista:', e);
-    }
-}
-
-// ========== BUSCA NAS APIS ==========
-
-// Lista otimizada de fontes para busca
-const NEWS_SOURCES = [
-    { name: "O País", baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts", code: "OP" },
-    { name: "Jornal Notícias", baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts", code: "JN" },
-    { name: "Canal de Moçambique", baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts", code: "CM" },
-    { name: "Time de Todos", baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts", code: "TT" },
-    { name: "Carta de Moçambique", baseUrl: "https://cartamz.com/wp-json/wp/v2/posts", code: "CT" },
-    { name: "Savana", baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts", code: "SV" },
-    { name: "Integrity", baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts", code: "IT" }
-];
-
-// Buscar notícia nas APIs
-async function fetchNewsFromAPIs(params) {
-    const { id, source, slug } = params;
-    
-    // Primeiro, tentar fontes específicas baseadas no source
-    if (source) {
+    if (sourceHint) {
+        // Tentar encontrar fonte correspondente
         const sourceMatch = NEWS_SOURCES.find(s => 
-            s.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') === source
+            s.name.toLowerCase().includes(sourceHint.toLowerCase())
         );
-        
         if (sourceMatch) {
-            const result = await tryFetchFromSource(sourceMatch, params);
-            if (result) return result;
+            sourcesToTry = [sourceMatch, ...NEWS_SOURCES.filter(s => s !== sourceMatch)];
         }
     }
     
-    // Se não encontrou, tentar todas as fontes
-    for (const sourceConfig of NEWS_SOURCES) {
-        // Pular se já tentou esta fonte
-        if (source && sourceConfig.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') === source) {
+    for (const source of sourcesToTry) {
+        try {
+            // Tentar buscar algumas notícias desta fonte
+            const response = await fetchWithTimeout(`${source.baseUrl}?_embed&per_page=10&t=${Date.now()}`, 3000);
+            
+            if (!response.ok) continue;
+            
+            const articles = await response.json();
+            
+            // Procurar por notícia com hash correspondente
+            for (const article of articles) {
+                const articleText = article.title.rendered + article.link;
+                const articleHash = btoa(articleText).replace(/[^a-zA-Z0-9]/g, '').substring(0, 12);
+                
+                if (articleHash === newsId) {
+                    return {
+                        id: newsId,
+                        title: article.title.rendered,
+                        content: article.content.rendered,
+                        image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                               article.jetpack_featured_media_url ||
+                               "https://via.placeholder.com/300x200",
+                        source: source.name,
+                        date: article.date || article.modified,
+                        link: article.link
+                    };
+                }
+            }
+            
+            // Se temos título, tentar buscar por título similar
+            if (titleHint) {
+                const searchTitle = titleHint.toLowerCase().replace(/-/g, ' ');
+                for (const article of articles) {
+                    if (article.title.rendered.toLowerCase().includes(searchTitle)) {
+                        const articleText = article.title.rendered + article.link;
+                        const articleHash = btoa(articleText).replace(/[^a-zA-Z0-9]/g, '').substring(0, 12);
+                        
+                        return {
+                            id: articleHash,
+                            title: article.title.rendered,
+                            content: article.content.rendered,
+                            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                                   article.jetpack_featured_media_url ||
+                                   "https://via.placeholder.com/300x200",
+                            source: source.name,
+                            date: article.date || article.modified,
+                            link: article.link
+                        };
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn(`Erro ao buscar de ${source.name}:`, error);
             continue;
         }
-        
-        const result = await tryFetchFromSource(sourceConfig, params);
-        if (result) return result;
-        
-        // Pequena pausa para não sobrecarregar
-        await new Promise(resolve => setTimeout(resolve, 100));
     }
     
     return null;
 }
 
-// Tentar buscar de uma fonte específica
-async function tryFetchFromSource(sourceConfig, params) {
-    const { id, slug } = params;
-    
-    try {
-        // Tentar buscar algumas notícias desta fonte
-        const response = await fetchWithTimeout(`${sourceConfig.baseUrl}?_embed&per_page=5&t=${Date.now()}`, 5000);
-        
-        if (!response.ok) {
-            return null;
-        }
-        
-        const articles = await response.json();
-        
-        // Procurar a notícia na lista
-        for (const article of articles) {
-            const articleHash = generateHash(article.title.rendered, article.link);
-            
-            // 1. Tentar por ID
-            if (id && articleHash === id) {
-                return formatArticle(article, sourceConfig.name);
-            }
-            
-            // 2. Tentar por slug no título
-            if (slug) {
-                const articleSlug = article.title.rendered
-                    .toLowerCase()
-                    .replace(/[^\w\s]/g, '')
-                    .replace(/\s+/g, '-');
-                
-                if (articleSlug.includes(slug)) {
-                    return formatArticle(article, sourceConfig.name);
-                }
-            }
-            
-            // 3. Tentar por título similar
-            if (slug) {
-                const searchTerm = slug.replace(/-/g, ' ');
-                if (article.title.rendered.toLowerCase().includes(searchTerm)) {
-                    return formatArticle(article, sourceConfig.name);
-                }
-            }
-        }
-    } catch (error) {
-        console.warn(`Erro ao buscar de ${sourceConfig.name}:`, error);
-    }
-    
-    return null;
-}
-
-// Formatador de artigo da API
-function formatArticle(apiArticle, sourceName) {
-    return {
-        title: apiArticle.title.rendered,
-        content: apiArticle.content.rendered,
-        image: apiArticle._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-               apiArticle.jetpack_featured_media_url ||
-               `https://via.placeholder.com/800x400/1a73e8/ffffff?text=${sourceName.substring(0,2)}`,
-        source: sourceName,
-        date: apiArticle.date || apiArticle.modified,
-        link: apiArticle.link,
-        hash: generateHash(apiArticle.title.rendered, apiArticle.link)
-    };
-}
-
-// Fetch com timeout
-function fetchWithTimeout(url, timeout = 5000) {
+function fetchWithTimeout(url, timeout = 3000) {
     return Promise.race([
         fetch(url),
         new Promise((_, reject) =>
@@ -835,9 +677,7 @@ function fetchWithTimeout(url, timeout = 5000) {
 // ========== RENDERIZAÇÃO ==========
 
 function renderNews(article) {
-    currentArticle = article;
-    
-    const category = article.category || determineCategory(article.title);
+    const category = determineCategory(article.title);
     
     // Atualizar título da página
     document.title = `${article.title.substring(0, 60)}${article.title.length > 60 ? '...' : ''} | Notícias CLD`;
@@ -849,7 +689,6 @@ function renderNews(article) {
         metaDesc.content = cleanContent;
     }
     
-    // Criar HTML da notícia
     const newsHTML = `
         <div class="news-header">
             <h1 class="news-title">${article.title}</h1>
@@ -892,8 +731,6 @@ function renderNews(article) {
             </div>
         </div>
         
-        <div id="related-news-container"></div>
-        
         <div class="footer">
             <p>© ${new Date().getFullYear()} Notícias CLD - Agregador de Notícias de Moçambique</p>
             <div class="footer-links">
@@ -908,63 +745,23 @@ function renderNews(article) {
     document.getElementById('news-container').innerHTML = newsHTML;
     document.getElementById('news-container').style.display = 'block';
     
-    // Carregar notícias relacionadas de forma assíncrona
-    setTimeout(() => loadRelatedNews(), 100);
-}
-
-// Carregar notícias relacionadas
-function loadRelatedNews() {
-    if (!currentArticle) return;
-    
+    // Adicionar notícia ao cache se não estava lá
     try {
-        const allNews = JSON.parse(localStorage.getItem('cld_news') || '[]');
-        const currentCategory = determineCategory(currentArticle.title);
-        
-        // Filtrar notícias da mesma categoria, excluindo a atual
-        const related = allNews
-            .filter(news => {
-                if (news.hash === currentArticle.hash) return false;
-                const newsCategory = determineCategory(news.title);
-                return newsCategory === currentCategory;
-            })
-            .slice(0, 3); // Máximo 3
-        
-        if (related.length > 0) {
-            const relatedHTML = `
-                <div class="related-news-section">
-                    <h3 class="related-news-title"><i class="fas fa-newspaper"></i> Notícias Relacionadas</h3>
-                    <div class="related-news-container">
-                        ${related.map(news => {
-                            const newsSlug = news.title
-                                .toLowerCase()
-                                .replace(/[^\w\s]/g, '')
-                                .replace(/\s+/g, '-');
-                            const sourceSlug = news.source
-                                .toLowerCase()
-                                .replace(/\s+/g, '-')
-                                .replace(/[^\w-]/g, '');
-                            
-                            return `
-                                <a href="leitura.html?source=${encodeURIComponent(sourceSlug)}&slug=${encodeURIComponent(newsSlug)}&id=${news.hash}" class="related-news-card">
-                                    <img src="${news.image}" alt="${news.title}" 
-                                         loading="lazy"
-                                         onerror="this.src='https://via.placeholder.com/300x150/1a73e8/ffffff?text=${encodeURIComponent(news.source.substring(0,2))}'">
-                                    <h3>${news.title.substring(0, 80)}${news.title.length > 80 ? '...' : ''}</h3>
-                                    <div class="related-news-meta">
-                                        <span class="source-tag" style="font-size:10px;">${news.source}</span>
-                                        <span>${formatDate(news.date)}</span>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
+        if (!localStorage.getItem(`news_${article.id}`)) {
+            localStorage.setItem(`news_${article.id}`, JSON.stringify(article));
             
-            document.getElementById('related-news-container').innerHTML = relatedHTML;
+            // Adicionar à lista de cache
+            let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
+            if (!cachedNews.includes(article.id)) {
+                cachedNews.push(article.id);
+                if (cachedNews.length > 200) {
+                    cachedNews.shift();
+                }
+                localStorage.setItem('cached_news', JSON.stringify(cachedNews));
+            }
         }
     } catch (e) {
-        console.warn('Erro ao carregar notícias relacionadas:', e);
+        console.warn('Não foi possível salvar no cache:', e);
     }
 }
 
@@ -984,41 +781,37 @@ function showLoader() {
 // ========== CARREGAMENTO PRINCIPAL ==========
 
 async function loadNews() {
-    const params = getAllUrlParams();
-    
+    const params = getUrlParams();
     console.log('Parâmetros da URL:', params);
     
-    // Verificar se há parâmetros mínimos
-    if (!params.id && !params.slug) {
-        console.error('Parâmetros insuficientes na URL');
+    if (!params.n) {
+        console.error('ID da notícia não fornecido');
         showError();
         return;
     }
     
-    // 1. Tentar encontrar no cache local (MUITO RÁPIDO)
-    let article = findNewsInAllCaches(params);
+    // 1. Tentar encontrar no cache local
+    let article = findNewsInCache(params.n);
     
     if (article) {
         console.log('Notícia encontrada no cache:', article.title);
-        saveNewsToAllCaches(article); // Atualizar caches
         renderNews(article);
         return;
     }
     
-    // 2. Mostrar loader enquanto busca nas APIs
+    // 2. Mostrar loader enquanto busca na API
     showLoader();
     
-    // 3. Buscar nas APIs
+    // 3. Buscar na API
     try {
-        console.log('Buscando notícia nas APIs...');
-        article = await fetchNewsFromAPIs(params);
+        console.log('Buscando notícia na API...');
+        article = await fetchNewsFromAPI(params.n, params.t, params.s);
         
         if (article) {
             console.log('Notícia encontrada na API:', article.title);
-            saveNewsToAllCaches(article);
             renderNews(article);
         } else {
-            console.error('Notícia não encontrada em nenhuma API');
+            console.error('Notícia não encontrada na API');
             showError();
         }
     } catch (error) {
@@ -1029,21 +822,16 @@ async function loadNews() {
 
 // ========== INICIALIZAÇÃO ==========
 
-// Iniciar imediatamente quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar se há uma notícia no hash da URL
     const hash = window.location.hash.substring(1);
-    if (hash && hash.startsWith('news_')) {
-        const articleId = hash.replace('news_', '');
-        // Tentar carregar direto pelo ID do hash
-        const cached = findNewsInAllCaches({ id: articleId });
-        if (cached) {
-            renderNews(cached);
-            return;
-        }
+    if (hash && hash.startsWith('n=')) {
+        const newsId = hash.replace('n=', '');
+        window.location.search = `?n=${newsId}`;
+        return;
     }
     
-    // Carregar normalmente pelos parâmetros da URL
+    // Carregar normalmente
     loadNews();
 });
 
@@ -1068,7 +856,6 @@ window.addEventListener('error', function(e) {
     }
 }, true);
 
-// Log para debug
 console.log('Página de leitura carregada');
 </script>
 </body>
