@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Notícias CLD - Agregador de Notícias de Moçambique</title>
+<title>Notícias CLD - Agregador de Notícias</title>
 <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
 <meta name="robots" content="index, follow">
 <style>
+/* [Todo o CSS anterior permanece igual - não alterei] */
 body{
     font-family:Arial,sans-serif;
     background:#f2f3f5;
@@ -796,14 +797,14 @@ Notícias CLD
 </button>
 
 <script>
-// VARIÁVEIS GLOBAIS
-let news = []; // Todas as notícias carregadas
-let filteredNews = []; // Notícias filtradas para busca
-let hashes = new Set(); // Para evitar duplicatas
-const BATCH_SIZE = 15; // Quantas notícias carregar por fonte
-let isLoadingMore = false; // Flag para evitar múltiplos carregamentos
-let allSourcesLoaded = false; // Se todas as fontes foram completamente carregadas
-let currentCategory = 'todos'; // Categoria atual selecionada
+// ========== VARIÁVEIS GLOBAIS ==========
+let news = [];
+let filteredNews = [];
+let hashes = new Set();
+const BATCH_SIZE = 15;
+let isLoadingMore = false;
+let allSourcesLoaded = false;
+let currentCategory = 'todos';
 
 // CATEGORIAS DISPONÍVEIS
 const CATEGORIES = {
@@ -828,7 +829,7 @@ const modalIcon = document.getElementById("modal-icon");
 // CONSTANTES
 const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb7BeBI7T8bRTbjcsN0t";
 
-// CONFIGURAÇÃO DAS FONTES
+// FONTES DE NOTÍCIAS
 const sources = [
     { 
         name: "O País", 
@@ -916,41 +917,64 @@ const sources = [
     }
 ];
 
-/* ========== FUNÇÃO PARA GERAR SLUG ========== */
+// ========== FUNÇÕES DE UTILIDADE ==========
 
-// Função para gerar slug amigável para URLs
-function generateSlug(text) {
-    return text
-        .toLowerCase()
-        .replace(/[^\w\s-àáâãèéêìíîòóôõùúûñç]/g, '')
-        .replace(/[àáâã]/g, 'a')
-        .replace(/[èéê]/g, 'e')
-        .replace(/[ìíî]/g, 'i')
-        .replace(/[òóôõ]/g, 'o')
-        .replace(/[ùúû]/g, 'u')
-        .replace(/ñ/g, 'n')
-        .replace(/ç/g, 'c')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .substring(0, 100);
+// Gerar hash único para a notícia
+function generateNewsHash(article) {
+    const text = article.title.rendered + article.link;
+    return btoa(text).replace(/[^a-zA-Z0-9]/g, '').substring(0, 12);
 }
 
-/* ========== FUNÇÃO PARA GERAR LINK DA NOTÍCIA ========== */
-
-function generateNewsLink(article) {
-    const slug = generateSlug(article.title);
-    const sourceSlug = generateSlug(article.source);
-    return `leitura.html?source=${encodeURIComponent(sourceSlug)}&slug=${encodeURIComponent(slug)}&id=${article.hash}`;
+// Gerar link curto para a notícia
+function generateShortLink(hash) {
+    return `leitura.html?n=${hash}`;
 }
 
-/* ========== FUNÇÕES DE INTERFACE ========== */
+// Salvar notícia no cache
+function saveToCache(article) {
+    try {
+        const hash = generateNewsHash(article);
+        const newsItem = {
+            id: hash,
+            title: article.title.rendered,
+            content: article.content.rendered,
+            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                   article.jetpack_featured_media_url ||
+                   "https://via.placeholder.com/300x200",
+            source: article.sourceName || "Desconhecido",
+            date: article.date || article.modified,
+            link: article.link
+        };
+        
+        // Salvar no localStorage
+        localStorage.setItem(`news_${hash}`, JSON.stringify(newsItem));
+        
+        // Adicionar à lista geral de notícias em cache
+        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
+        if (!cachedNews.includes(hash)) {
+            cachedNews.push(hash);
+            // Manter apenas 200 notícias em cache
+            if (cachedNews.length > 200) {
+                const removed = cachedNews.shift();
+                localStorage.removeItem(`news_${removed}`);
+            }
+            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
+        }
+        
+        return hash;
+    } catch (e) {
+        console.error('Erro ao salvar no cache:', e);
+        return null;
+    }
+}
 
-/* SIDEBAR */
+// ========== FUNÇÕES DE INTERFACE ==========
+
 function openSidebar(){
     document.getElementById("sidebar").classList.add("open");
     document.getElementById("sidebar-overlay").style.display="block";
 }
+
 function closeSidebar(){
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("sidebar-overlay").style.display="none";
@@ -962,14 +986,11 @@ document.getElementById('sidebar-overlay').addEventListener('click', function(ev
     }
 });
 
-/* DATA */
 function formatDate(d){
     return new Date(d).toLocaleString("pt-PT");
 }
 
-/* CATEGORIAS */
 function filterByCategory(category) {
-    // Atualiza botões ativos
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active');
     });
@@ -977,7 +998,6 @@ function filterByCategory(category) {
     
     currentCategory = category;
     
-    // Aplica filtro de categoria
     if (category === 'todos') {
         filteredNews = [...news];
     } else {
@@ -987,7 +1007,6 @@ function filterByCategory(category) {
         });
     }
     
-    // Re-aplica busca se houver texto na busca
     const searchText = document.getElementById("search-input").value.toLowerCase();
     if (searchText) {
         filteredNews = filteredNews.filter(n =>
@@ -996,18 +1015,15 @@ function filterByCategory(category) {
         );
     }
     
-    // Re-renderiza
     container.innerHTML = '';
     filteredNews.forEach(article => {
         renderSingleNews(article);
     });
 }
 
-/* BUSCA */
 function searchNews(){
     const q = document.getElementById("search-input").value.toLowerCase();
     
-    // Primeiro filtra por categoria
     let tempFiltered = [...news];
     
     if (currentCategory !== 'todos') {
@@ -1017,22 +1033,19 @@ function searchNews(){
         });
     }
     
-    // Depois aplica o filtro de busca
     filteredNews = tempFiltered.filter(n =>
         n.title.toLowerCase().includes(q) || 
         n.source.toLowerCase().includes(q)
     );
     
-    // Limpa e re-renderiza todas as notícias filtradas
     container.innerHTML = '';
     filteredNews.forEach(article => {
         renderSingleNews(article);
     });
 }
 
-/* MODAL INFO (SOBRE/CONTATO) - MELHORADA */
 function openInfoModal(type) {
-    closeSidebar(); // Fecha a sidebar quando abre a modal
+    closeSidebar();
     
     let title = '';
     let icon = '';
@@ -1047,28 +1060,25 @@ function openInfoModal(type) {
             
             <div class="info-section">
                 <h3><i class="fas fa-bullhorn"></i> Descrição</h3>
-                <p>Agregador independente de notícias de Moçambique, reunindo conteúdos de várias fontes confiáveis em tempo real. A plataforma tem como objetivo facilitar o acesso à informação de qualidade sobre Moçambique.</p>
+                <p>Agregador independente de notícias de Moçambique, reunindo conteúdos de várias fontes confiáveis em tempo real.</p>
             </div>
             
             <div class="info-section">
                 <h3><i class="fas fa-newspaper"></i> Fontes Incluídas</h3>
                 <ul>
-                    <li><strong>O País</strong> - Jornal de referência nacional</li>
-                    <li><strong>Jornal Notícias</strong> - Notícias diárias</li>
-                    <li><strong>Canal de Moçambique</strong> - Análises e reportagens</li>
-                    <li><strong>Carta de Moçambique</strong> - Política e economia</li>
-                    <li><strong>Club of Mozambique</strong> - Negócios e investimentos</li>
-                    <li><strong>Stop</strong> - Notícias gerais</li>
-                    <li><strong>Zitamar News</strong> - Análises especializadas</li>
-                    <li><strong>Time de Todos</strong> - Desporto e cultura</li>
-                    <li><strong>JornalMZ</strong> - Notícias diversas</li>
-                    <li><strong>Checka</strong> - Fact-checking e análises</li>
+                    <li><strong>O País</strong></li>
+                    <li><strong>Jornal Notícias</strong></li>
+                    <li><strong>Canal de Moçambique</strong></li>
+                    <li><strong>Carta de Moçambique</strong></li>
+                    <li><strong>Club of Mozambique</strong></li>
+                    <li><strong>Stop</strong></li>
+                    <li><strong>Zitamar News</strong></li>
+                    <li><strong>Time de Todos</strong></li>
                 </ul>
             </div>
             
             <div class="info-section">
                 <h3><i class="fas fa-tags"></i> Categorias</h3>
-                <p>As notícias são automaticamente classificadas em 7 categorias principais:</p>
                 <div class="features-grid">
                     <div class="feature-item">
                         <i class="fas fa-users"></i>
@@ -1100,10 +1110,6 @@ function openInfoModal(type) {
                     </div>
                 </div>
             </div>
-            
-            <div class="info-highlight">
-                <p><i class="fas fa-lightbulb"></i> <strong>Nota Importante:</strong> Esta é uma plataforma independente e não possui afiliação oficial com as fontes de notícias listadas. O conteúdo é agregado automaticamente das fontes originais.</p>
-            </div>
         </div>
         `;
     } else if (type === 'contato') {
@@ -1115,7 +1121,6 @@ function openInfoModal(type) {
             
             <div class="info-section">
                 <h3><i class="fas fa-headset"></i> Canais de Atendimento</h3>
-                <p>Temos vários canais disponíveis para o atender:</p>
                 
                 <div class="contact-info">
                     <div class="contact-item">
@@ -1133,15 +1138,6 @@ function openInfoModal(type) {
                             <a href="tel:+258869667677" class="contact-link">+258 869 667 677</a>
                         </div>
                     </div>
-                    
-                    <div class="contact-item">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <strong>Horário de Atendimento</strong><br>
-                            Seg-Sex: 08:00 - 18:00<br>
-                            Sábado: 09:00 - 13:00
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -1151,40 +1147,17 @@ function openInfoModal(type) {
                 <button class="social-btn whatsapp" onclick="openWhatsAppChannel()">
                     <i class="fab fa-whatsapp"></i> Entrar no Canal
                 </button>
-                <p style="font-size: 13px; color: #666; margin-top: 10px;">Receba atualizações em tempo real sem custos adicionais.</p>
-            </div>
-            
-            <div class="info-section">
-                <h3><i class="fas fa-comments"></i> Ações Rápidas</h3>
-                <div class="social-links">
-                    <button class="social-btn email" onclick="window.open('mailto:claudioarmando001@gmail.com?subject=Contacto%20Jornal%20Moçambique', '_blank')">
-                        <i class="fas fa-envelope"></i> Enviar Email
-                    </button>
-                    <button class="social-btn whatsapp" onclick="window.open('https://wa.me/258869667677?text=Olá%20Jornal%20Moçambique,%20gostaria%20de%20mais%20informações', '_blank')">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </button>
-                    <button class="social-btn phone" onclick="window.location.href='tel:+258869667677'">
-                        <i class="fas fa-phone"></i> Ligar Agora
-                    </button>
-                </div>
-            </div>
-            
-            <div class="info-highlight">
-                <p><i class="fas fa-clock"></i> <strong>Resposta Rápida:</strong> Respondemos a todos os contactos em até 24 horas úteis.</p>
             </div>
         </div>
         `;
     }
     
-    // Atualiza título e ícone da modal
     modalTitle.textContent = title;
     modalIcon.className = `fas ${icon}`;
     document.getElementById("info-modal-body").innerHTML = content;
     
-    // Mostra a modal
     infoModal.style.display = "flex";
     
-    // Adiciona efeito de entrada
     setTimeout(() => {
         document.getElementById("info-modal-content").style.transform = "translateY(0)";
     }, 10);
@@ -1194,7 +1167,6 @@ function closeInfoModal() {
     infoModal.style.display = "none";
 }
 
-// Event Listeners para a modal info
 infoModalClose.addEventListener('click', closeInfoModal);
 
 infoModal.addEventListener('click', (e) => {
@@ -1203,82 +1175,35 @@ infoModal.addEventListener('click', (e) => {
     }
 });
 
-/* ========== RENDERIZAÇÃO EM TEMPO REAL ========== */
+// ========== RENDERIZAÇÃO ==========
 
-// Determina categoria baseada no conteúdo da notícia
 function determineCategory(title, content) {
     const text = (title + ' ' + content).toLowerCase();
     
-    // Palavras-chave para cada categoria
-    const keywords = {
-        'sociedade': ['sociedade', 'social', 'comunidade', 'educação', 'escola', 'universidade', 
-                     'aluno', 'professor', 'família', 'habitação', 'bairro', 'comunitário'],
-        'política': ['política', 'político', 'governo', 'presidente', 'ministro', 'eleições', 
-                    'partido', 'parlamento', 'assembleia', 'diplomacia', 'embaixada', 'voto'],
-        'economia': ['economia', 'econômico', 'negócio', 'empresa', 'investimento', 'banco', 
-                    'finanças', 'mercado', 'bolsa', 'imposto', 'crescimento', 'inflação'],
-        'esportes': ['esporte', 'futebol', 'jogo', 'atleta', 'campeonato', 'liga', 
-                    'competição', 'ginásio', 'treino', 'seleção', 'estádio', 'golo'],
-        'cultura': ['cultura', 'cultural', 'arte', 'música', 'teatro', 'cinema', 
-                   'literatura', 'poesia', 'tradição', 'festival', 'exposição', 'artista'],
-        'saúde': ['saúde', 'hospital', 'médico', 'enfermeiro', 'doença', 'vacina', 
-                 'tratamento', 'clínica', 'epidemia', 'pandemia', 'medicamento', 'cirurgia'],
-        'tecnologia': ['tecnologia', 'tecnológico', 'internet', 'digital', 'aplicativo', 
-                      'software', 'startup', 'inovação', 'ciência', 'pesquisa', 'robô', 'IA']
-    };
-    
-    // Conta ocorrências para cada categoria
-    let scores = {};
-    Object.keys(keywords).forEach(cat => {
-        scores[cat] = 0;
-        keywords[cat].forEach(keyword => {
-            if (text.includes(keyword)) {
-                scores[cat]++;
-            }
-        });
-    });
-    
-    // Encontra categoria com maior pontuação
-    let maxScore = 0;
-    let selectedCategory = 'sociedade'; // default
-    
-    Object.keys(scores).forEach(cat => {
-        if (scores[cat] > maxScore) {
-            maxScore = scores[cat];
-            selectedCategory = cat;
-        }
-    });
-    
-    // Se nenhuma palavra-chave foi encontrada, usa heurística baseada no título
-    if (maxScore === 0) {
-        if (title.toLowerCase().includes('futebol') || title.toLowerCase().includes('desporto')) {
-            return 'esportes';
-        } else if (title.toLowerCase().includes('econ') || title.toLowerCase().includes('negócio')) {
-            return 'economia';
-        } else if (title.toLowerCase().includes('arte') || title.toLowerCase().includes('música')) {
-            return 'cultura';
-        } else if (title.toLowerCase().includes('hospital') || title.toLowerCase().includes('médico')) {
-            return 'saúde';
-        } else if (title.toLowerCase().includes('tech') || title.toLowerCase().includes('digital')) {
-            return 'tecnologia';
-        } else {
-            // Distribuição aleatória controlada para diversidade
-            const categories = Object.keys(CATEGORIES).filter(cat => cat !== 'todos');
-            return categories[Math.floor(Math.random() * categories.length)];
-        }
+    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta')) {
+        return 'esportes';
+    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento')) {
+        return 'economia';
+    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro')) {
+        return 'política';
+    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro')) {
+        return 'saúde';
+    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo')) {
+        return 'tecnologia';
+    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro')) {
+        return 'cultura';
+    } else {
+        return 'sociedade';
     }
-    
-    return selectedCategory;
 }
 
-// Renderiza uma única notícia imediatamente
 function renderSingleNews(article) {
     if (container.querySelector(`[data-hash="${article.hash}"]`)) return;
     
     const category = article.category || determineCategory(article.title, article.content);
-    article.category = category; // Armazena a categoria determinada
+    article.category = category;
     
-    const newsLink = generateNewsLink(article);
+    const newsLink = generateShortLink(article.hash);
     
     const c = document.createElement("a");
     c.className = "card";
@@ -1299,7 +1224,6 @@ function renderSingleNews(article) {
     <img src="${article.image}" loading="lazy" alt="${article.title}" onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
     `;
     
-    // Encontra a posição correta para manter ordenação por data (mais recente primeiro)
     let inserted = false;
     const cards = container.querySelectorAll('.card');
     
@@ -1314,53 +1238,20 @@ function renderSingleNews(article) {
         }
     }
     
-    // Se não encontrou posição (ou é a primeira notícia), adiciona no final
     if (!inserted) {
         container.appendChild(c);
     }
     
-    // Armazena a data como atributo para futuras ordenações
     c.dataset.date = article.date;
-    
-    // Salva no localStorage para acesso na página de leitura
-    saveNewsToLocalStorage(article);
 }
 
-/* ========== LOCALSTORAGE FUNCTIONS ========== */
+// ========== CARREGAMENTO DE NOTÍCIAS ==========
 
-function saveNewsToLocalStorage(article) {
-    try {
-        // Pega notícias existentes
-        let savedNews = JSON.parse(localStorage.getItem('cld_news') || '[]');
-        
-        // Verifica se já existe
-        const exists = savedNews.some(n => n.hash === article.hash);
-        
-        if (!exists) {
-            // Adiciona a nova notícia
-            savedNews.push(article);
-            
-            // Mantém apenas as 200 notícias mais recentes
-            if (savedNews.length > 200) {
-                savedNews = savedNews.slice(-200);
-            }
-            
-            // Salva no localStorage
-            localStorage.setItem('cld_news', JSON.stringify(savedNews));
-        }
-    } catch (e) {
-        console.error('Erro ao salvar no localStorage:', e);
-    }
-}
-
-/* ========== CARREGAMENTO DE NOTÍCIAS EM TEMPO REAL ========== */
-
-// Processa artigos de uma fonte e renderiza imediatamente
 async function processSourceArticles(source, articles) {
     const newArticles = [];
     
     for (const article of articles) {
-        const hash = (article.title.rendered + article.link).replace(/\W/g, "");
+        const hash = generateNewsHash(article);
         
         if (hashes.has(hash)) continue;
         
@@ -1378,26 +1269,24 @@ async function processSourceArticles(source, articles) {
             hash: hash
         };
         
+        // Salvar no cache imediatamente
+        saveToCache({...article, sourceName: source.name});
+        
         newArticles.push(newsItem);
     }
     
-    // Ordena as novas notícias por data (mais recente primeiro)
     newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
     
-    // Adiciona às listas e renderiza cada uma
     for (const newsItem of newArticles) {
         news.push(newsItem);
         filteredNews.push(newsItem);
         
-        // Renderiza IMEDIATAMENTE
         renderSingleNews(newsItem);
         
-        // Pequena pausa para animação suave
         await new Promise(resolve => setTimeout(resolve, 30));
     }
 }
 
-// Carrega notícias de uma fonte específica
 async function loadSource(source) {
     if (!source.hasMore || source.isFetching) return;
     
@@ -1423,7 +1312,6 @@ async function loadSource(source) {
         
         source.currentPage++;
         
-        // Processa e renderiza as notícias imediatamente
         await processSourceArticles(source, data);
         
     } catch (error) {
@@ -1431,54 +1319,40 @@ async function loadSource(source) {
         source.hasMore = false;
     } finally {
         source.isFetching = false;
-        
-        // Verifica se todas as fontes foram carregadas
         checkAllSourcesLoaded();
     }
 }
 
-// Carrega notícias de todas as fontes simultaneamente
 async function loadAllSources() {
-    // Limpa dados anteriores
     news = [];
     filteredNews = [];
     hashes.clear();
     allSourcesLoaded = false;
     
-    // Limpa o container
     container.innerHTML = '';
     
-    // Reseta fontes
     sources.forEach(source => {
         source.currentPage = 1;
         source.hasMore = true;
         source.isFetching = false;
     });
     
-    // Carrega todas as fontes em paralelo
     const promises = sources.map(source => loadSource(source));
-    
-    // Aguarda todas as fontes terminarem o primeiro carregamento
     await Promise.allSettled(promises);
     
-    // Reordena todas as notícias por data (mais recente primeiro)
     reorderAllNewsByDate();
 }
 
-// Reordena TODAS as notícias por data (mais recente primeiro)
 function reorderAllNewsByDate() {
-    // Ordena os arrays
     news.sort((a, b) => new Date(b.date) - new Date(a.date));
     filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
     
-    // Limpa e re-renderiza em ordem
     container.innerHTML = '';
     filteredNews.forEach(article => {
         renderSingleNews(article);
     });
 }
 
-// Carrega mais notícias (scroll infinito)
 async function loadMoreNews() {
     if (isLoadingMore || allSourcesLoaded) return;
     
@@ -1488,7 +1362,6 @@ async function loadMoreNews() {
     let anySourceHasMore = false;
     const promises = [];
     
-    // Carrega de todas as fontes que ainda têm conteúdo
     for (const source of sources) {
         if (source.hasMore) {
             promises.push(loadSource(source));
@@ -1499,10 +1372,8 @@ async function loadMoreNews() {
         }
     }
     
-    // Aguarda todas as fontes terminarem
     await Promise.allSettled(promises);
     
-    // Verifica se todas as fontes foram completamente carregadas
     allSourcesLoaded = !anySourceHasMore;
     
     isLoadingMore = false;
@@ -1517,16 +1388,9 @@ function checkAllSourcesLoaded() {
     }
 }
 
-/* ========== CONTROLES ========== */
-
 function manualRefresh() {
-    // Limpa o container
     container.innerHTML = '';
-    
-    // Fecha modais se estiverem abertas
     closeInfoModal();
-    
-    // Recarrega tudo
     loadAllSources();
 }
 
@@ -1535,7 +1399,7 @@ function openWhatsAppChannel() {
     closeInfoModal();
 }
 
-/* ========== SCROLL INFINITO ========== */
+// ========== SCROLL INFINITO ==========
 
 let scrollTimeout;
 const SCROLL_THRESHOLD = 300;
@@ -1553,15 +1417,12 @@ window.addEventListener("scroll", () => {
     }, 150);
 });
 
-/* ========== INICIALIZAÇÃO ========== */
+// ========== INICIALIZAÇÃO ==========
 
-// Inicia o carregamento
 loadAllSources();
 
-// Atualiza a cada 5 minutos se a página estiver visível
 setInterval(() => {
     if (document.visibilityState === 'visible' && !isLoadingMore) {
-        // Carrega apenas se o usuário estiver no final da página
         const scrollPosition = window.innerHeight + window.scrollY;
         const threshold = document.body.offsetHeight - 500;
         
@@ -1571,7 +1432,7 @@ setInterval(() => {
     }
 }, 300000);
 
-/* ========== ATALHOS DE TECLADO ========== */
+// ========== ATALHOS DE TECLADO ==========
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -1590,32 +1451,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Inicializa a contagem de notícias por categoria
-function updateCategoryStats() {
-    const stats = {};
-    Object.keys(CATEGORIES).forEach(cat => {
-        if (cat !== 'todos') {
-            stats[cat] = 0;
-        }
-    });
-    
-    news.forEach(article => {
-        if (article.category && stats[article.category] !== undefined) {
-            stats[article.category]++;
-        }
-    });
-    
-    // Atualiza os botões com contagem
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        const cat = btn.getAttribute('onclick')?.match(/filterByCategory\('([^']+)'\)/)?.[1];
-        if (cat && cat !== 'todos' && stats[cat]) {
-            btn.innerHTML = `${CATEGORIES[cat].name} <span style="background: white; color: #1a73e8; padding: 1px 6px; border-radius: 10px; font-size: 11px;">${stats[cat]}</span>`;
-        }
-    });
-}
-
-// Atualiza estatísticas periodicamente
-setInterval(updateCategoryStats, 10000);
+console.log('Página principal carregada com sucesso!');
 </script>
 </body>
 </html>
