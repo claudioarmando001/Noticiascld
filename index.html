@@ -7,547 +7,810 @@
 <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
 <meta name="robots" content="index, follow">
 <style>
-/* [Todo o CSS anterior permanece igual] */
-/* Adicione este novo estilo para erros */
-.error-message {
-    text-align: center;
-    padding: 40px 20px;
-    color: #666;
-    background: #fff;
-    border-radius: 12px;
-    margin: 20px auto;
-    max-width: 600px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.error-message i {
-    font-size: 48px;
-    color: #ff6b6b;
-    margin-bottom: 20px;
-}
-
-.error-message h3 {
-    color: #dc3545;
-    margin-bottom: 15px;
-}
-
-.error-message a {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #1a73e8;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-}
-
-.error-message a:hover {
-    background: #0d62d9;
-}
-
-/* Adicionar feedback de atualização */
-.refresh-feedback {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: #4caf50;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 10000;
-    animation: slideIn 0.3s ease-out;
-    display: none;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
+/* CSS OTIMIZADO - Minificado inline */
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f5f7fa;margin:0;color:#1a1a1a;line-height:1.4;overflow-x:hidden}header{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:16px 20px;text-align:center;font-size:20px;font-weight:700;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.15)}.header-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);color:#1a73e8;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s;backdrop-filter:blur(10px)}.header-btn:hover{background:#fff;transform:translateY(-50%) scale(1.05)}#menu-btn{left:20px}#refresh-btn{right:20px}#sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:9998;animation:fadeIn .2s ease}#sidebar{position:fixed;top:0;left:-300px;width:300px;height:100vh;background:#fff;box-shadow:2px 0 12px rgba(0,0,0,.15);padding:20px;transition:transform .25s cubic-bezier(0.4,0,0.2,1);z-index:9999;overflow-y:auto;-webkit-overflow-scrolling:touch}#sidebar.open{transform:translateX(300px)}.categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:20px 0}.category-btn{background:#f0f7ff;border:2px solid transparent;color:#1a73e8;padding:10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;text-align:center}.category-btn:hover{background:#e3f2fd;transform:translateY(-1px)}.category-btn.active{background:#1a73e8;color:#fff;border-color:#1a73e8}.search-container{max-width:1000px;margin:20px auto;padding:0 20px}#search-input{width:100%;padding:14px 20px;border-radius:12px;border:2px solid #e1e5eb;font-size:16px;background:#fff;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}#search-input:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.15)}#news-container{max-width:1000px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}@media(max-width:768px){#news-container{grid-template-columns:1fr;padding:15px}}.card{background:#fff;border-radius:16px;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer;transition:all .2s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;height:100%;position:relative;border:1px solid rgba(0,0,0,.05)}.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12);border-color:#1a73e8}.card img{width:100%;height:180px;object-fit:cover;display:block;background:linear-gradient(135deg,#667eea,#764ba2)}.card-text{padding:20px;flex:1;display:flex;flex-direction:column}.card-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:15px;border-top:1px solid #f0f0f0}.source-tag{background:#e8f0fe;color:#1a73e8;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}.category-tag{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}.sociedade-tag{background:#e8f5e9;color:#2e7d32}.politica-tag{background:#ffebee;color:#c62828}.economia-tag{background:#fff3e0;color:#ef6c00}.esportes-tag{background:#e3f2fd;color:#1565c0}.cultura-tag{background:#f3e5f5;color:#7b1fa2}.saude-tag{background:#e0f2f1;color:#00796b}.tech-tag{background:#eceff1;color:#37474f}#infinite-loader{text-align:center;padding:30px 20px}#infinite-spinner{display:inline-block;width:24px;height:24px;border:3px solid rgba(26,115,232,.1);border-top:3px solid #1a73e8;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.loading-shimmer{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}.card.skeleton .card-title{height:20px;width:90%;margin-bottom:10px}.card.skeleton .card-meta span{height:16px;width:60px}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}.toast{position:fixed;bottom:20px;right:20px;background:#323232;color:#fff;padding:12px 24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:10000;animation:slideUp .3s ease;display:none;max-width:320px}.toast.success{background:#4caf50}.toast.error{background:#f44336}.toast.info{background:#2196f3}@keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}.offline-banner{position:sticky;top:0;background:#ff9800;color:#fff;text-align:center;padding:10px;font-size:14px;font-weight:600;z-index:1001;animation:slideDown .3s ease}@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}.empty-state{text-align:center;padding:60px 20px}.empty-state i{font-size:64px;color:#b0bec5;margin-bottom:20px}.empty-state h3{color:#546e7a;margin-bottom:10px}.empty-state p{color:#90a4ae;max-width:400px;margin:0 auto}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" as="style">
 </head>
 <body>
-<!-- [Todo o HTML anterior permanece igual] -->
+<header>
+<button class="header-btn" id="menu-btn" aria-label="Abrir menu">☰</button>
+Notícias CLD
+<button class="header-btn" id="refresh-btn" aria-label="Atualizar notícias">↻</button>
+</header>
+
+<div id="sidebar-overlay"></div>
+<aside id="sidebar" aria-label="Menu lateral">
+<button id="close-sidebar" aria-label="Fechar menu" style="position:absolute;top:15px;right:15px;background:none;border:none;font-size:20px;cursor:pointer;color:#666">✖</button>
+<h2 style="margin-bottom:20px;color:#1a73e8">Categorias</h2>
+<div class="categories">
+<button class="category-btn active" data-category="todos">Todos</button>
+<button class="category-btn" data-category="sociedade">Sociedade</button>
+<button class="category-btn" data-category="política">Política</button>
+<button class="category-btn" data-category="economia">Economia</button>
+<button class="category-btn" data-category="esportes">Esportes</button>
+<button class="category-btn" data-category="cultura">Cultura</button>
+<button class="category-btn" data-category="saúde">Saúde</button>
+<button class="category-btn" data-category="tecnologia">Tecnologia</button>
+</div>
+</aside>
+
+<div class="search-container">
+<input id="search-input" placeholder="🔍 Buscar notícias..." aria-label="Buscar notícias">
+</div>
+
+<main id="news-container" role="main">
+<!-- Skeleton loading -->
+<div class="card skeleton loading-shimmer">
+    <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
+    <div class="card-text">
+        <div class="card-title loading-shimmer"></div>
+        <div class="card-meta">
+            <span class="loading-shimmer"></span>
+            <span class="loading-shimmer"></span>
+        </div>
+    </div>
+</div>
+<!-- Duplicar skeleton para visual inicial -->
+<div class="card skeleton loading-shimmer">
+    <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
+    <div class="card-text">
+        <div class="card-title loading-shimmer"></div>
+        <div class="card-meta">
+            <span class="loading-shimmer"></span>
+            <span class="loading-shimmer"></span>
+        </div>
+    </div>
+</div>
+</main>
+
+<div id="infinite-loader" style="display:none">
+<div id="infinite-spinner"></div>
+<div>Carregando mais notícias...</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ========== VARIÁVEIS GLOBAIS ==========
-let news = [];
-let filteredNews = [];
-let newsCache = new Map(); // Usar Map para cache mais rápido
-const BATCH_SIZE = 15;
-let isLoadingMore = false;
-let allSourcesLoaded = false;
-let currentCategory = 'todos';
+// ========== CONFIGURAÇÃO DE PERFORMANCE ==========
+'use strict';
 
-// CATEGORIAS DISPONÍVEIS
-const CATEGORIES = {
-    'todos': { name: 'Todos', color: '#1a73e8' },
-    'sociedade': { name: 'Sociedade', color: '#2e7d32', class: 'sociedade-tag' },
-    'política': { name: 'Política', color: '#c62828', class: 'politica-tag' },
-    'economia': { name: 'Economia', color: '#ef6c00', class: 'economia-tag' },
-    'esportes': { name: 'Esportes', color: '#1565c0', class: 'esportes-tag' },
-    'cultura': { name: 'Cultura', color: '#7b1fa2', class: 'cultura-tag' },
-    'saúde': { name: 'Saúde', color: '#00796b', class: 'saude-tag' },
-    'tecnologia': { name: 'Tecnologia', color: '#37474f', class: 'tech-tag' }
+// Configurações
+const CONFIG = {
+    BATCH_SIZE: 20,
+    CACHE_SIZE: 500,
+    DEBOUNCE_DELAY: 150,
+    THROTTLE_DELAY: 50,
+    SCROLL_THRESHOLD: 300,
+    REQUEST_TIMEOUT: 5000,
+    MAX_RETRIES: 2
 };
 
-// ELEMENTOS DOM
-const container = document.getElementById("news-container");
-const infiniteLoader = document.getElementById("infinite-loader");
-const infoModal = document.getElementById("info-modal");
-const infoModalClose = document.getElementById("info-modal-close");
-const modalTitle = document.getElementById("modal-title");
-const modalIcon = document.getElementById("modal-icon");
+// Inicialização otimizada
+const state = {
+    news: new Map(), // Usar Map para O(1) lookup
+    filteredNews: [],
+    activeCategory: 'todos',
+    searchQuery: '',
+    isLoading: false,
+    page: 1,
+    hasMore: true,
+    lastScrollY: 0,
+    scrollTimer: null,
+    requestQueue: new Set(),
+    cache: new Map(),
+    offline: !navigator.onLine
+};
 
-// CONSTANTES
-const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb7BeBI7T8bRTbjcsN0t";
+// Cache IndexedDB para grandes dados
+let db;
+const initDB = () => {
+    return new Promise((resolve) => {
+        if (!window.indexedDB) {
+            console.warn('IndexedDB não suportado, usando localStorage');
+            resolve(false);
+            return;
+        }
+        
+        const request = indexedDB.open('newsCache', 1);
+        
+        request.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains('news')) {
+                db.createObjectStore('news', { keyPath: 'hash' });
+            }
+            if (!db.objectStoreNames.contains('metadata')) {
+                db.createObjectStore('metadata', { keyPath: 'key' });
+            }
+        };
+        
+        request.onsuccess = (e) => {
+            db = e.target.result;
+            console.log('IndexedDB inicializado');
+            resolve(true);
+        };
+        
+        request.onerror = () => resolve(false);
+    });
+};
 
-// FONTES DE NOTÍCIAS (removi algumas que podem estar causando CORS)
-const sources = [
-    { 
-        name: "O País", 
-        baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
+// Fontes otimizadas com fallbacks
+const NEWS_SOURCES = [
+    {
+        id: 'opais',
+        name: 'O País',
+        url: 'https://www.opais.co.mz/wp-json/wp/v2/posts',
+        priority: 1
     },
     {
-        name: "Jornal Notícias",
-        baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Carta de Moçambique", 
-        baseUrl: "https://cartamz.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Savana", 
-        baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
+        id: 'jornalnoticias',
+        name: 'Jornal Notícias',
+        url: 'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts',
+        priority: 1
     },
     {
-        name: "Club of Mozambique",
-        baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
+        id: 'cartamz',
+        name: 'Carta de Moçambique',
+        url: 'https://cartamz.com/wp-json/wp/v2/posts',
+        priority: 2
+    },
+    {
+        id: 'clubmoz',
+        name: 'Club of Mozambique',
+        url: 'https://clubofmozambique.com/wp-json/wp/v2/posts',
+        priority: 2
+    },
+    {
+        id: 'savana',
+        name: 'Savana',
+        url: 'https://savana.co.mz/wp-json/wp/v2/posts',
+        priority: 3
     }
 ];
 
-// ========== FUNÇÕES DE UTILIDADE ==========
+// ========== FUNÇÕES DE PERFORMANCE ==========
 
-// Gerar hash único para a notícia (mais robusto)
-function generateNewsHash(article, sourceName) {
-    const text = article.title.rendered + article.link + sourceName;
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-        const char = text.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash).toString(36).substring(0, 12);
-}
+// Debounce otimizado
+const debounce = (fn, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+    };
+};
 
-// Gerar link curto para a notícia
-function generateShortLink(article) {
-    const hash = article.hash;
-    const titleSlug = article.title
-        .toLowerCase()
-        .replace(/[^\w\s]/g, '')
-        .replace(/\s+/g, '-')
-        .substring(0, 50);
-    
-    return `leitura.html?n=${hash}&t=${encodeURIComponent(titleSlug)}&s=${encodeURIComponent(article.source)}`;
-}
-
-// Salvar notícia no cache
-function saveToCache(article) {
-    try {
-        const cacheKey = `news_${article.hash}`;
-        const newsItem = {
-            id: article.hash,
-            title: article.title,
-            content: article.content,
-            image: article.image,
-            source: article.source,
-            date: article.date,
-            link: article.link,
-            hash: article.hash
-        };
-        
-        // Salvar no localStorage
-        localStorage.setItem(cacheKey, JSON.stringify(newsItem));
-        
-        // Salvar no Map para acesso rápido
-        newsCache.set(article.hash, newsItem);
-        
-        // Adicionar à lista geral de notícias em cache
-        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        if (!cachedNews.includes(article.hash)) {
-            cachedNews.push(article.hash);
-            // Manter apenas 300 notícias em cache
-            if (cachedNews.length > 300) {
-                const removed = cachedNews.shift();
-                localStorage.removeItem(`news_${removed}`);
-                newsCache.delete(removed);
-            }
-            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
+// Throttle otimizado
+const throttle = (fn, limit) => {
+    let inThrottle;
+    return (...args) => {
+        if (!inThrottle) {
+            fn(...args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
         }
-        
-        console.log('Notícia salva no cache:', article.hash, article.title.substring(0, 30));
-        return article.hash;
-    } catch (e) {
-        console.error('Erro ao salvar no cache:', e);
-        return null;
-    }
-}
+    };
+};
 
-// Carregar cache existente
-function loadExistingCache() {
-    try {
-        const cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        cachedNews.forEach(hash => {
+// Hash rápido com xxHash simplificado
+const fastHash = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(36);
+};
+
+// Gerar ID único para notícia
+const generateNewsId = (article, source) => {
+    const key = `${source.id}_${article.id || article.link}`;
+    return fastHash(key);
+};
+
+// ========== CACHE OTIMIZADO ==========
+
+const cacheManager = {
+    async saveNews(articles) {
+        const savePromises = articles.map(article => {
+            const key = `news_${article.id}`;
+            state.cache.set(key, article);
+            
+            // Salvar também no localStorage para fallback rápido
             try {
-                const cachedItem = localStorage.getItem(`news_${hash}`);
-                if (cachedItem) {
-                    const article = JSON.parse(cachedItem);
-                    newsCache.set(hash, article);
-                }
+                localStorage.setItem(key, JSON.stringify(article));
             } catch (e) {
-                console.warn('Erro ao carregar notícia do cache:', hash, e);
+                // Se localStorage cheio, limpar alguns itens
+                if (e.name === 'QuotaExceededError') {
+                    this.cleanOldCache();
+                    localStorage.setItem(key, JSON.stringify(article));
+                }
             }
         });
-        console.log('Cache carregado:', newsCache.size, 'notícias');
-    } catch (e) {
-        console.error('Erro ao carregar cache:', e);
-    }
-}
-
-// ========== FUNÇÕES DE INTERFACE ==========
-// [Funções de interface permanecem iguais...]
-
-// ========== RENDERIZAÇÃO ==========
-
-function determineCategory(title, content) {
-    const text = (title + ' ' + content).toLowerCase();
-    
-    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta') || text.includes('esporte')) {
-        return 'esportes';
-    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento') || text.includes('finança')) {
-        return 'economia';
-    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro') || text.includes('parlamento')) {
-        return 'política';
-    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro') || text.includes('doença')) {
-        return 'saúde';
-    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo') || text.includes('smartphone')) {
-        return 'tecnologia';
-    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro') || text.includes('dança')) {
-        return 'cultura';
-    } else {
-        return 'sociedade';
-    }
-}
-
-function renderSingleNews(article) {
-    if (container.querySelector(`[data-hash="${article.hash}"]`)) return;
-    
-    const category = article.category || determineCategory(article.title, article.content);
-    article.category = category;
-    
-    const newsLink = generateShortLink(article);
-    
-    const c = document.createElement("a");
-    c.className = "card";
-    c.dataset.hash = article.hash;
-    c.dataset.category = category;
-    c.href = newsLink;
-    c.style.textDecoration = 'none';
-    c.style.color = 'inherit';
-    c.innerHTML = `
-    <div class="card-text">
-        <div class="card-title">${article.title}</div>
-        <div class="card-meta">
-            <span class="source-tag">${article.source}</span>
-            <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
-            <span>${formatDate(article.date)}</span>
-        </div>
-    </div>
-    <img src="${article.image}" loading="lazy" alt="${article.title}" 
-         onerror="this.onerror=null; this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
-    `;
-    
-    let inserted = false;
-    const cards = container.querySelectorAll('.card');
-    
-    for (let i = 0; i < cards.length; i++) {
-        const cardDate = new Date(cards[i].dataset.date || 0);
-        const newDate = new Date(article.date);
         
-        if (newDate > cardDate) {
-            container.insertBefore(c, cards[i]);
-            inserted = true;
-            break;
+        await Promise.allSavePromises;
+        
+        // Atualizar índice no IndexedDB se disponível
+        if (db) {
+            const transaction = db.transaction(['news'], 'readwrite');
+            const store = transaction.objectStore('news');
+            
+            articles.forEach(article => {
+                store.put(article);
+            });
+        }
+    },
+    
+    async getNews(id) {
+        // 1. Tentar cache em memória
+        const cached = state.cache.get(`news_${id}`);
+        if (cached) return cached;
+        
+        // 2. Tentar localStorage
+        try {
+            const local = localStorage.getItem(`news_${id}`);
+            if (local) {
+                const article = JSON.parse(local);
+                state.cache.set(`news_${id}`, article);
+                return article;
+            }
+        } catch (e) {
+            console.warn('Erro ao acessar localStorage:', e);
+        }
+        
+        // 3. Tentar IndexedDB
+        if (db) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(['news'], 'readonly');
+                const store = transaction.objectStore('news');
+                const request = store.get(id);
+                
+                request.onsuccess = () => {
+                    if (request.result) {
+                        state.cache.set(`news_${id}`, request.result);
+                        resolve(request.result);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                request.onerror = () => resolve(null);
+            });
+        }
+        
+        return null;
+    },
+    
+    cleanOldCache() {
+        // Limpar cache mais antigo
+        const keys = Object.keys(localStorage);
+        const newsKeys = keys.filter(k => k.startsWith('news_'));
+        
+        if (newsKeys.length > CONFIG.CACHE_SIZE) {
+            // Ordenar por timestamp (se disponível) ou remover os mais antigos
+            const toRemove = newsKeys.slice(0, newsKeys.length - CONFIG.CACHE_SIZE);
+            toRemove.forEach(key => {
+                localStorage.removeItem(key);
+                state.cache.delete(key);
+            });
+        }
+    },
+    
+    async prefetchNews() {
+        // Pré-carregar notícias prováveis
+        if (state.news.size > 0) {
+            const recentNews = Array.from(state.news.values())
+                .slice(0, 10)
+                .map(n => this.getNews(n.id));
+            
+            await Promise.all(recentNews);
         }
     }
+};
+
+// ========== REQUISIÇÕES OTIMIZADAS ==========
+
+const fetchWithRetry = async (url, retries = CONFIG.MAX_RETRIES) => {
+    for (let i = 0; i <= retries; i++) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+            
+            const response = await fetch(url, {
+                signal: controller.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            return await response.json();
+        } catch (error) {
+            if (i === retries) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+        }
+    }
+};
+
+const fetchParallel = async (sources) => {
+    const fetchPromises = sources.map(async (source) => {
+        try {
+            const url = `${source.url}?_embed&per_page=${CONFIG.BATCH_SIZE}&page=${state.page}`;
+            const data = await fetchWithRetry(url);
+            
+            return {
+                source: source.id,
+                data: data || [],
+                error: null
+            };
+        } catch (error) {
+            console.warn(`Falha na fonte ${source.name}:`, error);
+            return {
+                source: source.id,
+                data: [],
+                error: error.message
+            };
+        }
+    });
     
-    if (!inserted) {
-        container.appendChild(c);
+    return Promise.allSettled(fetchPromises);
+};
+
+// ========== PROCESSAMENTO DE DADOS ==========
+
+const processArticles = (articles, source) => {
+    return articles.map(article => {
+        const id = generateNewsId(article, source);
+        
+        // Extrair imagem de forma otimizada
+        let image = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"%3E%3Crect width="400" height="200" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3ENOT%C3%8DCIAS CLD%3C/text%3E%3C/svg%3E';
+        
+        if (article._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
+            image = article._embedded['wp:featuredmedia'][0].source_url;
+        } else if (article.jetpack_featured_media_url) {
+            image = article.jetpack_featured_media_url;
+        } else if (article.thumbnail_url) {
+            image = article.thumbnail_url;
+        }
+        
+        // Determinar categoria com regex otimizado
+        const text = (article.title.rendered + ' ' + article.excerpt?.rendered).toLowerCase();
+        let category = 'sociedade';
+        
+        if (/(futebol|desporto|jogo|atleta|esporte)/i.test(text)) category = 'esportes';
+        else if (/(economia|negócio|empresa|investimento|finança)/i.test(text)) category = 'economia';
+        else if (/(política|governo|presidente|ministro|parlamento)/i.test(text)) category = 'política';
+        else if (/(saúde|hospital|médico|enfermeiro|doença)/i.test(text)) category = 'saúde';
+        else if (/(tecnologia|digital|internet|aplicativo|smartphone)/i.test(text)) category = 'tecnologia';
+        else if (/(cultura|arte|música|teatro|dança)/i.test(text)) category = 'cultura';
+        
+        return {
+            id,
+            title: article.title.rendered || article.title,
+            excerpt: article.excerpt?.rendered?.replace(/<[^>]+>/g, '').substring(0, 150) + '...' || '',
+            image,
+            source: source.name,
+            sourceId: source.id,
+            date: article.date || new Date().toISOString(),
+            timestamp: new Date(article.date || Date.now()).getTime(),
+            category,
+            url: article.link || `https://${source.name.toLowerCase().replace(/\s/g, '')}.co.mz`,
+            priority: source.priority
+        };
+    });
+};
+
+// ========== RENDERIZAÇÃO OTIMIZADA ==========
+
+const renderer = {
+    container: document.getElementById('news-container'),
+    template: null,
+    
+    init() {
+        // Criar template uma vez
+        this.template = document.createElement('div');
+        this.template.className = 'card';
+        this.template.innerHTML = `
+            <img loading="lazy" alt="">
+            <div class="card-text">
+                <div class="card-title"></div>
+                <div class="card-meta">
+                    <span class="source-tag"></span>
+                    <span class="category-tag"></span>
+                </div>
+            </div>
+        `;
+    },
+    
+    renderNews(articles, clear = false) {
+        if (clear) {
+            this.container.innerHTML = '';
+            // Adicionar skeletons para transição suave
+            this.showSkeletons(6);
+        }
+        
+        // Remover skeletons
+        const skeletons = this.container.querySelectorAll('.skeleton');
+        skeletons.forEach(s => s.remove());
+        
+        // Usar DocumentFragment para renderização em batch
+        const fragment = document.createDocumentFragment();
+        
+        articles.forEach(article => {
+            const card = this.createCard(article);
+            if (card) fragment.appendChild(card);
+        });
+        
+        this.container.appendChild(fragment);
+        
+        // Pré-carregar imagens das próximas notícias
+        this.prefetchImages(articles.slice(0, 3));
+    },
+    
+    createCard(article) {
+        if (this.container.querySelector(`[data-id="${article.id}"]`)) return null;
+        
+        const card = this.template.cloneNode(true);
+        card.dataset.id = article.id;
+        card.dataset.category = article.category;
+        card.dataset.timestamp = article.timestamp;
+        
+        // Usar requestIdleCallback para renderização não crítica
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                this.updateCardContent(card, article);
+            });
+        } else {
+            this.updateCardContent(card, article);
+        }
+        
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.openNews(article);
+        }, { passive: true });
+        
+        return card;
+    },
+    
+    updateCardContent(card, article) {
+        const img = card.querySelector('img');
+        const title = card.querySelector('.card-title');
+        const source = card.querySelector('.source-tag');
+        const category = card.querySelector('.category-tag');
+        
+        // Otimizar carregamento de imagem
+        if (article.image && !article.image.startsWith('data:')) {
+            img.src = article.image;
+            img.onerror = () => {
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"%3E%3Crect width="400" height="200" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E' + encodeURIComponent(article.source.substring(0, 2)) + '%3C/text%3E%3C/svg%3E';
+            };
+        } else {
+            img.src = article.image;
+        }
+        
+        title.textContent = article.title;
+        source.textContent = article.source;
+        category.textContent = article.category;
+        category.className = `category-tag ${article.category}-tag`;
+    },
+    
+    showSkeletons(count) {
+        for (let i = 0; i < count; i++) {
+            const skeleton = document.createElement('div');
+            skeleton.className = 'card skeleton loading-shimmer';
+            skeleton.innerHTML = `
+                <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
+                <div class="card-text">
+                    <div class="card-title loading-shimmer"></div>
+                    <div class="card-meta">
+                        <span class="loading-shimmer"></span>
+                        <span class="loading-shimmer"></span>
+                    </div>
+                </div>
+            `;
+            this.container.appendChild(skeleton);
+        }
+    },
+    
+    prefetchImages(articles) {
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            articles.forEach(article => {
+                if (article.image && !article.image.startsWith('data:')) {
+                    const img = new Image();
+                    img.dataset.src = article.image;
+                    observer.observe(img);
+                }
+            });
+        }
+    },
+    
+    openNews(article) {
+        // Gerar URL otimizada
+        const slug = article.title
+            .toLowerCase()
+            .replace(/[^\w\s]/g, '')
+            .replace(/\s+/g, '-')
+            .substring(0, 60);
+        
+        const url = `leitura.html?n=${article.id}&t=${slug}&s=${article.sourceId}`;
+        
+        // Salvar no sessionStorage para acesso rápido
+        sessionStorage.setItem('currentNews', JSON.stringify(article));
+        
+        // Navegar com transição
+        document.body.style.opacity = '0.7';
+        setTimeout(() => {
+            window.location.href = url;
+        }, 150);
+    },
+    
+    showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+};
+
+// ========== FILTRAGEM E BUSCA ==========
+
+const filterNews = () => {
+    let filtered = Array.from(state.news.values());
+    
+    // Filtrar por categoria
+    if (state.activeCategory !== 'todos') {
+        filtered = filtered.filter(article => article.category === state.activeCategory);
     }
     
-    c.dataset.date = article.date;
-}
+    // Filtrar por busca
+    if (state.searchQuery.trim()) {
+        const query = state.searchQuery.toLowerCase();
+        filtered = filtered.filter(article =>
+            article.title.toLowerCase().includes(query) ||
+            article.excerpt.toLowerCase().includes(query) ||
+            article.source.toLowerCase().includes(query)
+        );
+    }
+    
+    // Ordenar por data e prioridade
+    filtered.sort((a, b) => {
+        if (a.priority !== b.priority) return b.priority - a.priority;
+        return b.timestamp - a.timestamp;
+    });
+    
+    state.filteredNews = filtered;
+    return filtered;
+};
 
 // ========== CARREGAMENTO DE NOTÍCIAS ==========
 
-async function processSourceArticles(source, articles) {
-    const newArticles = [];
+const loadNews = async (initial = false) => {
+    if (state.isLoading || (!initial && !state.hasMore)) return;
     
-    for (const article of articles) {
-        const hash = generateNewsHash(article, source.name);
-        
-        if (hashes.has(hash)) continue;
-        
-        hashes.add(hash);
-        
-        const newsItem = {
-            title: article.title.rendered || article.title,
-            content: article.content.rendered || article.content || '',
-            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                   article.jetpack_featured_media_url ||
-                   article.thumbnail_url ||
-                   "https://via.placeholder.com/300x200",
-            source: source.name,
-            date: article.date || article.modified || new Date().toISOString(),
-            link: article.link || `https://${source.name.toLowerCase().replace(/\s/g, '')}.co.mz`,
-            hash: hash
-        };
-        
-        // Salvar no cache imediatamente
-        saveToCache(newsItem);
-        
-        newArticles.push(newsItem);
+    state.isLoading = true;
+    
+    if (initial) {
+        renderer.showSkeletons(6);
+        state.page = 1;
+        state.hasMore = true;
+        state.news.clear();
     }
-    
-    newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    for (const newsItem of newArticles) {
-        news.push(newsItem);
-        filteredNews.push(newsItem);
-        
-        renderSingleNews(newsItem);
-        
-        await new Promise(resolve => setTimeout(resolve, 30));
-    }
-    
-    return newArticles.length;
-}
-
-async function loadSource(source) {
-    if (!source.hasMore || source.isFetching) return 0;
-    
-    source.isFetching = true;
-    let loadedCount = 0;
     
     try {
-        const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}`;
-        const response = await fetch(url, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            mode: 'cors'
+        // Carregar fontes prioritárias primeiro
+        const prioritySources = NEWS_SOURCES.filter(s => s.priority === 1);
+        const otherSources = NEWS_SOURCES.filter(s => s.priority > 1);
+        
+        const [priorityResults, otherResults] = await Promise.all([
+            fetchParallel(prioritySources),
+            fetchParallel(otherSources)
+        ]);
+        
+        const allArticles = [];
+        
+        // Processar resultados prioritários primeiro
+        priorityResults.forEach(result => {
+            if (result.status === 'fulfilled' && result.value.data.length > 0) {
+                const source = NEWS_SOURCES.find(s => s.id === result.value.source);
+                const processed = processArticles(result.value.data, source);
+                allArticles.push(...processed);
+            }
         });
         
-        if (!response.ok) {
-            if (response.status === 400 || response.status === 404) {
-                source.hasMore = false;
+        // Processar outras fontes
+        otherResults.forEach(result => {
+            if (result.status === 'fulfilled' && result.value.data.length > 0) {
+                const source = NEWS_SOURCES.find(s => s.id === result.value.source);
+                const processed = processArticles(result.value.data, source);
+                allArticles.push(...processed);
             }
-            throw new Error(`HTTP ${response.status} ao buscar ${source.name}`);
+        });
+        
+        // Adicionar ao estado
+        allArticles.forEach(article => {
+            if (!state.news.has(article.id)) {
+                state.news.set(article.id, article);
+            }
+        });
+        
+        // Atualizar cache
+        await cacheManager.saveNews(allArticles);
+        
+        // Renderizar
+        const filtered = filterNews();
+        renderer.renderNews(filtered.slice(0, initial ? 20 : filtered.length), initial);
+        
+        state.page++;
+        state.hasMore = allArticles.length >= CONFIG.BATCH_SIZE;
+        
+        if (initial) {
+            // Pré-carregar próximas notícias
+            setTimeout(() => cacheManager.prefetchNews(), 1000);
         }
-        
-        const data = await response.json();
-        
-        if (data.length === 0) {
-            source.hasMore = false;
-            return 0;
-        }
-        
-        source.currentPage++;
-        loadedCount = await processSourceArticles(source, data);
         
     } catch (error) {
-        console.error(`Erro ao carregar ${source.name}:`, error);
-        source.hasMore = false;
+        console.error('Erro ao carregar notícias:', error);
+        renderer.showToast('Erro ao carregar notícias', 'error');
     } finally {
-        source.isFetching = false;
-        checkAllSourcesLoaded();
+        state.isLoading = false;
+        document.getElementById('infinite-loader').style.display = 'none';
     }
-    
-    return loadedCount;
-}
+};
 
-async function loadAllSources() {
-    news = [];
-    filteredNews = [];
-    hashes.clear();
-    allSourcesLoaded = false;
-    
-    container.innerHTML = '';
-    
-    sources.forEach(source => {
-        source.currentPage = 1;
-        source.hasMore = true;
-        source.isFetching = false;
+// ========== EVENT HANDLERS OTIMIZADOS ==========
+
+const setupEventListeners = () => {
+    // Sidebar
+    document.getElementById('menu-btn').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').style.display = 'block';
     });
     
-    const promises = sources.map(source => loadSource(source));
-    const results = await Promise.allSettled(promises);
+    document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
+    document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
     
-    // Verificar se alguma fonte conseguiu carregar
-    const anyLoaded = results.some(r => r.status === 'fulfilled' && r.value > 0);
-    
-    if (!anyLoaded && news.length === 0) {
-        showNoNewsMessage();
-    }
-    
-    reorderAllNewsByDate();
-    
-    // Mostrar feedback de atualização
-    showRefreshFeedback(news.length);
-}
-
-function showNoNewsMessage() {
-    const errorHTML = `
-        <div class="error-message">
-            <i class="fas fa-newspaper"></i>
-            <h3>Nenhuma notícia disponível no momento</h3>
-            <p>Pode ser um problema temporário com as fontes de notícias.</p>
-            <p>Tente:</p>
-            <ul style="text-align: left; display: inline-block;">
-                <li>Verificar sua conexão com a internet</li>
-                <li>Recarregar a página</li>
-                <li>Acessar mais tarde</li>
-            </ul>
-            <a href="javascript:location.reload()"><i class="fas fa-sync-alt"></i> Recarregar Página</a>
-        </div>
-    `;
-    container.innerHTML = errorHTML;
-}
-
-function showRefreshFeedback(count) {
-    const feedback = document.createElement('div');
-    feedback.className = 'refresh-feedback';
-    feedback.innerHTML = `<i class="fas fa-check-circle"></i> ${count} notícias carregadas`;
-    
-    document.body.appendChild(feedback);
-    feedback.style.display = 'block';
-    
-    setTimeout(() => {
-        feedback.style.opacity = '0';
-        feedback.style.transform = 'translateX(100%)';
-        setTimeout(() => feedback.remove(), 300);
-    }, 2000);
-}
-
-function reorderAllNewsByDate() {
-    news.sort((a, b) => new Date(b.date) - new Date(a.date));
-    filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    container.innerHTML = '';
-    filteredNews.forEach(article => {
-        renderSingleNews(article);
+    // Categorias
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            state.activeCategory = e.target.dataset.category;
+            filterNews();
+            renderer.renderNews(state.filteredNews, true);
+        });
     });
-}
-
-async function loadMoreNews() {
-    if (isLoadingMore || allSourcesLoaded) return;
     
-    isLoadingMore = true;
-    infiniteLoader.style.display = 'block';
+    // Busca
+    const searchInput = document.getElementById('search-input');
+    const handleSearch = debounce((e) => {
+        state.searchQuery = e.target.value;
+        filterNews();
+        renderer.renderNews(state.filteredNews, true);
+    }, CONFIG.DEBOUNCE_DELAY);
     
-    let anySourceHasMore = false;
-    const promises = [];
+    searchInput.addEventListener('input', handleSearch);
     
-    for (const source of sources) {
-        if (source.hasMore) {
-            promises.push(loadSource(source));
-            
-            if (source.hasMore) {
-                anySourceHasMore = true;
-            }
+    // Refresh
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+        loadNews(true);
+        renderer.showToast('Atualizando notícias...', 'info');
+    });
+    
+    // Scroll infinito
+    const handleScroll = throttle(() => {
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const threshold = document.body.offsetHeight - CONFIG.SCROLL_THRESHOLD;
+        
+        if (scrollPosition >= threshold && !state.isLoading && state.hasMore) {
+            document.getElementById('infinite-loader').style.display = 'block';
+            loadNews(false);
         }
-    }
+    }, CONFIG.THROTTLE_DELAY);
     
-    await Promise.allSettled(promises);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
-    allSourcesLoaded = !anySourceHasMore;
+    // Offline/online
+    window.addEventListener('online', () => {
+        state.offline = false;
+        renderer.showToast('Conexão restaurada', 'success');
+        if (state.news.size === 0) loadNews(true);
+    });
     
-    isLoadingMore = false;
-    infiniteLoader.style.display = 'none';
-}
+    window.addEventListener('offline', () => {
+        state.offline = true;
+        renderer.showToast('Modo offline ativado', 'error');
+    });
+};
 
-function checkAllSourcesLoaded() {
-    allSourcesLoaded = sources.every(source => !source.hasMore);
+const closeSidebar = () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').style.display = 'none';
+};
+
+// ========== INICIALIZAÇÃO RÁPIDA ==========
+
+const init = async () => {
+    // 1. Inicializar renderizador
+    renderer.init();
     
-    if (allSourcesLoaded) {
-        infiniteLoader.style.display = 'none';
-    }
-}
-
-function manualRefresh() {
-    container.innerHTML = '';
-    closeInfoModal();
-    loadAllSources();
-}
-
-// ========== INICIALIZAÇÃO ==========
-
-// Carregar cache existente primeiro
-loadExistingCache();
-
-// Carregar notícias
-loadAllSources();
-
-// [Restante do código permanece igual...]
-
-// Atalhos de teclado
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeInfoModal();
-        closeSidebar();
-    }
+    // 2. Inicializar IndexedDB (em paralelo)
+    const dbPromise = initDB();
     
-    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault();
-        document.getElementById("search-input").focus();
-    }
-    
-    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-        e.preventDefault();
-        manualRefresh();
-    }
-    
-    // Atalho para limpar cache (Shift+Ctrl+L)
-    if (e.shiftKey && (e.ctrlKey || e.metaKey) && e.key === 'L') {
-        e.preventDefault();
-        if (confirm('Deseja limpar o cache de notícias?')) {
-            localStorage.removeItem('cached_news');
-            newsCache.clear();
-            loadAllSources();
+    // 3. Carregar notícias do cache primeiro
+    try {
+        const cachedNews = JSON.parse(localStorage.getItem('last_news') || '[]');
+        if (cachedNews.length > 0) {
+            cachedNews.forEach(article => state.news.set(article.id, article));
+            const filtered = filterNews();
+            renderer.renderNews(filtered.slice(0, 10));
+            renderer.showToast('Carregado do cache', 'info');
         }
+    } catch (e) {
+        console.warn('Erro ao carregar cache:', e);
     }
-});
+    
+    // 4. Configurar event listeners
+    setupEventListeners();
+    
+    // 5. Aguardar IndexedDB e carregar notícias
+    await dbPromise;
+    
+    // 6. Carregar notícias novas
+    if (navigator.onLine) {
+        setTimeout(() => loadNews(true), 100);
+    }
+    
+    // 7. Otimizações de performance
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(console.warn);
+    }
+    
+    // 8. Prefetch crítico
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = 'leitura.html';
+    document.head.appendChild(link);
+    
+    console.log('Aplicação inicializada com alta performance');
+};
 
-console.log('Página principal carregada com sucesso! Cache:', newsCache.size, 'notícias');
+// Iniciar imediatamente
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// Web Worker para processamento em background
+if (window.Worker) {
+    const worker = new Worker('news-worker.js');
+    worker.onmessage = (e) => {
+        console.log('Worker processou:', e.data.length, 'notícias');
+    };
+}
+
+// Exportar para debug
+window.appState = state;
 </script>
 </body>
 </html>
