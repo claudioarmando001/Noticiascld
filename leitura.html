@@ -7,7 +7,82 @@
 <meta name="description" content="Leia notícias completas de Moçambique">
 <meta name="robots" content="index, follow">
 <style>
-/* [CSS anterior permanece igual] */
+/* [Todo o CSS anterior permanece igual] */
+/* Adicionar estilos para cache status */
+.cache-status {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 12px;
+    color: #666;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.cache-status.online {
+    border-left: 4px solid #28a745;
+}
+
+.cache-status.offline {
+    border-left: 4px solid #dc3545;
+}
+
+.cache-status i {
+    margin-right: 5px;
+}
+
+.news-actions {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    background: #e8f0fe;
+    border: 1px solid #dce6f5;
+    border-radius: 6px;
+    color: #1a73e8;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.action-btn:hover {
+    background: #1a73e8;
+    color: white;
+}
+
+.action-btn.save {
+    background: #e8f5e8;
+    border-color: #d4edda;
+    color: #28a745;
+}
+
+.action-btn.save:hover {
+    background: #28a745;
+    color: white;
+}
+
+.action-btn.share {
+    background: #f0e8fe;
+    border-color: #e6dcf5;
+    color: #6f42c1;
+}
+
+.action-btn.share:hover {
+    background: #6f42c1;
+    color: white;
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -38,24 +113,28 @@ Notícias CLD
 
 <div id="error-message" class="error-message" style="display:none;">
     <h2><i class="fas fa-exclamation-triangle"></i> Notícia não encontrada</h2>
-    <p>A notícia que você está procurando não foi encontrada ou pode ter sido removida.</p>
-    <div id="fallback-options" style="margin-top:20px;display:none;">
-        <p><strong>Tentativas de recuperação:</strong></p>
-        <button id="try-cache-btn" class="share-btn" style="background:#1a73e8;margin:5px;">
-            <i class="fas fa-database"></i> Tentar cache local
-        </button>
-        <button id="try-search-btn" class="share-btn" style="background:#28a745;margin:5px;">
-            <i class="fas fa-search"></i> Buscar por título
-        </button>
+    <p>A notícia que você está procurando não foi encontrada.</p>
+    <p><small>Possíveis razões:</small></p>
+    <ul style="text-align: left; display: inline-block;">
+        <li>A notícia pode ter sido removida</li>
+        <li>O cache foi limpo</li>
+        <li>Problema temporário de conexão</li>
+    </ul>
+    <div style="margin-top: 20px;">
+        <a href="javascript:location.reload()"><i class="fas fa-sync-alt"></i> Tentar novamente</a>
+        <a href="/" style="margin-left: 10px; background: #6c757d;"><i class="fas fa-home"></i> Voltar para notícias</a>
     </div>
-    <a href="/" style="display:inline-block;margin-top:20px;padding:10px 20px;background:#1a73e8;color:white;text-decoration:none;border-radius:8px;font-weight:bold;">
-        ← Voltar para a lista de notícias
-    </a>
 </div>
 
 <div id="news-container" style="display:none;">
     <!-- Conteúdo da notícia será carregado aqui -->
 </div>
+</div>
+
+<!-- Cache Status -->
+<div id="cache-status" class="cache-status">
+    <i class="fas fa-database"></i>
+    <span id="cache-status-text">Carregando...</span>
 </div>
 
 <script>
@@ -70,40 +149,18 @@ const CATEGORIES = {
     'tecnologia': { name: 'Tecnologia', class: 'tech-tag' }
 };
 
-// Fontes de API para fallback
-const NEWS_SOURCES = [
-    { name: "O País", baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts" },
-    { name: "Jornal Notícias", baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts" },
-    { name: "Canal de Moçambique", baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts" },
-    { name: "Time de Todos", baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts" },
-    { name: "Carta de Moçambique", baseUrl: "https://cartamz.com/wp-json/wp/v2/posts" },
-    { name: "Savana", baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts" },
-    { name: "Integrity", baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts" }
-];
+// Cache local
+let newsCache = new Map();
 
 // ========== FUNÇÕES UTILITÁRIAS ==========
 
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     return {
-        n: params.get('n'), // ID curto da notícia
+        n: params.get('n'), // ID da notícia
         t: params.get('t'), // Título (para fallback)
-        s: params.get('s'), // Fonte (para fallback)
-        original: params.get('original') // Link original direto
+        s: params.get('s')  // Fonte (para fallback)
     };
-}
-
-// Função de hash consistente com o primeiro arquivo
-function generateConsistentHash(link, title) {
-    if (!link) return null;
-    const hashString = (link || '') + (title || '');
-    let hash = 0;
-    for (let i = 0; i < hashString.length; i++) {
-        const char = hashString.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return Math.abs(hash).toString(36).substring(0, 12);
 }
 
 function formatDate(d) {
@@ -122,24 +179,191 @@ function formatDate(d) {
     }
 }
 
-function determineCategory(title, content) {
-    const text = ((title || '') + ' ' + (content || '')).toLowerCase();
+function determineCategory(title) {
+    const text = title.toLowerCase();
     
-    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta')) {
+    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta') || text.includes('esporte')) {
         return 'esportes';
-    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento')) {
+    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento') || text.includes('finança')) {
         return 'economia';
-    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro')) {
+    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro') || text.includes('parlamento')) {
         return 'política';
-    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro')) {
+    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro') || text.includes('doença')) {
         return 'saúde';
-    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo')) {
+    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo') || text.includes('smartphone')) {
         return 'tecnologia';
-    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro')) {
+    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro') || text.includes('dança')) {
         return 'cultura';
     } else {
         return 'sociedade';
     }
+}
+
+// ========== FUNÇÕES DE CACHE ==========
+
+// Inicializar cache
+function initializeCache() {
+    try {
+        const cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
+        cachedNews.forEach(hash => {
+            try {
+                const cachedItem = localStorage.getItem(`news_${hash}`);
+                if (cachedItem) {
+                    const article = JSON.parse(cachedItem);
+                    newsCache.set(hash, article);
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar do cache:', hash, e);
+            }
+        });
+        updateCacheStatus();
+        console.log('Cache inicializado:', newsCache.size, 'notícias');
+    } catch (e) {
+        console.error('Erro ao inicializar cache:', e);
+    }
+}
+
+// Buscar notícia no cache
+function findNewsInCache(newsId) {
+    // Buscar no Map primeiro (mais rápido)
+    if (newsCache.has(newsId)) {
+        console.log('Notícia encontrada no Map cache:', newsId);
+        return newsCache.get(newsId);
+    }
+    
+    // Tentar buscar no localStorage
+    try {
+        const cached = localStorage.getItem(`news_${newsId}`);
+        if (cached) {
+            const article = JSON.parse(cached);
+            newsCache.set(newsId, article); // Adicionar ao Map para próximas buscas
+            console.log('Notícia encontrada no localStorage:', newsId);
+            return article;
+        }
+    } catch (e) {
+        console.error('Erro ao buscar no localStorage:', e);
+    }
+    
+    return null;
+}
+
+// Salvar notícia no cache
+function saveToCache(article) {
+    try {
+        const cacheKey = `news_${article.id}`;
+        localStorage.setItem(cacheKey, JSON.stringify(article));
+        newsCache.set(article.id, article);
+        
+        // Adicionar à lista de cache
+        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
+        if (!cachedNews.includes(article.id)) {
+            cachedNews.push(article.id);
+            if (cachedNews.length > 300) {
+                const removed = cachedNews.shift();
+                localStorage.removeItem(`news_${removed}`);
+                newsCache.delete(removed);
+            }
+            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
+        }
+        
+        updateCacheStatus();
+        console.log('Notícia salva no cache:', article.id);
+        return true;
+    } catch (e) {
+        console.error('Erro ao salvar no cache:', e);
+        return false;
+    }
+}
+
+// Atualizar status do cache
+function updateCacheStatus() {
+    const statusEl = document.getElementById('cache-status');
+    const textEl = document.getElementById('cache-status-text');
+    
+    if (newsCache.size > 0) {
+        statusEl.className = 'cache-status online';
+        textEl.textContent = `${newsCache.size} notícias em cache`;
+        statusEl.style.display = 'block';
+    } else {
+        statusEl.style.display = 'none';
+    }
+}
+
+// ========== FUNÇÕES DE FALLBACK ==========
+
+// Tentar buscar notícia de fontes alternativas
+async function tryFallbackSources(newsId, titleHint, sourceHint) {
+    console.log('Tentando fontes fallback...');
+    
+    // Lista de endpoints para tentar
+    const fallbackEndpoints = [
+        'https://www.opais.co.mz/wp-json/wp/v2/posts?per_page=20&_embed',
+        'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts?per_page=20&_embed',
+        'https://cartamz.com/wp-json/wp/v2/posts?per_page=20&_embed',
+        'https://savana.co.mz/wp-json/wp/v2/posts?per_page=20&_embed'
+    ];
+    
+    for (const endpoint of fallbackEndpoints) {
+        try {
+            console.log('Tentando endpoint:', endpoint);
+            const response = await fetch(endpoint, { timeout: 5000 });
+            
+            if (!response.ok) continue;
+            
+            const articles = await response.json();
+            
+            // Tentar encontrar por título similar
+            if (titleHint) {
+                const searchSlug = decodeURIComponent(titleHint).toLowerCase();
+                
+                for (const article of articles) {
+                    const articleTitle = article.title.rendered.toLowerCase();
+                    const articleSlug = articleTitle
+                        .replace(/[^\w\s]/g, '')
+                        .replace(/\s+/g, '-');
+                    
+                    // Verificar similaridade
+                    if (articleSlug.includes(searchSlug) || searchSlug.includes(articleSlug)) {
+                        console.log('Encontrada por título similar:', article.title.rendered);
+                        return {
+                            id: newsId,
+                            title: article.title.rendered,
+                            content: article.content.rendered,
+                            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                                   article.jetpack_featured_media_url ||
+                                   "https://via.placeholder.com/800x400",
+                            source: sourceHint || 'Fonte Desconhecida',
+                            date: article.date || new Date().toISOString(),
+                            link: article.link
+                        };
+                    }
+                }
+            }
+            
+            // Tentar encontrar por data mais recente
+            if (articles.length > 0) {
+                const recentArticle = articles[0];
+                console.log('Retornando artigo mais recente como fallback');
+                return {
+                    id: newsId,
+                    title: recentArticle.title.rendered,
+                    content: recentArticle.content.rendered,
+                    image: recentArticle._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                           recentArticle.jetpack_featured_media_url ||
+                           "https://via.placeholder.com/800x400",
+                    source: sourceHint || 'Fonte Desconhecida',
+                    date: recentArticle.date,
+                    link: recentArticle.link
+                };
+            }
+            
+        } catch (error) {
+            console.warn('Erro no endpoint fallback:', endpoint, error);
+            continue;
+        }
+    }
+    
+    return null;
 }
 
 // ========== FUNÇÕES DE INTERFACE ==========
@@ -152,233 +376,71 @@ function goBack() {
     }
 }
 
-// [Funções de compartilhamento permanecem iguais]
-
-// ========== BUSCA DE NOTÍCIAS - MELHORADA ==========
-
-// Buscar notícia no cache local - MELHORADO
-function findNewsInCache(newsId) {
-    try {
-        // 1. Buscar diretamente pelo hash
-        const cached = localStorage.getItem(`news_${newsId}`);
-        if (cached) {
-            return JSON.parse(cached);
-        }
+function copyLink() {
+    const url = window.location.href;
+    const btn = document.getElementById('copy-link-btn');
+    
+    navigator.clipboard.writeText(url).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+        btn.classList.add('copied');
         
-        // 2. Buscar em todas as notícias do cache
-        const allCached = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        
-        // Tentar encontrar por similaridade de hash (caso o hash tenha sido truncado)
-        for (const hash of allCached) {
-            if (hash.includes(newsId) || newsId.includes(hash)) {
-                const item = localStorage.getItem(`news_${hash}`);
-                if (item) {
-                    return JSON.parse(item);
-                }
-            }
-        }
-        
-        // 3. Buscar por título se fornecido na URL
-        const params = getUrlParams();
-        if (params.t) {
-            const searchTitle = decodeURIComponent(params.t).toLowerCase();
-            for (const hash of allCached) {
-                const item = localStorage.getItem(`news_${hash}`);
-                if (item) {
-                    const newsItem = JSON.parse(item);
-                    if (newsItem.title && newsItem.title.toLowerCase().includes(searchTitle)) {
-                        return newsItem;
-                    }
-                }
-            }
-        }
-    } catch (e) {
-        console.error('Erro ao buscar no cache:', e);
-    }
-    
-    return null;
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(err => {
+        console.error('Erro ao copiar:', err);
+        alert('Não foi possível copiar o link');
+    });
 }
 
-// Buscar notícia nas APIs (fallback) - MELHORADO
-async function fetchNewsFromAPI(newsId, titleHint, sourceHint) {
-    console.log(`Buscando notícia: ID=${newsId}, Título=${titleHint}, Fonte=${sourceHint}`);
-    
-    // Se temos o título, tentar buscar diretamente por similaridade
-    let sourcesToTry = NEWS_SOURCES;
-    
-    if (sourceHint) {
-        // Tentar encontrar fonte correspondente
-        const sourceMatch = NEWS_SOURCES.find(s => 
-            s.name.toLowerCase().includes(sourceHint.toLowerCase()) ||
-            sourceHint.toLowerCase().includes(s.name.toLowerCase())
-        );
-        if (sourceMatch) {
-            sourcesToTry = [sourceMatch, ...NEWS_SOURCES.filter(s => s !== sourceMatch)];
-        }
-    }
-    
-    for (const source of sourcesToTry) {
-        try {
-            console.log(`Tentando fonte: ${source.name}`);
-            
-            // Tentar buscar algumas notícias desta fonte
-            const response = await fetchWithTimeout(
-                `${source.baseUrl}?_embed&per_page=20&page=1&t=${Date.now()}`, 
-                5000
-            );
-            
-            if (!response.ok) {
-                console.warn(`Fonte ${source.name} não respondeu:`, response.status);
-                continue;
-            }
-            
-            const articles = await response.json();
-            
-            // Procurar por notícia com hash correspondente
-            for (const article of articles) {
-                if (!article || !article.link) continue;
-                
-                // Gerar hash da mesma forma que no primeiro arquivo
-                const articleHash = generateConsistentHash(article.link, article.title?.rendered);
-                
-                if (articleHash === newsId) {
-                    console.log(`Notícia encontrada por hash em ${source.name}`);
-                    return {
-                        id: newsId,
-                        title: article.title?.rendered || article.title || '',
-                        content: article.content?.rendered || article.content || '',
-                        image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                               article.jetpack_featured_media_url ||
-                               article.featured_media_url ||
-                               "https://via.placeholder.com/300x200",
-                        source: source.name,
-                        date: article.date || article.modified || new Date().toISOString(),
-                        link: article.link || article.guid?.rendered || ''
-                    };
-                }
-            }
-            
-            // Se temos título, tentar buscar por título similar
-            if (titleHint) {
-                const searchTitle = decodeURIComponent(titleHint).toLowerCase().replace(/-/g, ' ');
-                console.log(`Buscando por título: "${searchTitle}"`);
-                
-                for (const article of articles) {
-                    if (!article || !article.title) continue;
-                    
-                    const articleTitle = article.title.rendered || article.title || '';
-                    
-                    if (articleTitle.toLowerCase().includes(searchTitle) || 
-                        searchTitle.includes(articleTitle.toLowerCase().substring(0, 30))) {
-                        
-                        const articleHash = generateConsistentHash(article.link, articleTitle);
-                        console.log(`Notícia encontrada por título em ${source.name}`);
-                        
-                        return {
-                            id: articleHash,
-                            title: articleTitle,
-                            content: article.content?.rendered || article.content || '',
-                            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                                   article.jetpack_featured_media_url ||
-                                   article.featured_media_url ||
-                                   "https://via.placeholder.com/300x200",
-                            source: source.name,
-                            date: article.date || article.modified || new Date().toISOString(),
-                            link: article.link || article.guid?.rendered || ''
-                        };
-                    }
-                }
-            }
-        } catch (error) {
-            console.warn(`Erro ao buscar de ${source.name}:`, error);
-            continue;
-        }
-    }
-    
-    return null;
+function shareOnFacebook() {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}`, '_blank');
 }
 
-// Buscar notícia em múltiplas páginas da API
-async function searchNewsInAllPages(source, searchTitle) {
-    if (!searchTitle) return null;
+function shareOnTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    window.open(`https://twitter.com/intent/tweet?text=${title}&url=${url}`, '_blank');
+}
+
+function shareOnWhatsApp() {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    window.open(`https://wa.me/?text=${title}%20-%20${url}`, '_blank');
+}
+
+function saveForOffline() {
+    const article = window.currentArticle;
+    if (!article) return;
     
-    try {
-        // Buscar nas primeiras 3 páginas
-        for (let page = 1; page <= 3; page++) {
-            const response = await fetchWithTimeout(
-                `${source.baseUrl}?_embed&per_page=20&page=${page}`, 
-                4000
-            );
-            
-            if (!response.ok) break;
-            
-            const articles = await response.json();
-            if (articles.length === 0) break;
-            
-            for (const article of articles) {
-                const articleTitle = article.title?.rendered || article.title || '';
-                if (articleTitle.toLowerCase().includes(searchTitle)) {
-                    const articleHash = generateConsistentHash(article.link, articleTitle);
-                    return {
-                        id: articleHash,
-                        title: articleTitle,
-                        content: article.content?.rendered || article.content || '',
-                        image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                               article.jetpack_featured_media_url ||
-                               article.featured_media_url ||
-                               "https://via.placeholder.com/300x200",
-                        source: source.name,
-                        date: article.date || article.modified || new Date().toISOString(),
-                        link: article.link || article.guid?.rendered || ''
-                    };
-                }
-            }
-        }
-    } catch (error) {
-        console.warn(`Erro na busca profunda em ${source.name}:`, error);
+    if (saveToCache(article)) {
+        alert('Notícia salva para leitura offline!');
+    } else {
+        alert('Não foi possível salvar a notícia.');
     }
-    
-    return null;
 }
 
-function fetchWithTimeout(url, timeout = 5000) {
-    return Promise.race([
-        fetch(url),
-        new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), timeout)
-        )
-    ]);
-}
-
-// ========== RENDERIZAÇÃO - MELHORADA ==========
+// ========== RENDERIZAÇÃO ==========
 
 function renderNews(article) {
-    if (!article) {
-        showError();
-        return;
-    }
+    // Salvar referência global
+    window.currentArticle = article;
     
-    const category = determineCategory(article.title, article.content);
+    const category = determineCategory(article.title);
     
     // Atualizar título da página
     document.title = `${article.title.substring(0, 60)}${article.title.length > 60 ? '...' : ''} | Notícias CLD`;
     
     // Atualizar meta description
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc && article.content) {
+    if (metaDesc) {
         const cleanContent = article.content.replace(/<[^>]*>/g, '').substring(0, 160);
         metaDesc.content = cleanContent;
     }
-    
-    // Limpar e preparar conteúdo HTML
-    let cleanContent = article.content || '';
-    // Remover elementos problemáticos mas manter formatação básica
-    cleanContent = cleanContent
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-        .replace(/onclick="[^"]*"/gi, '')
-        .replace(/onload="[^"]*"/gi, '')
-        .replace(/onerror="[^"]*"/gi, '');
     
     const newsHTML = `
         <div class="news-header">
@@ -392,6 +454,15 @@ function renderNews(article) {
             </div>
         </div>
         
+        <div class="news-actions">
+            <button class="action-btn save" onclick="saveForOffline()">
+                <i class="fas fa-download"></i> Salvar Offline
+            </button>
+            <button class="action-btn" onclick="window.open('${article.link}', '_blank')">
+                <i class="fas fa-external-link-alt"></i> Ver Original
+            </button>
+        </div>
+        
         ${article.image && !article.image.includes('placeholder.com') ? 
             `<img src="${article.image}" class="news-image" alt="${article.title}" 
                  loading="lazy" 
@@ -401,7 +472,7 @@ function renderNews(article) {
         }
         
         <div class="news-body">
-            ${cleanContent || '<p style="text-align:center;color:#666;font-style:italic;">Conteúdo não disponível.</p>'}
+            ${article.content || '<p>Conteúdo não disponível.</p>'}
         </div>
         
         <div class="share-section">
@@ -427,6 +498,7 @@ function renderNews(article) {
             <div class="footer-links">
                 <a href="/"><i class="fas fa-home"></i> Página Inicial</a>
                 <a href="javascript:void(0)" onclick="location.reload()"><i class="fas fa-sync-alt"></i> Recarregar</a>
+                <a href="javascript:void(0)" onclick="goBack()"><i class="fas fa-arrow-left"></i> Voltar</a>
             </div>
         </div>
     `;
@@ -436,52 +508,18 @@ function renderNews(article) {
     document.getElementById('news-container').innerHTML = newsHTML;
     document.getElementById('news-container').style.display = 'block';
     
-    // Salvar no cache para acesso futuro
+    // Adicionar notícia ao cache
     saveToCache(article);
+    
+    // Adicionar analytics
+    trackNewsView(article.id);
 }
 
-function saveToCache(article) {
-    try {
-        if (!article.id) {
-            article.id = generateConsistentHash(article.link, article.title);
-        }
-        
-        if (article.id) {
-            localStorage.setItem(`news_${article.id}`, JSON.stringify(article));
-            
-            // Adicionar à lista de cache
-            let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-            if (!cachedNews.includes(article.id)) {
-                cachedNews.push(article.id);
-                if (cachedNews.length > 200) {
-                    cachedNews.shift();
-                }
-                localStorage.setItem('cached_news', JSON.stringify(cachedNews));
-            }
-        }
-    } catch (e) {
-        console.warn('Não foi possível salvar no cache:', e);
-    }
-}
-
-// Mostrar erro com opções de fallback
+// Mostrar erro
 function showError() {
     document.getElementById('skeleton-loader').style.display = 'none';
     document.getElementById('loader').style.display = 'none';
     document.getElementById('error-message').style.display = 'block';
-    
-    const params = getUrlParams();
-    if (params.t || params.s) {
-        document.getElementById('fallback-options').style.display = 'block';
-        
-        document.getElementById('try-cache-btn').onclick = async () => {
-            await tryCacheFallback();
-        };
-        
-        document.getElementById('try-search-btn').onclick = async () => {
-            await trySearchFallback();
-        };
-    }
 }
 
 // Mostrar loader
@@ -490,68 +528,19 @@ function showLoader() {
     document.getElementById('loader').style.display = 'block';
 }
 
-// ========== FALLBACKS MELHORADOS ==========
-
-async function tryCacheFallback() {
-    const params = getUrlParams();
-    showLoader();
-    
-    // Buscar em todo o cache por similaridade
+// Rastrear visualização
+function trackNewsView(newsId) {
     try {
-        const allCached = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        let foundArticle = null;
-        
-        if (params.t) {
-            const searchTitle = decodeURIComponent(params.t).toLowerCase();
-            for (const hash of allCached) {
-                const item = localStorage.getItem(`news_${hash}`);
-                if (item) {
-                    const newsItem = JSON.parse(item);
-                    if (newsItem.title && newsItem.title.toLowerCase().includes(searchTitle)) {
-                        foundArticle = newsItem;
-                        break;
-                    }
-                }
+        let viewedNews = JSON.parse(localStorage.getItem('viewed_news') || '[]');
+        if (!viewedNews.includes(newsId)) {
+            viewedNews.push(newsId);
+            if (viewedNews.length > 100) {
+                viewedNews.shift();
             }
-        }
-        
-        if (foundArticle) {
-            renderNews(foundArticle);
-        } else {
-            document.getElementById('loader').style.display = 'none';
-            alert('Não foi encontrada no cache local.');
+            localStorage.setItem('viewed_news', JSON.stringify(viewedNews));
         }
     } catch (e) {
-        console.error('Erro no fallback do cache:', e);
-        document.getElementById('loader').style.display = 'none';
-    }
-}
-
-async function trySearchFallback() {
-    const params = getUrlParams();
-    showLoader();
-    
-    try {
-        const title = decodeURIComponent(params.t || '');
-        const source = decodeURIComponent(params.s || '');
-        
-        let foundArticle = null;
-        
-        // Tentar buscar em todas as fontes
-        for (const newsSource of NEWS_SOURCES) {
-            foundArticle = await searchNewsInAllPages(newsSource, title.toLowerCase());
-            if (foundArticle) break;
-        }
-        
-        if (foundArticle) {
-            renderNews(foundArticle);
-        } else {
-            document.getElementById('loader').style.display = 'none';
-            alert('Não foi possível encontrar a notícia nas fontes disponíveis.');
-        }
-    } catch (e) {
-        console.error('Erro no fallback de busca:', e);
-        document.getElementById('loader').style.display = 'none';
+        console.warn('Não foi possível rastrear visualização:', e);
     }
 }
 
@@ -559,55 +548,40 @@ async function trySearchFallback() {
 
 async function loadNews() {
     const params = getUrlParams();
-    console.log('Parâmetros da URL:', params);
+    console.log('Parâmetros:', params);
     
-    if (!params.n && !params.t && !params.original) {
-        console.error('Nenhum identificador de notícia fornecido');
+    if (!params.n) {
+        console.error('ID da notícia não fornecido');
         showError();
         return;
     }
     
-    // 1. Se tiver link original direto, tentar carregar diretamente
-    if (params.original) {
-        try {
-            const response = await fetchWithTimeout(decodeURIComponent(params.original), 5000);
-            if (response.ok) {
-                // Implementar parsing específico se necessário
-                console.log('Carregamento direto do link original');
-            }
-        } catch (e) {
-            console.warn('Erro ao carregar link original:', e);
-        }
+    // 1. Tentar encontrar no cache local
+    let article = findNewsInCache(params.n);
+    
+    if (article) {
+        console.log('Notícia encontrada no cache');
+        renderNews(article);
+        return;
     }
     
-    // 2. Tentar encontrar no cache local
-    if (params.n) {
-        let article = findNewsInCache(params.n);
-        
-        if (article) {
-            console.log('Notícia encontrada no cache:', article.title);
-            renderNews(article);
-            return;
-        }
-    }
-    
-    // 3. Mostrar loader enquanto busca na API
+    // 2. Mostrar loader
     showLoader();
     
-    // 4. Buscar na API
+    // 3. Tentar fallback
     try {
-        console.log('Buscando notícia na API...');
-        const article = await fetchNewsFromAPI(params.n, params.t, params.s);
+        console.log('Tentando fallback...');
+        article = await tryFallbackSources(params.n, params.t, params.s);
         
         if (article) {
-            console.log('Notícia encontrada na API:', article.title);
+            console.log('Notícia encontrada via fallback');
             renderNews(article);
         } else {
-            console.error('Notícia não encontrada na API');
+            console.error('Notícia não encontrada em nenhuma fonte');
             showError();
         }
     } catch (error) {
-        console.error('Erro ao buscar notícia:', error);
+        console.error('Erro no fallback:', error);
         showError();
     }
 }
@@ -615,6 +589,9 @@ async function loadNews() {
 // ========== INICIALIZAÇÃO ==========
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar cache
+    initializeCache();
+    
     // Verificar se há uma notícia no hash da URL
     const hash = window.location.hash.substring(1);
     if (hash && hash.startsWith('n=')) {
@@ -623,21 +600,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Carregar normalmente
-    loadNews();
+    // Verificar se estamos offline
+    if (!navigator.onLine) {
+        document.getElementById('cache-status').className = 'cache-status offline';
+        document.getElementById('cache-status-text').textContent = 'Modo offline';
+        document.getElementById('cache-status').style.display = 'block';
+    }
+    
+    // Carregar notícia
+    setTimeout(() => {
+        loadNews();
+    }, 100);
+});
+
+// Detectar mudanças de conexão
+window.addEventListener('online', () => {
+    document.getElementById('cache-status').className = 'cache-status online';
+    document.getElementById('cache-status-text').textContent = `${newsCache.size} notícias em cache`;
+});
+
+window.addEventListener('offline', () => {
+    document.getElementById('cache-status').className = 'cache-status offline';
+    document.getElementById('cache-status-text').textContent = 'Modo offline';
 });
 
 // Atalhos de teclado
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' || (e.key === 'ArrowLeft' && e.altKey)) {
         goBack();
     }
     if (e.key === 'r' && e.ctrlKey) {
         e.preventDefault();
         location.reload();
     }
-    if (e.key === 'ArrowLeft' && e.altKey) {
-        goBack();
+    if (e.key === 's' && e.ctrlKey) {
+        e.preventDefault();
+        saveForOffline();
     }
 });
 
