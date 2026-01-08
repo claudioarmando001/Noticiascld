@@ -184,7 +184,7 @@
             box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
         }
 
-        /* LISTA */
+        /* LISTA - MANTENDO APARÊNCIA ORIGINAL */
         #news-container {
             max-width: 950px;
             margin: auto;
@@ -204,64 +204,58 @@
             transition: .2s;
             animation: fadeIn 0.5s ease-out;
             border: 1px solid #e8e8e8;
-            text-decoration: none;
-            color: inherit;
-            display: block;
         }
-
-        .card:hover {
-            transform: scale(1.01);
-            box-shadow: 0 4px 12px rgba(0,0,0,.12);
-        }
-
-        .card-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
+        .card:hover{ 
+            transform:scale(1.01); 
+            box-shadow:0 4px 12px rgba(0,0,0,.12);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
-        .card-text {
-            width: 70%;
+        .card-text{ 
+            width:70%; 
+            cursor: pointer;
         }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #111;
-            margin-bottom: 4px;
-            line-height: 1.3;
+        .card-title{ 
+            font-size:16px;
+            font-weight:bold;
+            color:#111;
+            margin-bottom:4px;
+            line-height:1.3;
         }
-
-        .card-meta {
-            font-size: 12px;
-            color: #777;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .card-meta{
+            font-size:12px;
+            color:#777;
+            display:flex;
+            align-items:center;
+            gap:8px;
             flex-wrap: wrap;
         }
 
-        .source-tag {
-            background: #e8f0fe;
-            color: #1a73e8;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
+        .source-tag{
+            background:#e8f0fe;
+            color:#1a73e8;
+            padding:2px 8px;
+            border-radius:12px;
+            font-size:11px;
+            font-weight:bold;
         }
 
-        .card img {
-            width: 120px;
-            height: 85px;
-            object-fit: cover;
-            border-radius: 10px;
-            background: #eee;
+        .card img{
+            width:120px;
+            height:85px;
+            object-fit:cover;
+            border-radius:10px;
+            background:#eee;
         }
 
         .category-tag {
@@ -398,29 +392,6 @@
             max-height: calc(85vh - 80px);
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .card-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .card-text {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            
-            .card img {
-                width: 100%;
-                height: 150px;
-            }
-            
-            .header {
-                font-size: 18px;
-                padding: 15px;
-            }
-        }
-
         /* SHARE PREVIEW */
         .share-preview {
             margin: 15px 0;
@@ -452,11 +423,98 @@
         .copy-link-btn:hover {
             background: #0d62d9;
         }
+
+        /* QUICK NAVIGATION */
+        .quick-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #0d62d9;
+            transform: translateY(-3px);
+        }
+
+        /* PRELOADER */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .card-text {
+                width: 65%;
+            }
+            
+            .card img {
+                width: 100px;
+                height: 75px;
+            }
+            
+            .header-btn {
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+            
+            .quick-nav {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
     </style>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div style="text-align: center;">
+            <div style="width: 60px; height: 60px; border: 5px solid #e8e8e8; border-top: 5px solid #1a73e8; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+            <p style="color: #666; font-weight: bold;">Carregando notícias...</p>
+        </div>
+    </div>
+
     <header>
         <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
         Notícias CLD
@@ -506,6 +564,16 @@
         Carregando mais notícias...
     </div>
 
+    <!-- QUICK NAVIGATION -->
+    <div class="quick-nav">
+        <button class="nav-btn" onclick="scrollToTop()" title="Voltar ao topo">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        <button class="nav-btn" onclick="manualRefresh()" title="Atualizar notícias">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+    </div>
+
     <!-- MODAL INFO -->
     <div id="info-modal">
         <div id="info-modal-content">
@@ -518,14 +586,64 @@
     </div>
 
     <script>
+        // SISTEMA DE CACHE OTIMIZADO
+        class NewsCache {
+            constructor() {
+                this.CACHE_KEY = 'newsCache_v2';
+                this.TIMESTAMP_KEY = 'newsCacheTimestamp_v2';
+                this.CACHE_DURATION = 30 * 60 * 1000; // 30 minutos
+            }
+
+            isValid() {
+                const timestamp = localStorage.getItem(this.TIMESTAMP_KEY);
+                if (!timestamp) return false;
+                
+                return Date.now() - parseInt(timestamp) < this.CACHE_DURATION;
+            }
+
+            get() {
+                if (!this.isValid()) {
+                    this.clear();
+                    return null;
+                }
+                
+                const cached = localStorage.getItem(this.CACHE_KEY);
+                return cached ? JSON.parse(cached) : null;
+            }
+
+            set(data) {
+                localStorage.setItem(this.CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(this.TIMESTAMP_KEY, Date.now().toString());
+            }
+
+            clear() {
+                localStorage.removeItem(this.CACHE_KEY);
+                localStorage.removeItem(this.TIMESTAMP_KEY);
+            }
+
+            updateArticle(article) {
+                const cached = this.get();
+                if (cached) {
+                    const index = cached.findIndex(n => n.id === article.id);
+                    if (index !== -1) {
+                        cached[index] = article;
+                    } else {
+                        cached.unshift(article);
+                    }
+                    this.set(cached);
+                }
+            }
+        }
+
         // VARIÁVEIS GLOBAIS
         let news = [];
         let filteredNews = [];
         let hashes = new Set();
-        const BATCH_SIZE = 15;
+        const BATCH_SIZE = 20; // Aumentado para carregar mais rápido
         let isLoadingMore = false;
         let allSourcesLoaded = false;
         let currentCategory = 'todos';
+        const newsCache = new NewsCache();
 
         // CATEGORIAS
         const CATEGORIES = {
@@ -546,98 +664,140 @@
         const infoModalClose = document.getElementById("info-modal-close");
         const modalTitle = document.getElementById("modal-title");
         const modalIcon = document.getElementById("modal-icon");
+        const preloader = document.getElementById("preloader");
 
-        // CONFIGURAÇÃO DAS FONTES
+        // CONFIGURAÇÃO DAS FONTES OTIMIZADA
         const sources = [
             { 
                 name: "O País", 
                 baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts",
                 currentPage: 1,
                 hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "Time de Todos",
-                baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
-            },
-            { 
-                name: "Integrity", 
-                baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
+                isFetching: false,
+                priority: 1
             },
             {
                 name: "Jornal Notícias",
                 baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
                 currentPage: 1,
                 hasMore: true,
-                isFetching: false
-            },
-            { 
-                name: "Savana", 
-                baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "JornalMZ",
-                baseUrl: "https://jornalmz.com/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "Checka",
-                baseUrl: "https://checka.co.mz/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
+                isFetching: false,
+                priority: 1
             },
             {
                 name: "Canal de Moçambique",
                 baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts",
                 currentPage: 1,
                 hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "Stop",
-                baseUrl: "https://www.stop.co.mz/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "Club of Mozambique",
-                baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
-            },
-            {
-                name: "Zitamar News",
-                baseUrl: "https://www.zitamar.com/wp-json/wp/v2/posts",
-                currentPage: 1,
-                hasMore: true,
-                isFetching: false
+                isFetching: false,
+                priority: 2
             },
             { 
                 name: "Carta de Moçambique", 
                 baseUrl: "https://cartamz.com/wp-json/wp/v2/posts",
                 currentPage: 1,
                 hasMore: true,
-                isFetching: false
+                isFetching: false,
+                priority: 2
+            },
+            {
+                name: "Time de Todos",
+                baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 3
+            },
+            { 
+                name: "Integrity", 
+                baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 3
+            },
+            { 
+                name: "Savana", 
+                baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 3
+            },
+            {
+                name: "JornalMZ",
+                baseUrl: "https://jornalmz.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 4
+            },
+            {
+                name: "Checka",
+                baseUrl: "https://checka.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 4
+            },
+            {
+                name: "Stop",
+                baseUrl: "https://www.stop.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 4
+            },
+            {
+                name: "Club of Mozambique",
+                baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 5
+            },
+            {
+                name: "Zitamar News",
+                baseUrl: "https://www.zitamar.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false,
+                priority: 5
             }
         ];
 
-        // FUNÇÕES DE UTILIDADE
+        // FUNÇÕES DE UTILIDADE RÁPIDAS
         function formatDate(d) {
-            return new Date(d).toLocaleString("pt-PT");
+            const date = new Date(d);
+            const now = new Date();
+            const diff = now - date;
+            
+            // Se for menos de 1 hora, mostrar "há X minutos"
+            if (diff < 3600000) {
+                const minutes = Math.floor(diff / 60000);
+                return `há ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+            }
+            
+            // Se for hoje, mostrar apenas hora
+            if (date.toDateString() === now.toDateString()) {
+                return `hoje às ${date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            
+            // Se for ontem
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return `ontem às ${date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`;
+            }
+            
+            // Caso contrário, mostrar data completa
+            return date.toLocaleDateString('pt-PT', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         }
 
         function generateSlug(title) {
@@ -647,14 +807,21 @@
                 .replace(/[\u0300-\u036f]/g, '')
                 .replace(/[^\w\s]/g, '')
                 .replace(/\s+/g, '-')
-                .substring(0, 50);
+                .substring(0, 40);
         }
 
         function generateNewsId(title, source, date) {
             const shortTitle = title.substring(0, 30);
-            const sourceAbbr = source.substring(0, 3).toLowerCase();
+            const sourceAbbr = source.substring(0, 3).toLowerCase().replace(/\s/g, '');
             const dateStr = new Date(date).getTime().toString(36);
-            return `${sourceAbbr}-${generateSlug(shortTitle)}-${dateStr}`;
+            const slug = generateSlug(shortTitle);
+            return `${sourceAbbr}-${slug}-${dateStr}`;
+        }
+
+        function stripHTML(html) {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            return div.textContent || div.innerText || '';
         }
 
         // FUNÇÕES DE INTERFACE
@@ -699,6 +866,9 @@
             filteredNews.forEach(article => {
                 renderSingleNews(article);
             });
+            
+            // Salva filtro atual
+            localStorage.setItem('currentFilter', category);
         }
 
         function searchNews() {
@@ -709,13 +879,14 @@
             if (currentCategory !== 'todos') {
                 tempFiltered = news.filter(article => {
                     const articleCategory = determineCategory(article.title, article.content);
-                    return articleCategory === currentCategory;
+                    return articleCategory === category;
                 });
             }
             
             filteredNews = tempFiltered.filter(n =>
                 n.title.toLowerCase().includes(q) || 
-                n.source.toLowerCase().includes(q)
+                n.source.toLowerCase().includes(q) ||
+                (n.excerpt && n.excerpt.toLowerCase().includes(q))
             );
             
             container.innerHTML = '';
@@ -724,7 +895,7 @@
             });
         }
 
-        // MODAL INFO
+        // MODAL INFO OTIMIZADA
         function openInfoModal(type) {
             closeSidebar();
             
@@ -736,40 +907,29 @@
                 title = 'Sobre a Plataforma';
                 icon = 'fa-info-circle';
                 content = `
-                    <div class="info-content">
-                        <h3>📰 Agregador de Notícias</h3>
-                        <p>Agregador independente de notícias de Moçambique, reunindo conteúdos de várias fontes confiáveis em tempo real.</p>
+                    <div style="line-height: 1.6;">
+                        <h3 style="color: #1a73e8; margin-top: 0;">📰 Agregador de Notícias</h3>
+                        <p>Plataforma que reúne notícias das principais fontes de Moçambique em tempo real.</p>
                         
-                        <h4>Funcionalidades:</h4>
-                        <ul>
-                            <li>✅ Notícias em tempo real</li>
-                            <li>✅ Busca inteligente</li>
-                            <li>✅ Categorização automática</li>
-                            <li>✅ Links permanentes para cada notícia</li>
-                            <li>✅ Design responsivo</li>
-                        </ul>
-                        
-                        <div class="share-preview">
-                            <small><strong>Compartilhe esta plataforma:</strong></small><br>
-                            <button class="copy-link-btn" onclick="copyPlatformLink()">
-                                <i class="fas fa-link"></i> Copiar Link da Plataforma
-                            </button>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0;">⚡ Carregamento Rápido</h4>
+                            <p>Sistema otimizado para carregar notícias instantaneamente dos links compartilhados.</p>
                         </div>
+                        
+                        <button onclick="copyPlatformLink()" style="background: #1a73e8; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;">
+                            <i class="fas fa-link"></i> Copiar Link da Plataforma
+                        </button>
                     </div>
                 `;
             } else if (type === 'contato') {
                 title = 'Contacto';
                 icon = 'fa-envelope';
                 content = `
-                    <div class="info-content">
-                        <h3>📞 Entre em Contacto</h3>
-                        
-                        <div class="contact-info">
-                            <p><strong>Email:</strong> claudioarmando001@gmail.com</p>
-                            <p><strong>Telefone:</strong> +258 869 667 677</p>
-                        </div>
-                        
-                        <p><em>Horário de atendimento: Seg-Sex, 08:00-18:00</em></p>
+                    <div style="line-height: 1.6;">
+                        <h3 style="color: #1a73e8; margin-top: 0;">📞 Contacte-nos</h3>
+                        <p><strong>Email:</strong> claudioarmando001@gmail.com</p>
+                        <p><strong>Telefone:</strong> +258 869 667 677</p>
+                        <p><em>Horário: Seg-Sex, 08:00-18:00</em></p>
                     </div>
                 `;
             }
@@ -795,93 +955,70 @@
             });
         }
 
-        // DETERMINAR CATEGORIA
+        // DETERMINAR CATEGORIA RÁPIDA
         function determineCategory(title, content) {
-            const text = (title + ' ' + content).toLowerCase();
+            const text = (title + ' ' + (content || '')).toLowerCase();
             
-            const keywords = {
-                'sociedade': ['sociedade', 'social', 'comunidade', 'educação', 'escola'],
-                'política': ['política', 'governo', 'presidente', 'eleições', 'partido'],
-                'economia': ['economia', 'negócio', 'empresa', 'investimento', 'banco'],
-                'esportes': ['esporte', 'futebol', 'jogo', 'atleta', 'campeonato'],
-                'cultura': ['cultura', 'arte', 'música', 'teatro', 'cinema'],
-                'saúde': ['saúde', 'hospital', 'médico', 'doença', 'vacina'],
-                'tecnologia': ['tecnologia', 'internet', 'digital', 'aplicativo', 'software']
+            const categoryPatterns = {
+                'política': /\b(política|governo|presidente|eleições|partido|parlamento|ministro)\b/,
+                'economia': /\b(economia|negócio|empresa|investimento|banco|finanças|mercado)\b/,
+                'esportes': /\b(esporte|futebol|jogo|atleta|campeonato|liga|competição)\b/,
+                'saúde': /\b(saúde|hospital|médico|doença|vacina|tratamento|epidemia)\b/,
+                'tecnologia': /\b(tecnologia|internet|digital|aplicativo|software|startup|inovacção)\b/,
+                'cultura': /\b(cultura|arte|música|teatro|cinema|literatura|tradição)\b/
             };
             
-            let scores = {};
-            Object.keys(keywords).forEach(cat => {
-                scores[cat] = 0;
-                keywords[cat].forEach(keyword => {
-                    if (text.includes(keyword)) scores[cat]++;
-                });
-            });
-            
-            let maxScore = 0;
-            let selectedCategory = 'sociedade';
-            
-            Object.keys(scores).forEach(cat => {
-                if (scores[cat] > maxScore) {
-                    maxScore = scores[cat];
-                    selectedCategory = cat;
+            for (const [category, pattern] of Object.entries(categoryPatterns)) {
+                if (pattern.test(text)) {
+                    return category;
                 }
-            });
-            
-            if (maxScore === 0) {
-                if (title.toLowerCase().includes('futebol')) return 'esportes';
-                if (title.toLowerCase().includes('econ')) return 'economia';
-                if (title.toLowerCase().includes('arte')) return 'cultura';
-                if (title.toLowerCase().includes('hospital')) return 'saúde';
-                if (title.toLowerCase().includes('tech')) return 'tecnologia';
-                
-                const categories = Object.keys(CATEGORIES).filter(cat => cat !== 'todos');
-                return categories[Math.floor(Math.random() * categories.length)];
             }
             
-            return selectedCategory;
+            return 'sociedade';
         }
 
-        // RENDERIZAR NOTÍCIA
+        // RENDERIZAR NOTÍCIA (APARÊNCIA ORIGINAL)
         function renderSingleNews(article) {
             if (container.querySelector(`[data-id="${article.id}"]`)) return;
             
             const category = article.category || determineCategory(article.title, article.content);
             article.category = category;
             
-            // Gera ID único para a notícia
-            article.id = article.id || generateNewsId(article.title, article.source, article.date);
+            if (!article.id) {
+                article.id = generateNewsId(article.title, article.source, article.date);
+            }
             
-            // Gera URL para a página de leitura
             const newsUrl = `leitura.html?id=${article.id}`;
             
-            const c = document.createElement("a");
+            const c = document.createElement("div");
             c.className = "card";
-            c.href = newsUrl;
             c.dataset.id = article.id;
             c.dataset.category = category;
+            c.dataset.date = article.date;
             
             c.innerHTML = `
-                <div class="card-content">
-                    <div class="card-text">
-                        <div class="card-title">${article.title}</div>
-                        <div class="card-meta">
-                            <span class="source-tag">${article.source}</span>
-                            <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
-                            <span>${formatDate(article.date)}</span>
-                        </div>
+                <div class="card-text" onclick="window.location.href='${newsUrl}'">
+                    <div class="card-title">${article.title}</div>
+                    <div class="card-meta">
+                        <span class="source-tag">${article.source}</span>
+                        <span class="category-tag ${CATEGORIES[category]?.class || 'sociedade-tag'}">
+                            ${CATEGORIES[category]?.name || 'Sociedade'}
+                        </span>
+                        <span>${formatDate(article.date)}</span>
                     </div>
-                    <img src="${article.image}" loading="lazy" alt="${article.title}" onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
                 </div>
+                <img src="${article.image}" loading="lazy" alt="${article.title}" 
+                     onclick="window.location.href='${newsUrl}'"
+                     onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
             `;
             
-            // Encontra a posição correta para ordenação por data
+            // Ordenação por data (mais recente primeiro)
             let inserted = false;
             const cards = container.querySelectorAll('.card');
+            const newDate = new Date(article.date).getTime();
             
             for (let i = 0; i < cards.length; i++) {
-                const cardDate = new Date(cards[i].dataset.date || 0);
-                const newDate = new Date(article.date);
-                
+                const cardDate = new Date(cards[i].dataset.date).getTime();
                 if (newDate > cardDate) {
                     container.insertBefore(c, cards[i]);
                     inserted = true;
@@ -892,11 +1029,9 @@
             if (!inserted) {
                 container.appendChild(c);
             }
-            
-            c.dataset.date = article.date;
         }
 
-        // CARREGAMENTO DE NOTÍCIAS
+        // CARREGAMENTO OTIMIZADO
         async function processSourceArticles(source, articles) {
             const newArticles = [];
             
@@ -910,6 +1045,7 @@
                     id: generateNewsId(article.title.rendered, source.name, article.date),
                     title: article.title.rendered,
                     content: article.content.rendered,
+                    excerpt: stripHTML(article.excerpt?.rendered || '').substring(0, 150),
                     image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
                            article.jetpack_featured_media_url ||
                            "https://via.placeholder.com/300x200",
@@ -922,13 +1058,21 @@
                 newArticles.push(newsItem);
             }
             
-            newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            for (const newsItem of newArticles) {
-                news.push(newsItem);
-                filteredNews.push(newsItem);
-                renderSingleNews(newsItem);
-                await new Promise(resolve => setTimeout(resolve, 30));
+            // Processamento em lote para melhor performance
+            const batchSize = 5;
+            for (let i = 0; i < newArticles.length; i += batchSize) {
+                const batch = newArticles.slice(i, i + batchSize);
+                
+                batch.forEach(newsItem => {
+                    news.push(newsItem);
+                    filteredNews.push(newsItem);
+                    renderSingleNews(newsItem);
+                });
+                
+                // Pequena pausa para não bloquear a UI
+                if (i + batchSize < newArticles.length) {
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                }
             }
         }
 
@@ -938,12 +1082,16 @@
             source.isFetching = true;
             
             try {
-                const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}&t=${Date.now()}`;
-                const response = await fetch(url);
+                const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
-                    if (response.status === 400) source.hasMore = false;
-                    throw new Error(`Erro ao buscar ${source.name}`);
+                    source.hasMore = false;
+                    return;
                 }
                 
                 const data = await response.json();
@@ -957,7 +1105,9 @@
                 await processSourceArticles(source, data);
                 
             } catch (error) {
-                console.error(`Erro ao carregar ${source.name}:`, error);
+                if (error.name !== 'AbortError') {
+                    console.warn(`Erro na fonte ${source.name}:`, error);
+                }
                 source.hasMore = false;
             } finally {
                 source.isFetching = false;
@@ -965,7 +1115,35 @@
             }
         }
 
-        async function loadAllSources() {
+        // CARREGAMENTO COM CACHE
+        async function loadAllSources(forceRefresh = false) {
+            // Esconde preloader após 1.5 segundos no máximo
+            setTimeout(() => {
+                preloader.classList.add('hidden');
+            }, 1500);
+            
+            // Verifica cache primeiro
+            if (!forceRefresh) {
+                const cached = newsCache.get();
+                if (cached) {
+                    news = cached;
+                    filteredNews = [...cached];
+                    
+                    // Renderiza do cache primeiro
+                    container.innerHTML = '';
+                    filteredNews.forEach(article => {
+                        renderSingleNews(article);
+                    });
+                    
+                    preloader.classList.add('hidden');
+                    
+                    // Depois carrega atualizações em background
+                    setTimeout(() => loadFreshNews(), 1000);
+                    return;
+                }
+            }
+            
+            // Se não tem cache ou forceRefresh = true
             news = [];
             filteredNews = [];
             hashes.clear();
@@ -978,22 +1156,56 @@
                 source.isFetching = false;
             });
             
-            const promises = sources.map(source => loadSource(source));
-            await Promise.allSettled(promises);
-            reorderAllNewsByDate();
+            // Carrega fontes prioritárias primeiro
+            const prioritySources = [...sources].sort((a, b) => a.priority - b.priority);
             
-            // Armazena no localStorage para uso na página de leitura
-            localStorage.setItem('newsCache', JSON.stringify(news));
-            localStorage.setItem('newsCacheTimestamp', Date.now());
+            // Carrega fontes prioritárias em paralelo
+            const promises = prioritySources.map(source => loadSource(source));
+            await Promise.allSettled(promises);
+            
+            // Ordena e salva no cache
+            reorderAllNewsByDate();
+            newsCache.set(news);
+            
+            preloader.classList.add('hidden');
+        }
+
+        // CARREGAR NOTÍCIAS FRESCAS EM BACKGROUND
+        async function loadFreshNews() {
+            // Reseta apenas algumas fontes para atualização
+            const freshSources = sources.filter(s => s.priority <= 2);
+            freshSources.forEach(source => {
+                source.currentPage = 1;
+                source.hasMore = true;
+            });
+            
+            // Carrega em background
+            const promises = freshSources.map(source => loadSource(source));
+            Promise.allSettled(promises).then(() => {
+                if (news.length > 0) {
+                    reorderAllNewsByDate();
+                    newsCache.set(news);
+                }
+            });
         }
 
         function reorderAllNewsByDate() {
             news.sort((a, b) => new Date(b.date) - new Date(a.date));
             filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
             
+            // Re-renderiza mantendo os cards existentes
+            const existingCards = {};
+            container.querySelectorAll('.card').forEach(card => {
+                existingCards[card.dataset.id] = card;
+            });
+            
             container.innerHTML = '';
             filteredNews.forEach(article => {
-                renderSingleNews(article);
+                if (existingCards[article.id]) {
+                    container.appendChild(existingCards[article.id]);
+                } else {
+                    renderSingleNews(article);
+                }
             });
         }
 
@@ -1003,24 +1215,18 @@
             isLoadingMore = true;
             infiniteLoader.style.display = 'block';
             
-            let anySourceHasMore = false;
-            const promises = [];
-            
-            for (const source of sources) {
-                if (source.hasMore) {
-                    promises.push(loadSource(source));
-                    if (source.hasMore) anySourceHasMore = true;
-                }
-            }
+            // Carrega das fontes que ainda têm conteúdo
+            const activeSources = sources.filter(s => s.hasMore);
+            const promises = activeSources.map(source => loadSource(source));
             
             await Promise.allSettled(promises);
-            allSourcesLoaded = !anySourceHasMore;
             
+            allSourcesLoaded = sources.every(source => !source.hasMore);
             isLoadingMore = false;
             infiniteLoader.style.display = 'none';
             
             // Atualiza cache
-            localStorage.setItem('newsCache', JSON.stringify(news));
+            newsCache.set(news);
         }
 
         function checkAllSourcesLoaded() {
@@ -1030,42 +1236,83 @@
 
         // CONTROLES
         function manualRefresh() {
-            container.innerHTML = '';
-            closeInfoModal();
-            loadAllSources();
+            newsCache.clear();
+            loadAllSources(true);
         }
 
-        // SCROLL INFINITO
-        let scrollTimeout;
-        const SCROLL_THRESHOLD = 300;
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
+        // SCROLL INFINITO OTIMIZADO
+        let scrollTimer;
         window.addEventListener("scroll", () => {
-            if (scrollTimeout) clearTimeout(scrollTimeout);
+            if (scrollTimer) clearTimeout(scrollTimer);
             
-            scrollTimeout = setTimeout(() => {
+            scrollTimer = setTimeout(() => {
                 const scrollPosition = window.innerHeight + window.scrollY;
-                const threshold = document.body.offsetHeight - SCROLL_THRESHOLD;
+                const threshold = document.body.offsetHeight - 500;
                 
                 if (scrollPosition >= threshold && !isLoadingMore && !allSourcesLoaded) {
                     loadMoreNews();
                 }
-            }, 150);
+            }, 200);
         });
 
-        // INICIALIZAÇÃO
-        loadAllSources();
-
-        // Atualiza periodicamente
-        setInterval(() => {
-            if (document.visibilityState === 'visible' && !isLoadingMore) {
-                const scrollPosition = window.innerHeight + window.scrollY;
-                const threshold = document.body.offsetHeight - 500;
+        // DETECTAR SE VEM DE UM LINK DIRETO
+        function checkDirectLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const directId = urlParams.get('direct');
+            
+            if (directId) {
+                // Remove o parâmetro da URL
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
                 
-                if (scrollPosition >= threshold) {
-                    loadMoreNews();
-                }
+                // Redireciona para a página de leitura
+                window.location.href = `leitura.html?id=${directId}`;
+                return true;
             }
-        }, 300000);
+            
+            return false;
+        }
+
+        // CARREGAR FILTRO SALVO
+        function loadSavedFilter() {
+            const savedFilter = localStorage.getItem('currentFilter');
+            if (savedFilter && CATEGORIES[savedFilter]) {
+                currentCategory = savedFilter;
+                
+                // Ativa o botão correspondente
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    if (btn.getAttribute('onclick')?.includes(`'${savedFilter}'`)) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Aplica o filtro
+                filterByCategory(savedFilter);
+            }
+        }
+
+        // INICIALIZAÇÃO RÁPIDA
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica se é um redirecionamento direto
+            if (!checkDirectLink()) {
+                // Carrega notícias normalmente
+                loadAllSources();
+                loadSavedFilter();
+            }
+        });
+
+        // ATUALIZAÇÃO PERIÓDICA
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                loadFreshNews();
+            }
+        }, 5 * 60 * 1000); // A cada 5 minutos
 
         // ATALHOS DE TECLADO
         document.addEventListener('keydown', (e) => {
@@ -1084,6 +1331,16 @@
                 manualRefresh();
             }
         });
+
+        // SERVICE WORKER PARA CACHE AVANÇADO (OPCIONAL)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(console.error);
+        }
+
+        // EXPORTAR FUNÇÕES PARA USO GLOBAL
+        window.openNews = function(articleId) {
+            window.location.href = `leitura.html?id=${articleId}`;
+        };
     </script>
 </body>
 </html>
