@@ -1,816 +1,1089 @@
 <!doctype html>
 <html lang="pt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Notícias CLD - Agregador de Notícias</title>
-<meta name="description" content="Agregador de notícias de Moçambique em tempo real">
-<meta name="robots" content="index, follow">
-<style>
-/* CSS OTIMIZADO - Minificado inline */
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f5f7fa;margin:0;color:#1a1a1a;line-height:1.4;overflow-x:hidden}header{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:16px 20px;text-align:center;font-size:20px;font-weight:700;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,.15)}.header-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.9);color:#1a73e8;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s;backdrop-filter:blur(10px)}.header-btn:hover{background:#fff;transform:translateY(-50%) scale(1.05)}#menu-btn{left:20px}#refresh-btn{right:20px}#sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;z-index:9998;animation:fadeIn .2s ease}#sidebar{position:fixed;top:0;left:-300px;width:300px;height:100vh;background:#fff;box-shadow:2px 0 12px rgba(0,0,0,.15);padding:20px;transition:transform .25s cubic-bezier(0.4,0,0.2,1);z-index:9999;overflow-y:auto;-webkit-overflow-scrolling:touch}#sidebar.open{transform:translateX(300px)}.categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:20px 0}.category-btn{background:#f0f7ff;border:2px solid transparent;color:#1a73e8;padding:10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;text-align:center}.category-btn:hover{background:#e3f2fd;transform:translateY(-1px)}.category-btn.active{background:#1a73e8;color:#fff;border-color:#1a73e8}.search-container{max-width:1000px;margin:20px auto;padding:0 20px}#search-input{width:100%;padding:14px 20px;border-radius:12px;border:2px solid #e1e5eb;font-size:16px;background:#fff;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}#search-input:focus{outline:none;border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.15)}#news-container{max-width:1000px;margin:0 auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}@media(max-width:768px){#news-container{grid-template-columns:1fr;padding:15px}}.card{background:#fff;border-radius:16px;padding:0;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer;transition:all .2s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;height:100%;position:relative;border:1px solid rgba(0,0,0,.05)}.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12);border-color:#1a73e8}.card img{width:100%;height:180px;object-fit:cover;display:block;background:linear-gradient(135deg,#667eea,#764ba2)}.card-text{padding:20px;flex:1;display:flex;flex-direction:column}.card-title{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:15px;border-top:1px solid #f0f0f0}.source-tag{background:#e8f0fe;color:#1a73e8;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}.category-tag{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}.sociedade-tag{background:#e8f5e9;color:#2e7d32}.politica-tag{background:#ffebee;color:#c62828}.economia-tag{background:#fff3e0;color:#ef6c00}.esportes-tag{background:#e3f2fd;color:#1565c0}.cultura-tag{background:#f3e5f5;color:#7b1fa2}.saude-tag{background:#e0f2f1;color:#00796b}.tech-tag{background:#eceff1;color:#37474f}#infinite-loader{text-align:center;padding:30px 20px}#infinite-spinner{display:inline-block;width:24px;height:24px;border:3px solid rgba(26,115,232,.1);border-top:3px solid #1a73e8;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.loading-shimmer{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}.card.skeleton .card-title{height:20px;width:90%;margin-bottom:10px}.card.skeleton .card-meta span{height:16px;width:60px}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}.toast{position:fixed;bottom:20px;right:20px;background:#323232;color:#fff;padding:12px 24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:10000;animation:slideUp .3s ease;display:none;max-width:320px}.toast.success{background:#4caf50}.toast.error{background:#f44336}.toast.info{background:#2196f3}@keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}.offline-banner{position:sticky;top:0;background:#ff9800;color:#fff;text-align:center;padding:10px;font-size:14px;font-weight:600;z-index:1001;animation:slideDown .3s ease}@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}.empty-state{text-align:center;padding:60px 20px}.empty-state i{font-size:64px;color:#b0bec5;margin-bottom:20px}.empty-state h3{color:#546e7a;margin-bottom:10px}.empty-state p{color:#90a4ae;max-width:400px;margin:0 auto}
-</style>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" as="style">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Notícias CLD - Página Inicial</title>
+    <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
+    <meta name="robots" content="index, follow">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f3f5;
+            margin: 0;
+            color: #111;
+        }
+
+        /* HEADER */
+        header {
+            background: #1a73e8;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .header-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: #1a73e8;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .header-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        #menu-btn { left: 15px; }
+        #refresh-btn { right: 15px; }
+
+        /* SIDEBAR */
+        #sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            display: none;
+            z-index: 9998;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 6px rgba(0,0,0,.2);
+            padding: 20px;
+            box-sizing: border-box;
+            transition: .3s;
+            z-index: 9999;
+            overflow-y: auto;
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #sidebar h2 {
+            color: #1a73e8;
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        #sidebar p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        #close-sidebar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* CATEGORIAS */
+        .categories {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-btn {
+            background: #e8f0fe;
+            border: 1px solid #dce6f5;
+            color: #1a73e8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .category-btn:hover {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .category-btn.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        /* BOTÕES MODAL */
+        .modal-buttons {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-btn:hover {
+            background: #0d62d9;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(26, 115, 232, 0.3);
+        }
+
+        /* SEARCH */
+        .search-container {
+            max-width: 950px;
+            margin: 12px auto;
+            padding: 0 12px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background: #fff;
+            color: #111;
+            transition: all 0.3s;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+
+        /* LISTA */
+        #news-container {
+            max-width: 950px;
+            margin: auto;
+            padding: 12px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,.08);
+            cursor: pointer;
+            transition: .2s;
+            animation: fadeIn 0.5s ease-out;
+            border: 1px solid #e8e8e8;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        }
+
+        .card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-text {
+            width: 70%;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .card-meta {
+            font-size: 12px;
+            color: #777;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .source-tag {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .card img {
+            width: 120px;
+            height: 85px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #eee;
+        }
+
+        .category-tag {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .sociedade-tag {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+        }
+
+        .politica-tag {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+        }
+
+        .economia-tag {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ef6c00;
+        }
+
+        .esportes-tag {
+            background: rgba(33, 150, 243, 0.1);
+            color: #1565c0;
+        }
+
+        .cultura-tag {
+            background: rgba(156, 39, 176, 0.1);
+            color: #7b1fa2;
+        }
+
+        .saude-tag {
+            background: rgba(0, 150, 136, 0.1);
+            color: #00796b;
+        }
+
+        .tech-tag {
+            background: rgba(96, 125, 139, 0.1);
+            color: #37474f;
+        }
+
+        /* LOADER INFINITO */
+        #infinite-loader {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .infinite-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e8e8e8;
+            border-top: 3px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* MODAL INFO */
+        #info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #info-modal-content {
+            background: #fff;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #info-modal-header {
+            background: linear-gradient(135deg, #1a73e8, #0d62d9);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #info-modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #info-modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        #info-modal-close:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        #info-modal-body {
+            padding: 25px;
+            overflow-y: auto;
+            max-height: calc(85vh - 80px);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .card-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .card-text {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .card img {
+                width: 100%;
+                height: 150px;
+            }
+            
+            .header {
+                font-size: 18px;
+                padding: 15px;
+            }
+        }
+
+        /* SHARE PREVIEW */
+        .share-preview {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .share-preview small {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .copy-link-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-link-btn:hover {
+            background: #0d62d9;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<header>
-<button class="header-btn" id="menu-btn" aria-label="Abrir menu">☰</button>
-Notícias CLD
-<button class="header-btn" id="refresh-btn" aria-label="Atualizar notícias">↻</button>
-</header>
+    <header>
+        <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
+        Notícias CLD
+        <button class="header-btn" id="refresh-btn" onclick="manualRefresh()">↻</button>
+    </header>
 
-<div id="sidebar-overlay"></div>
-<aside id="sidebar" aria-label="Menu lateral">
-<button id="close-sidebar" aria-label="Fechar menu" style="position:absolute;top:15px;right:15px;background:none;border:none;font-size:20px;cursor:pointer;color:#666">✖</button>
-<h2 style="margin-bottom:20px;color:#1a73e8">Categorias</h2>
-<div class="categories">
-<button class="category-btn active" data-category="todos">Todos</button>
-<button class="category-btn" data-category="sociedade">Sociedade</button>
-<button class="category-btn" data-category="política">Política</button>
-<button class="category-btn" data-category="economia">Economia</button>
-<button class="category-btn" data-category="esportes">Esportes</button>
-<button class="category-btn" data-category="cultura">Cultura</button>
-<button class="category-btn" data-category="saúde">Saúde</button>
-<button class="category-btn" data-category="tecnologia">Tecnologia</button>
-</div>
-</aside>
+    <!-- SIDEBAR -->
+    <div id="sidebar-overlay"></div>
+    <div id="sidebar">
+        <span id="close-sidebar" onclick="closeSidebar()">✖</span>
+        <h2>Categorias</h2>
+        <div class="categories">
+            <button class="category-btn active" onclick="filterByCategory('todos')">Todos</button>
+            <button class="category-btn" onclick="filterByCategory('sociedade')">Sociedade</button>
+            <button class="category-btn" onclick="filterByCategory('política')">Política</button>
+            <button class="category-btn" onclick="filterByCategory('economia')">Economia</button>
+            <button class="category-btn" onclick="filterByCategory('esportes')">Esportes</button>
+            <button class="category-btn" onclick="filterByCategory('cultura')">Cultura</button>
+            <button class="category-btn" onclick="filterByCategory('saúde')">Saúde</button>
+            <button class="category-btn" onclick="filterByCategory('tecnologia')">Tecnologia</button>
+        </div>
 
-<div class="search-container">
-<input id="search-input" placeholder="🔍 Buscar notícias..." aria-label="Buscar notícias">
-</div>
-
-<main id="news-container" role="main">
-<!-- Skeleton loading -->
-<div class="card skeleton loading-shimmer">
-    <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
-    <div class="card-text">
-        <div class="card-title loading-shimmer"></div>
-        <div class="card-meta">
-            <span class="loading-shimmer"></span>
-            <span class="loading-shimmer"></span>
+        <h2>Ações</h2>
+        <div class="modal-buttons">
+            <button class="modal-btn" onclick="openInfoModal('sobre')">
+                <i class="fas fa-info-circle"></i> Sobre a Plataforma
+            </button>
+            <button class="modal-btn" onclick="openInfoModal('contato')">
+                <i class="fas fa-envelope"></i> Contacto
+            </button>
         </div>
     </div>
-</div>
-<!-- Duplicar skeleton para visual inicial -->
-<div class="card skeleton loading-shimmer">
-    <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
-    <div class="card-text">
-        <div class="card-title loading-shimmer"></div>
-        <div class="card-meta">
-            <span class="loading-shimmer"></span>
-            <span class="loading-shimmer"></span>
-        </div>
+
+    <!-- BUSCA -->
+    <div class="search-container">
+        <input id="search-input" placeholder="🔍 Buscar notícias..." onkeyup="searchNews()">
     </div>
-</div>
-</main>
 
-<div id="infinite-loader" style="display:none">
-<div id="infinite-spinner"></div>
-<div>Carregando mais notícias...</div>
-</div>
+    <!-- LISTA DE NOTÍCIAS -->
+    <div id="news-container">
+        <!-- Notícias serão carregadas aqui -->
+    </div>
 
-<div class="toast" id="toast"></div>
+    <!-- LOADER INFINITO -->
+    <div id="infinite-loader" style="display:none;">
+        <div class="infinite-spinner"></div>
+        Carregando mais notícias...
+    </div>
 
-<script>
-// ========== CONFIGURAÇÃO DE PERFORMANCE ==========
-'use strict';
-
-// Configurações
-const CONFIG = {
-    BATCH_SIZE: 20,
-    CACHE_SIZE: 500,
-    DEBOUNCE_DELAY: 150,
-    THROTTLE_DELAY: 50,
-    SCROLL_THRESHOLD: 300,
-    REQUEST_TIMEOUT: 5000,
-    MAX_RETRIES: 2
-};
-
-// Inicialização otimizada
-const state = {
-    news: new Map(), // Usar Map para O(1) lookup
-    filteredNews: [],
-    activeCategory: 'todos',
-    searchQuery: '',
-    isLoading: false,
-    page: 1,
-    hasMore: true,
-    lastScrollY: 0,
-    scrollTimer: null,
-    requestQueue: new Set(),
-    cache: new Map(),
-    offline: !navigator.onLine
-};
-
-// Cache IndexedDB para grandes dados
-let db;
-const initDB = () => {
-    return new Promise((resolve) => {
-        if (!window.indexedDB) {
-            console.warn('IndexedDB não suportado, usando localStorage');
-            resolve(false);
-            return;
-        }
-        
-        const request = indexedDB.open('newsCache', 1);
-        
-        request.onupgradeneeded = (e) => {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains('news')) {
-                db.createObjectStore('news', { keyPath: 'hash' });
-            }
-            if (!db.objectStoreNames.contains('metadata')) {
-                db.createObjectStore('metadata', { keyPath: 'key' });
-            }
-        };
-        
-        request.onsuccess = (e) => {
-            db = e.target.result;
-            console.log('IndexedDB inicializado');
-            resolve(true);
-        };
-        
-        request.onerror = () => resolve(false);
-    });
-};
-
-// Fontes otimizadas com fallbacks
-const NEWS_SOURCES = [
-    {
-        id: 'opais',
-        name: 'O País',
-        url: 'https://www.opais.co.mz/wp-json/wp/v2/posts',
-        priority: 1
-    },
-    {
-        id: 'jornalnoticias',
-        name: 'Jornal Notícias',
-        url: 'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts',
-        priority: 1
-    },
-    {
-        id: 'cartamz',
-        name: 'Carta de Moçambique',
-        url: 'https://cartamz.com/wp-json/wp/v2/posts',
-        priority: 2
-    },
-    {
-        id: 'clubmoz',
-        name: 'Club of Mozambique',
-        url: 'https://clubofmozambique.com/wp-json/wp/v2/posts',
-        priority: 2
-    },
-    {
-        id: 'savana',
-        name: 'Savana',
-        url: 'https://savana.co.mz/wp-json/wp/v2/posts',
-        priority: 3
-    }
-];
-
-// ========== FUNÇÕES DE PERFORMANCE ==========
-
-// Debounce otimizado
-const debounce = (fn, delay) => {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
-    };
-};
-
-// Throttle otimizado
-const throttle = (fn, limit) => {
-    let inThrottle;
-    return (...args) => {
-        if (!inThrottle) {
-            fn(...args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-};
-
-// Hash rápido com xxHash simplificado
-const fastHash = (str) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    return Math.abs(hash).toString(36);
-};
-
-// Gerar ID único para notícia
-const generateNewsId = (article, source) => {
-    const key = `${source.id}_${article.id || article.link}`;
-    return fastHash(key);
-};
-
-// ========== CACHE OTIMIZADO ==========
-
-const cacheManager = {
-    async saveNews(articles) {
-        const savePromises = articles.map(article => {
-            const key = `news_${article.id}`;
-            state.cache.set(key, article);
-            
-            // Salvar também no localStorage para fallback rápido
-            try {
-                localStorage.setItem(key, JSON.stringify(article));
-            } catch (e) {
-                // Se localStorage cheio, limpar alguns itens
-                if (e.name === 'QuotaExceededError') {
-                    this.cleanOldCache();
-                    localStorage.setItem(key, JSON.stringify(article));
-                }
-            }
-        });
-        
-        await Promise.allSavePromises;
-        
-        // Atualizar índice no IndexedDB se disponível
-        if (db) {
-            const transaction = db.transaction(['news'], 'readwrite');
-            const store = transaction.objectStore('news');
-            
-            articles.forEach(article => {
-                store.put(article);
-            });
-        }
-    },
-    
-    async getNews(id) {
-        // 1. Tentar cache em memória
-        const cached = state.cache.get(`news_${id}`);
-        if (cached) return cached;
-        
-        // 2. Tentar localStorage
-        try {
-            const local = localStorage.getItem(`news_${id}`);
-            if (local) {
-                const article = JSON.parse(local);
-                state.cache.set(`news_${id}`, article);
-                return article;
-            }
-        } catch (e) {
-            console.warn('Erro ao acessar localStorage:', e);
-        }
-        
-        // 3. Tentar IndexedDB
-        if (db) {
-            return new Promise((resolve) => {
-                const transaction = db.transaction(['news'], 'readonly');
-                const store = transaction.objectStore('news');
-                const request = store.get(id);
-                
-                request.onsuccess = () => {
-                    if (request.result) {
-                        state.cache.set(`news_${id}`, request.result);
-                        resolve(request.result);
-                    } else {
-                        resolve(null);
-                    }
-                };
-                
-                request.onerror = () => resolve(null);
-            });
-        }
-        
-        return null;
-    },
-    
-    cleanOldCache() {
-        // Limpar cache mais antigo
-        const keys = Object.keys(localStorage);
-        const newsKeys = keys.filter(k => k.startsWith('news_'));
-        
-        if (newsKeys.length > CONFIG.CACHE_SIZE) {
-            // Ordenar por timestamp (se disponível) ou remover os mais antigos
-            const toRemove = newsKeys.slice(0, newsKeys.length - CONFIG.CACHE_SIZE);
-            toRemove.forEach(key => {
-                localStorage.removeItem(key);
-                state.cache.delete(key);
-            });
-        }
-    },
-    
-    async prefetchNews() {
-        // Pré-carregar notícias prováveis
-        if (state.news.size > 0) {
-            const recentNews = Array.from(state.news.values())
-                .slice(0, 10)
-                .map(n => this.getNews(n.id));
-            
-            await Promise.all(recentNews);
-        }
-    }
-};
-
-// ========== REQUISIÇÕES OTIMIZADAS ==========
-
-const fetchWithRetry = async (url, retries = CONFIG.MAX_RETRIES) => {
-    for (let i = 0; i <= retries; i++) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-            
-            const response = await fetch(url, {
-                signal: controller.signal,
-                headers: {
-                    'Accept': 'application/json',
-                    'Cache-Control': 'no-cache'
-                }
-            });
-            
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            
-            return await response.json();
-        } catch (error) {
-            if (i === retries) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-        }
-    }
-};
-
-const fetchParallel = async (sources) => {
-    const fetchPromises = sources.map(async (source) => {
-        try {
-            const url = `${source.url}?_embed&per_page=${CONFIG.BATCH_SIZE}&page=${state.page}`;
-            const data = await fetchWithRetry(url);
-            
-            return {
-                source: source.id,
-                data: data || [],
-                error: null
-            };
-        } catch (error) {
-            console.warn(`Falha na fonte ${source.name}:`, error);
-            return {
-                source: source.id,
-                data: [],
-                error: error.message
-            };
-        }
-    });
-    
-    return Promise.allSettled(fetchPromises);
-};
-
-// ========== PROCESSAMENTO DE DADOS ==========
-
-const processArticles = (articles, source) => {
-    return articles.map(article => {
-        const id = generateNewsId(article, source);
-        
-        // Extrair imagem de forma otimizada
-        let image = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"%3E%3Crect width="400" height="200" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3ENOT%C3%8DCIAS CLD%3C/text%3E%3C/svg%3E';
-        
-        if (article._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
-            image = article._embedded['wp:featuredmedia'][0].source_url;
-        } else if (article.jetpack_featured_media_url) {
-            image = article.jetpack_featured_media_url;
-        } else if (article.thumbnail_url) {
-            image = article.thumbnail_url;
-        }
-        
-        // Determinar categoria com regex otimizado
-        const text = (article.title.rendered + ' ' + article.excerpt?.rendered).toLowerCase();
-        let category = 'sociedade';
-        
-        if (/(futebol|desporto|jogo|atleta|esporte)/i.test(text)) category = 'esportes';
-        else if (/(economia|negócio|empresa|investimento|finança)/i.test(text)) category = 'economia';
-        else if (/(política|governo|presidente|ministro|parlamento)/i.test(text)) category = 'política';
-        else if (/(saúde|hospital|médico|enfermeiro|doença)/i.test(text)) category = 'saúde';
-        else if (/(tecnologia|digital|internet|aplicativo|smartphone)/i.test(text)) category = 'tecnologia';
-        else if (/(cultura|arte|música|teatro|dança)/i.test(text)) category = 'cultura';
-        
-        return {
-            id,
-            title: article.title.rendered || article.title,
-            excerpt: article.excerpt?.rendered?.replace(/<[^>]+>/g, '').substring(0, 150) + '...' || '',
-            image,
-            source: source.name,
-            sourceId: source.id,
-            date: article.date || new Date().toISOString(),
-            timestamp: new Date(article.date || Date.now()).getTime(),
-            category,
-            url: article.link || `https://${source.name.toLowerCase().replace(/\s/g, '')}.co.mz`,
-            priority: source.priority
-        };
-    });
-};
-
-// ========== RENDERIZAÇÃO OTIMIZADA ==========
-
-const renderer = {
-    container: document.getElementById('news-container'),
-    template: null,
-    
-    init() {
-        // Criar template uma vez
-        this.template = document.createElement('div');
-        this.template.className = 'card';
-        this.template.innerHTML = `
-            <img loading="lazy" alt="">
-            <div class="card-text">
-                <div class="card-title"></div>
-                <div class="card-meta">
-                    <span class="source-tag"></span>
-                    <span class="category-tag"></span>
-                </div>
+    <!-- MODAL INFO -->
+    <div id="info-modal">
+        <div id="info-modal-content">
+            <div id="info-modal-header">
+                <h2><i class="fas" id="modal-icon"></i> <span id="modal-title"></span></h2>
+                <button id="info-modal-close">✖</button>
             </div>
-        `;
-    },
-    
-    renderNews(articles, clear = false) {
-        if (clear) {
-            this.container.innerHTML = '';
-            // Adicionar skeletons para transição suave
-            this.showSkeletons(6);
+            <div id="info-modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // VARIÁVEIS GLOBAIS
+        let news = [];
+        let filteredNews = [];
+        let hashes = new Set();
+        const BATCH_SIZE = 15;
+        let isLoadingMore = false;
+        let allSourcesLoaded = false;
+        let currentCategory = 'todos';
+
+        // CATEGORIAS
+        const CATEGORIES = {
+            'todos': { name: 'Todos', color: '#1a73e8' },
+            'sociedade': { name: 'Sociedade', color: '#2e7d32', class: 'sociedade-tag' },
+            'política': { name: 'Política', color: '#c62828', class: 'politica-tag' },
+            'economia': { name: 'Economia', color: '#ef6c00', class: 'economia-tag' },
+            'esportes': { name: 'Esportes', color: '#1565c0', class: 'esportes-tag' },
+            'cultura': { name: 'Cultura', color: '#7b1fa2', class: 'cultura-tag' },
+            'saúde': { name: 'Saúde', color: '#00796b', class: 'saude-tag' },
+            'tecnologia': { name: 'Tecnologia', color: '#37474f', class: 'tech-tag' }
+        };
+
+        // ELEMENTOS DOM
+        const container = document.getElementById("news-container");
+        const infiniteLoader = document.getElementById("infinite-loader");
+        const infoModal = document.getElementById("info-modal");
+        const infoModalClose = document.getElementById("info-modal-close");
+        const modalTitle = document.getElementById("modal-title");
+        const modalIcon = document.getElementById("modal-icon");
+
+        // CONFIGURAÇÃO DAS FONTES
+        const sources = [
+            { 
+                name: "O País", 
+                baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Time de Todos",
+                baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            { 
+                name: "Integrity", 
+                baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Jornal Notícias",
+                baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            { 
+                name: "Savana", 
+                baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "JornalMZ",
+                baseUrl: "https://jornalmz.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Checka",
+                baseUrl: "https://checka.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Canal de Moçambique",
+                baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Stop",
+                baseUrl: "https://www.stop.co.mz/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Club of Mozambique",
+                baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            {
+                name: "Zitamar News",
+                baseUrl: "https://www.zitamar.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            },
+            { 
+                name: "Carta de Moçambique", 
+                baseUrl: "https://cartamz.com/wp-json/wp/v2/posts",
+                currentPage: 1,
+                hasMore: true,
+                isFetching: false
+            }
+        ];
+
+        // FUNÇÕES DE UTILIDADE
+        function formatDate(d) {
+            return new Date(d).toLocaleString("pt-PT");
         }
-        
-        // Remover skeletons
-        const skeletons = this.container.querySelectorAll('.skeleton');
-        skeletons.forEach(s => s.remove());
-        
-        // Usar DocumentFragment para renderização em batch
-        const fragment = document.createDocumentFragment();
-        
-        articles.forEach(article => {
-            const card = this.createCard(article);
-            if (card) fragment.appendChild(card);
-        });
-        
-        this.container.appendChild(fragment);
-        
-        // Pré-carregar imagens das próximas notícias
-        this.prefetchImages(articles.slice(0, 3));
-    },
-    
-    createCard(article) {
-        if (this.container.querySelector(`[data-id="${article.id}"]`)) return null;
-        
-        const card = this.template.cloneNode(true);
-        card.dataset.id = article.id;
-        card.dataset.category = article.category;
-        card.dataset.timestamp = article.timestamp;
-        
-        // Usar requestIdleCallback para renderização não crítica
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(() => {
-                this.updateCardContent(card, article);
+
+        function generateSlug(title) {
+            return title
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^\w\s]/g, '')
+                .replace(/\s+/g, '-')
+                .substring(0, 50);
+        }
+
+        function generateNewsId(title, source, date) {
+            const shortTitle = title.substring(0, 30);
+            const sourceAbbr = source.substring(0, 3).toLowerCase();
+            const dateStr = new Date(date).getTime().toString(36);
+            return `${sourceAbbr}-${generateSlug(shortTitle)}-${dateStr}`;
+        }
+
+        // FUNÇÕES DE INTERFACE
+        function openSidebar() {
+            document.getElementById("sidebar").classList.add("open");
+            document.getElementById("sidebar-overlay").style.display = "block";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("sidebar-overlay").style.display = "none";
+        }
+
+        document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+
+        function filterByCategory(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
-        } else {
-            this.updateCardContent(card, article);
+            event.target.classList.add('active');
+            
+            currentCategory = category;
+            
+            if (category === 'todos') {
+                filteredNews = [...news];
+            } else {
+                filteredNews = news.filter(article => {
+                    const articleCategory = determineCategory(article.title, article.content);
+                    return articleCategory === category;
+                });
+            }
+            
+            const searchText = document.getElementById("search-input").value.toLowerCase();
+            if (searchText) {
+                filteredNews = filteredNews.filter(n =>
+                    n.title.toLowerCase().includes(searchText) || 
+                    n.source.toLowerCase().includes(searchText)
+                );
+            }
+            
+            container.innerHTML = '';
+            filteredNews.forEach(article => {
+                renderSingleNews(article);
+            });
         }
-        
-        card.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.openNews(article);
-        }, { passive: true });
-        
-        return card;
-    },
-    
-    updateCardContent(card, article) {
-        const img = card.querySelector('img');
-        const title = card.querySelector('.card-title');
-        const source = card.querySelector('.source-tag');
-        const category = card.querySelector('.category-tag');
-        
-        // Otimizar carregamento de imagem
-        if (article.image && !article.image.startsWith('data:')) {
-            img.src = article.image;
-            img.onerror = () => {
-                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"%3E%3Crect width="400" height="200" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em"%3E' + encodeURIComponent(article.source.substring(0, 2)) + '%3C/text%3E%3C/svg%3E';
-            };
-        } else {
-            img.src = article.image;
+
+        function searchNews() {
+            const q = document.getElementById("search-input").value.toLowerCase();
+            
+            let tempFiltered = [...news];
+            
+            if (currentCategory !== 'todos') {
+                tempFiltered = news.filter(article => {
+                    const articleCategory = determineCategory(article.title, article.content);
+                    return articleCategory === currentCategory;
+                });
+            }
+            
+            filteredNews = tempFiltered.filter(n =>
+                n.title.toLowerCase().includes(q) || 
+                n.source.toLowerCase().includes(q)
+            );
+            
+            container.innerHTML = '';
+            filteredNews.forEach(article => {
+                renderSingleNews(article);
+            });
         }
-        
-        title.textContent = article.title;
-        source.textContent = article.source;
-        category.textContent = article.category;
-        category.className = `category-tag ${article.category}-tag`;
-    },
-    
-    showSkeletons(count) {
-        for (let i = 0; i < count; i++) {
-            const skeleton = document.createElement('div');
-            skeleton.className = 'card skeleton loading-shimmer';
-            skeleton.innerHTML = `
-                <div class="loading-shimmer" style="height:180px;border-radius:16px 16px 0 0"></div>
-                <div class="card-text">
-                    <div class="card-title loading-shimmer"></div>
-                    <div class="card-meta">
-                        <span class="loading-shimmer"></span>
-                        <span class="loading-shimmer"></span>
+
+        // MODAL INFO
+        function openInfoModal(type) {
+            closeSidebar();
+            
+            let title = '';
+            let icon = '';
+            let content = '';
+            
+            if (type === 'sobre') {
+                title = 'Sobre a Plataforma';
+                icon = 'fa-info-circle';
+                content = `
+                    <div class="info-content">
+                        <h3>📰 Agregador de Notícias</h3>
+                        <p>Agregador independente de notícias de Moçambique, reunindo conteúdos de várias fontes confiáveis em tempo real.</p>
+                        
+                        <h4>Funcionalidades:</h4>
+                        <ul>
+                            <li>✅ Notícias em tempo real</li>
+                            <li>✅ Busca inteligente</li>
+                            <li>✅ Categorização automática</li>
+                            <li>✅ Links permanentes para cada notícia</li>
+                            <li>✅ Design responsivo</li>
+                        </ul>
+                        
+                        <div class="share-preview">
+                            <small><strong>Compartilhe esta plataforma:</strong></small><br>
+                            <button class="copy-link-btn" onclick="copyPlatformLink()">
+                                <i class="fas fa-link"></i> Copiar Link da Plataforma
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `;
-            this.container.appendChild(skeleton);
+                `;
+            } else if (type === 'contato') {
+                title = 'Contacto';
+                icon = 'fa-envelope';
+                content = `
+                    <div class="info-content">
+                        <h3>📞 Entre em Contacto</h3>
+                        
+                        <div class="contact-info">
+                            <p><strong>Email:</strong> claudioarmando001@gmail.com</p>
+                            <p><strong>Telefone:</strong> +258 869 667 677</p>
+                        </div>
+                        
+                        <p><em>Horário de atendimento: Seg-Sex, 08:00-18:00</em></p>
+                    </div>
+                `;
+            }
+            
+            modalTitle.textContent = title;
+            modalIcon.className = `fas ${icon}`;
+            document.getElementById("info-modal-body").innerHTML = content;
+            infoModal.style.display = "flex";
         }
-    },
-    
-    prefetchImages(articles) {
-        if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        observer.unobserve(img);
-                    }
+
+        function closeInfoModal() {
+            infoModal.style.display = "none";
+        }
+
+        infoModalClose.addEventListener('click', closeInfoModal);
+        infoModal.addEventListener('click', (e) => {
+            if (e.target.id === 'info-modal') closeInfoModal();
+        });
+
+        function copyPlatformLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Link da plataforma copiado!');
+            });
+        }
+
+        // DETERMINAR CATEGORIA
+        function determineCategory(title, content) {
+            const text = (title + ' ' + content).toLowerCase();
+            
+            const keywords = {
+                'sociedade': ['sociedade', 'social', 'comunidade', 'educação', 'escola'],
+                'política': ['política', 'governo', 'presidente', 'eleições', 'partido'],
+                'economia': ['economia', 'negócio', 'empresa', 'investimento', 'banco'],
+                'esportes': ['esporte', 'futebol', 'jogo', 'atleta', 'campeonato'],
+                'cultura': ['cultura', 'arte', 'música', 'teatro', 'cinema'],
+                'saúde': ['saúde', 'hospital', 'médico', 'doença', 'vacina'],
+                'tecnologia': ['tecnologia', 'internet', 'digital', 'aplicativo', 'software']
+            };
+            
+            let scores = {};
+            Object.keys(keywords).forEach(cat => {
+                scores[cat] = 0;
+                keywords[cat].forEach(keyword => {
+                    if (text.includes(keyword)) scores[cat]++;
                 });
             });
             
-            articles.forEach(article => {
-                if (article.image && !article.image.startsWith('data:')) {
-                    const img = new Image();
-                    img.dataset.src = article.image;
-                    observer.observe(img);
+            let maxScore = 0;
+            let selectedCategory = 'sociedade';
+            
+            Object.keys(scores).forEach(cat => {
+                if (scores[cat] > maxScore) {
+                    maxScore = scores[cat];
+                    selectedCategory = cat;
                 }
             });
+            
+            if (maxScore === 0) {
+                if (title.toLowerCase().includes('futebol')) return 'esportes';
+                if (title.toLowerCase().includes('econ')) return 'economia';
+                if (title.toLowerCase().includes('arte')) return 'cultura';
+                if (title.toLowerCase().includes('hospital')) return 'saúde';
+                if (title.toLowerCase().includes('tech')) return 'tecnologia';
+                
+                const categories = Object.keys(CATEGORIES).filter(cat => cat !== 'todos');
+                return categories[Math.floor(Math.random() * categories.length)];
+            }
+            
+            return selectedCategory;
         }
-    },
-    
-    openNews(article) {
-        // Gerar URL otimizada
-        const slug = article.title
-            .toLowerCase()
-            .replace(/[^\w\s]/g, '')
-            .replace(/\s+/g, '-')
-            .substring(0, 60);
-        
-        const url = `leitura.html?n=${article.id}&t=${slug}&s=${article.sourceId}`;
-        
-        // Salvar no sessionStorage para acesso rápido
-        sessionStorage.setItem('currentNews', JSON.stringify(article));
-        
-        // Navegar com transição
-        document.body.style.opacity = '0.7';
-        setTimeout(() => {
-            window.location.href = url;
-        }, 150);
-    },
-    
-    showToast(message, type = 'info') {
-        const toast = document.getElementById('toast');
-        toast.textContent = message;
-        toast.className = `toast ${type}`;
-        toast.style.display = 'block';
-        
-        setTimeout(() => {
-            toast.style.display = 'none';
-        }, 3000);
-    }
-};
 
-// ========== FILTRAGEM E BUSCA ==========
+        // RENDERIZAR NOTÍCIA
+        function renderSingleNews(article) {
+            if (container.querySelector(`[data-id="${article.id}"]`)) return;
+            
+            const category = article.category || determineCategory(article.title, article.content);
+            article.category = category;
+            
+            // Gera ID único para a notícia
+            article.id = article.id || generateNewsId(article.title, article.source, article.date);
+            
+            // Gera URL para a página de leitura
+            const newsUrl = `leitura.html?id=${article.id}`;
+            
+            const c = document.createElement("a");
+            c.className = "card";
+            c.href = newsUrl;
+            c.dataset.id = article.id;
+            c.dataset.category = category;
+            
+            c.innerHTML = `
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-title">${article.title}</div>
+                        <div class="card-meta">
+                            <span class="source-tag">${article.source}</span>
+                            <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
+                            <span>${formatDate(article.date)}</span>
+                        </div>
+                    </div>
+                    <img src="${article.image}" loading="lazy" alt="${article.title}" onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
+                </div>
+            `;
+            
+            // Encontra a posição correta para ordenação por data
+            let inserted = false;
+            const cards = container.querySelectorAll('.card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                const cardDate = new Date(cards[i].dataset.date || 0);
+                const newDate = new Date(article.date);
+                
+                if (newDate > cardDate) {
+                    container.insertBefore(c, cards[i]);
+                    inserted = true;
+                    break;
+                }
+            }
+            
+            if (!inserted) {
+                container.appendChild(c);
+            }
+            
+            c.dataset.date = article.date;
+        }
 
-const filterNews = () => {
-    let filtered = Array.from(state.news.values());
-    
-    // Filtrar por categoria
-    if (state.activeCategory !== 'todos') {
-        filtered = filtered.filter(article => article.category === state.activeCategory);
-    }
-    
-    // Filtrar por busca
-    if (state.searchQuery.trim()) {
-        const query = state.searchQuery.toLowerCase();
-        filtered = filtered.filter(article =>
-            article.title.toLowerCase().includes(query) ||
-            article.excerpt.toLowerCase().includes(query) ||
-            article.source.toLowerCase().includes(query)
-        );
-    }
-    
-    // Ordenar por data e prioridade
-    filtered.sort((a, b) => {
-        if (a.priority !== b.priority) return b.priority - a.priority;
-        return b.timestamp - a.timestamp;
-    });
-    
-    state.filteredNews = filtered;
-    return filtered;
-};
+        // CARREGAMENTO DE NOTÍCIAS
+        async function processSourceArticles(source, articles) {
+            const newArticles = [];
+            
+            for (const article of articles) {
+                const hash = (article.title.rendered + article.link).replace(/\W/g, "");
+                
+                if (hashes.has(hash)) continue;
+                hashes.add(hash);
+                
+                const newsItem = {
+                    id: generateNewsId(article.title.rendered, source.name, article.date),
+                    title: article.title.rendered,
+                    content: article.content.rendered,
+                    image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                           article.jetpack_featured_media_url ||
+                           "https://via.placeholder.com/300x200",
+                    source: source.name,
+                    date: article.date || article.modified,
+                    link: article.link,
+                    hash: hash
+                };
+                
+                newArticles.push(newsItem);
+            }
+            
+            newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            for (const newsItem of newArticles) {
+                news.push(newsItem);
+                filteredNews.push(newsItem);
+                renderSingleNews(newsItem);
+                await new Promise(resolve => setTimeout(resolve, 30));
+            }
+        }
 
-// ========== CARREGAMENTO DE NOTÍCIAS ==========
+        async function loadSource(source) {
+            if (!source.hasMore || source.isFetching) return;
+            
+            source.isFetching = true;
+            
+            try {
+                const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}&t=${Date.now()}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    if (response.status === 400) source.hasMore = false;
+                    throw new Error(`Erro ao buscar ${source.name}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.length === 0) {
+                    source.hasMore = false;
+                    return;
+                }
+                
+                source.currentPage++;
+                await processSourceArticles(source, data);
+                
+            } catch (error) {
+                console.error(`Erro ao carregar ${source.name}:`, error);
+                source.hasMore = false;
+            } finally {
+                source.isFetching = false;
+                checkAllSourcesLoaded();
+            }
+        }
 
-const loadNews = async (initial = false) => {
-    if (state.isLoading || (!initial && !state.hasMore)) return;
-    
-    state.isLoading = true;
-    
-    if (initial) {
-        renderer.showSkeletons(6);
-        state.page = 1;
-        state.hasMore = true;
-        state.news.clear();
-    }
-    
-    try {
-        // Carregar fontes prioritárias primeiro
-        const prioritySources = NEWS_SOURCES.filter(s => s.priority === 1);
-        const otherSources = NEWS_SOURCES.filter(s => s.priority > 1);
-        
-        const [priorityResults, otherResults] = await Promise.all([
-            fetchParallel(prioritySources),
-            fetchParallel(otherSources)
-        ]);
-        
-        const allArticles = [];
-        
-        // Processar resultados prioritários primeiro
-        priorityResults.forEach(result => {
-            if (result.status === 'fulfilled' && result.value.data.length > 0) {
-                const source = NEWS_SOURCES.find(s => s.id === result.value.source);
-                const processed = processArticles(result.value.data, source);
-                allArticles.push(...processed);
+        async function loadAllSources() {
+            news = [];
+            filteredNews = [];
+            hashes.clear();
+            allSourcesLoaded = false;
+            container.innerHTML = '';
+            
+            sources.forEach(source => {
+                source.currentPage = 1;
+                source.hasMore = true;
+                source.isFetching = false;
+            });
+            
+            const promises = sources.map(source => loadSource(source));
+            await Promise.allSettled(promises);
+            reorderAllNewsByDate();
+            
+            // Armazena no localStorage para uso na página de leitura
+            localStorage.setItem('newsCache', JSON.stringify(news));
+            localStorage.setItem('newsCacheTimestamp', Date.now());
+        }
+
+        function reorderAllNewsByDate() {
+            news.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = '';
+            filteredNews.forEach(article => {
+                renderSingleNews(article);
+            });
+        }
+
+        async function loadMoreNews() {
+            if (isLoadingMore || allSourcesLoaded) return;
+            
+            isLoadingMore = true;
+            infiniteLoader.style.display = 'block';
+            
+            let anySourceHasMore = false;
+            const promises = [];
+            
+            for (const source of sources) {
+                if (source.hasMore) {
+                    promises.push(loadSource(source));
+                    if (source.hasMore) anySourceHasMore = true;
+                }
+            }
+            
+            await Promise.allSettled(promises);
+            allSourcesLoaded = !anySourceHasMore;
+            
+            isLoadingMore = false;
+            infiniteLoader.style.display = 'none';
+            
+            // Atualiza cache
+            localStorage.setItem('newsCache', JSON.stringify(news));
+        }
+
+        function checkAllSourcesLoaded() {
+            allSourcesLoaded = sources.every(source => !source.hasMore);
+            if (allSourcesLoaded) infiniteLoader.style.display = 'none';
+        }
+
+        // CONTROLES
+        function manualRefresh() {
+            container.innerHTML = '';
+            closeInfoModal();
+            loadAllSources();
+        }
+
+        // SCROLL INFINITO
+        let scrollTimeout;
+        const SCROLL_THRESHOLD = 300;
+
+        window.addEventListener("scroll", () => {
+            if (scrollTimeout) clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const threshold = document.body.offsetHeight - SCROLL_THRESHOLD;
+                
+                if (scrollPosition >= threshold && !isLoadingMore && !allSourcesLoaded) {
+                    loadMoreNews();
+                }
+            }, 150);
+        });
+
+        // INICIALIZAÇÃO
+        loadAllSources();
+
+        // Atualiza periodicamente
+        setInterval(() => {
+            if (document.visibilityState === 'visible' && !isLoadingMore) {
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const threshold = document.body.offsetHeight - 500;
+                
+                if (scrollPosition >= threshold) {
+                    loadMoreNews();
+                }
+            }
+        }, 300000);
+
+        // ATALHOS DE TECLADO
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeInfoModal();
+                closeSidebar();
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById("search-input").focus();
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                e.preventDefault();
+                manualRefresh();
             }
         });
-        
-        // Processar outras fontes
-        otherResults.forEach(result => {
-            if (result.status === 'fulfilled' && result.value.data.length > 0) {
-                const source = NEWS_SOURCES.find(s => s.id === result.value.source);
-                const processed = processArticles(result.value.data, source);
-                allArticles.push(...processed);
-            }
-        });
-        
-        // Adicionar ao estado
-        allArticles.forEach(article => {
-            if (!state.news.has(article.id)) {
-                state.news.set(article.id, article);
-            }
-        });
-        
-        // Atualizar cache
-        await cacheManager.saveNews(allArticles);
-        
-        // Renderizar
-        const filtered = filterNews();
-        renderer.renderNews(filtered.slice(0, initial ? 20 : filtered.length), initial);
-        
-        state.page++;
-        state.hasMore = allArticles.length >= CONFIG.BATCH_SIZE;
-        
-        if (initial) {
-            // Pré-carregar próximas notícias
-            setTimeout(() => cacheManager.prefetchNews(), 1000);
-        }
-        
-    } catch (error) {
-        console.error('Erro ao carregar notícias:', error);
-        renderer.showToast('Erro ao carregar notícias', 'error');
-    } finally {
-        state.isLoading = false;
-        document.getElementById('infinite-loader').style.display = 'none';
-    }
-};
-
-// ========== EVENT HANDLERS OTIMIZADOS ==========
-
-const setupEventListeners = () => {
-    // Sidebar
-    document.getElementById('menu-btn').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebar-overlay').style.display = 'block';
-    });
-    
-    document.getElementById('close-sidebar').addEventListener('click', closeSidebar);
-    document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
-    
-    // Categorias
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            state.activeCategory = e.target.dataset.category;
-            filterNews();
-            renderer.renderNews(state.filteredNews, true);
-        });
-    });
-    
-    // Busca
-    const searchInput = document.getElementById('search-input');
-    const handleSearch = debounce((e) => {
-        state.searchQuery = e.target.value;
-        filterNews();
-        renderer.renderNews(state.filteredNews, true);
-    }, CONFIG.DEBOUNCE_DELAY);
-    
-    searchInput.addEventListener('input', handleSearch);
-    
-    // Refresh
-    document.getElementById('refresh-btn').addEventListener('click', () => {
-        loadNews(true);
-        renderer.showToast('Atualizando notícias...', 'info');
-    });
-    
-    // Scroll infinito
-    const handleScroll = throttle(() => {
-        const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - CONFIG.SCROLL_THRESHOLD;
-        
-        if (scrollPosition >= threshold && !state.isLoading && state.hasMore) {
-            document.getElementById('infinite-loader').style.display = 'block';
-            loadNews(false);
-        }
-    }, CONFIG.THROTTLE_DELAY);
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Offline/online
-    window.addEventListener('online', () => {
-        state.offline = false;
-        renderer.showToast('Conexão restaurada', 'success');
-        if (state.news.size === 0) loadNews(true);
-    });
-    
-    window.addEventListener('offline', () => {
-        state.offline = true;
-        renderer.showToast('Modo offline ativado', 'error');
-    });
-};
-
-const closeSidebar = () => {
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebar-overlay').style.display = 'none';
-};
-
-// ========== INICIALIZAÇÃO RÁPIDA ==========
-
-const init = async () => {
-    // 1. Inicializar renderizador
-    renderer.init();
-    
-    // 2. Inicializar IndexedDB (em paralelo)
-    const dbPromise = initDB();
-    
-    // 3. Carregar notícias do cache primeiro
-    try {
-        const cachedNews = JSON.parse(localStorage.getItem('last_news') || '[]');
-        if (cachedNews.length > 0) {
-            cachedNews.forEach(article => state.news.set(article.id, article));
-            const filtered = filterNews();
-            renderer.renderNews(filtered.slice(0, 10));
-            renderer.showToast('Carregado do cache', 'info');
-        }
-    } catch (e) {
-        console.warn('Erro ao carregar cache:', e);
-    }
-    
-    // 4. Configurar event listeners
-    setupEventListeners();
-    
-    // 5. Aguardar IndexedDB e carregar notícias
-    await dbPromise;
-    
-    // 6. Carregar notícias novas
-    if (navigator.onLine) {
-        setTimeout(() => loadNews(true), 100);
-    }
-    
-    // 7. Otimizações de performance
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(console.warn);
-    }
-    
-    // 8. Prefetch crítico
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = 'leitura.html';
-    document.head.appendChild(link);
-    
-    console.log('Aplicação inicializada com alta performance');
-};
-
-// Iniciar imediatamente
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
-
-// Web Worker para processamento em background
-if (window.Worker) {
-    const worker = new Worker('news-worker.js');
-    worker.onmessage = (e) => {
-        console.log('Worker processou:', e.data.length, 'notícias');
-    };
-}
-
-// Exportar para debug
-window.appState = state;
-</script>
+    </script>
 </body>
 </html>
