@@ -7,646 +7,751 @@
 <meta name="description" content="Leia notícias completas de Moçambique">
 <meta name="robots" content="index, follow">
 <style>
-/* [Todo o CSS anterior permanece igual] */
-/* Adicionar estilos para cache status */
-.cache-status {
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 12px;
-    color: #666;
-    z-index: 999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: none;
-}
-
-.cache-status.online {
-    border-left: 4px solid #28a745;
-}
-
-.cache-status.offline {
-    border-left: 4px solid #dc3545;
-}
-
-.cache-status i {
-    margin-right: 5px;
-}
-
-.news-actions {
-    margin: 20px 0;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.action-btn {
-    padding: 8px 16px;
-    background: #e8f0fe;
-    border: 1px solid #dce6f5;
-    border-radius: 6px;
-    color: #1a73e8;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s;
-}
-
-.action-btn:hover {
-    background: #1a73e8;
-    color: white;
-}
-
-.action-btn.save {
-    background: #e8f5e8;
-    border-color: #d4edda;
-    color: #28a745;
-}
-
-.action-btn.save:hover {
-    background: #28a745;
-    color: white;
-}
-
-.action-btn.share {
-    background: #f0e8fe;
-    border-color: #e6dcf5;
-    color: #6f42c1;
-}
-
-.action-btn.share:hover {
-    background: #6f42c1;
-    color: white;
-}
+/* CSS ULTRA OTIMIZADO */
+:root{--primary:#1a73e8;--secondary:#0d47a1;--success:#4caf50;--error:#f44336;--warning:#ff9800;--dark:#1a1a1a;--light:#f5f7fa}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--light);color:var(--dark);line-height:1.6;overflow-x:hidden}header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:16px 20px;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center}.header-btn{background:rgba(255,255,255,.9);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:6px;color:var(--primary);position:absolute;left:20px}.header-btn:hover{background:#fff;transform:translateX(-2px)}#news-content{max-width:800px;margin:0 auto;padding:20px}@media(max-width:840px){#news-content{padding:15px}}.news-article{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.08);overflow:hidden;animation:fadeIn .3s ease}.news-header{padding:30px 30px 20px}@media(max-width:640px){.news-header{padding:20px 20px 15px}}.news-title{font-size:28px;font-weight:800;line-height:1.3;margin-bottom:20px;color:var(--dark)}@media(max-width:640px){.news-title{font-size:24px}}.news-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}.source-tag{background:#e8f0fe;color:var(--primary);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700}.category-tag{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;text-transform:capitalize}.news-image-container{position:relative;width:100%;height:400px;overflow:hidden}@media(max-width:640px){.news-image-container{height:250px}}.news-image{width:100%;height:100%;object-fit:cover;display:block;background:linear-gradient(135deg,#667eea,#764ba2);transition:transform .3s}.news-image.loading{filter:blur(10px)}.news-body{padding:30px;font-size:18px;line-height:1.8}@media(max-width:640px){.news-body{padding:20px;font-size:16px}}.news-body :is(p,h2,h3,h4){margin-bottom:1.2em}.news-body img{max-width:100%;height:auto;border-radius:8px;margin:1.5em 0}.news-body iframe,.news-body video{max-width:100%;border-radius:8px;margin:1.5em 0}.share-section{margin:30px;padding:25px;background:#f8f9fa;border-radius:12px;border-left:4px solid var(--primary)}.share-title{font-size:18px;color:var(--primary);margin-bottom:20px;font-weight:700;display:flex;align-items:center;gap:10px}.share-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}.share-btn{padding:12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}.share-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.15)}.share-btn.facebook{background:#1877f2;color:#fff}.share-btn.twitter{background:#1da1f2;color:#fff}.share-btn.whatsapp{background:#25d366;color:#fff}.share-btn.link{background:#6c757d;color:#fff}.share-btn.link.copied{background:var(--success)}.action-buttons{display:flex;gap:12px;margin:20px 0;flex-wrap:wrap}.action-btn{padding:10px 18px;background:#f0f7ff;border:2px solid #e1e5eb;border-radius:10px;color:var(--primary);cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all .2s}.action-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}.skeleton{animation:skeleton-loading 1.5s infinite alternate}.skeleton-text{height:16px;background:#e0e0e0;border-radius:4px;margin:8px 0}.skeleton-title{height:40px;width:80%;margin-bottom:20px}.skeleton-meta{height:24px;width:60%;margin-bottom:30px}.skeleton-image{height:400px;width:100%;margin:20px 0;border-radius:8px}@media(max-width:640px){.skeleton-image{height:250px}}@keyframes skeleton-loading{0%{background-color:#e0e0e0}100%{background-color:#f5f5f5}}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.toast{position:fixed;bottom:20px;right:20px;background:#323232;color:#fff;padding:12px 24px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:10000;animation:slideUp .3s ease;max-width:320px;display:none}.toast.success{background:var(--success)}.toast.error{background:var(--error)}.toast.info{background:var(--primary)}@keyframes slideUp{from{transform:translateY(100px);opacity:0}to{transform:translateY(0);opacity:1}}.progress-bar{position:fixed;top:0;left:0;width:0;height:3px;background:var(--primary);z-index:1001;transition:width .3s ease}.offline-badge{position:fixed;top:80px;right:20px;background:var(--warning);color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;z-index:999;animation:slideDown .3s ease;display:none}@keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}.loader{text-align:center;padding:60px 20px}.spinner{display:inline-block;width:40px;height:40px;border:4px solid rgba(26,115,232,.1);border-top:4px solid var(--primary);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}.error-state{text-align:center;padding:80px 20px}.error-state i{font-size:64px;color:#b0bec5;margin-bottom:20px}.error-state h2{color:#546e7a;margin-bottom:15px}.error-state p{color:#90a4ae;max-width:400px;margin:0 auto 30px}.btn-primary{display:inline-block;padding:12px 28px;background:var(--primary);color:#fff;text-decoration:none;border-radius:10px;font-weight:600;transition:all .2s}.btn-primary:hover{background:var(--secondary);transform:translateY(-2px)}.btn-secondary{display:inline-block;padding:12px 28px;background:#6c757d;color:#fff;text-decoration:none;border-radius:10px;font-weight:600;transition:all .2s;margin-left:10px}.btn-secondary:hover{background:#545b62;transform:translateY(-2px)}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
+<!-- Barra de progresso -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- Badge offline -->
+<div class="offline-badge" id="offline-badge">
+    <i class="fas fa-wifi-slash"></i> Modo Offline
+</div>
+
 <header>
-<button class="header-btn" id="back-btn" onclick="goBack()">← Voltar</button>
-Notícias CLD
-<div style="width:70px;"></div>
+<button class="header-btn" id="back-btn" aria-label="Voltar">
+    <i class="fas fa-arrow-left"></i> Voltar
+</button>
+<div style="font-size:20px;font-weight:700">Notícias CLD</div>
 </header>
 
-<div id="news-content">
-<!-- SKELETON LOADER -->
+<main id="news-content" role="main">
+<!-- Skeleton Loading -->
 <div id="skeleton-loader">
-    <div class="skeleton skeleton-title"></div>
-    <div class="skeleton skeleton-meta"></div>
-    <div class="skeleton skeleton-image"></div>
-    <div class="skeleton skeleton-text"></div>
-    <div class="skeleton skeleton-text"></div>
-    <div class="skeleton skeleton-text short"></div>
-    <div class="skeleton skeleton-text"></div>
-    <div class="skeleton skeleton-text short"></div>
-</div>
-
-<div class="loader" id="loader" style="display:none;">
-    <div class="spinner"></div>
-    <p>Carregando notícia...</p>
-</div>
-
-<div id="error-message" class="error-message" style="display:none;">
-    <h2><i class="fas fa-exclamation-triangle"></i> Notícia não encontrada</h2>
-    <p>A notícia que você está procurando não foi encontrada.</p>
-    <p><small>Possíveis razões:</small></p>
-    <ul style="text-align: left; display: inline-block;">
-        <li>A notícia pode ter sido removida</li>
-        <li>O cache foi limpo</li>
-        <li>Problema temporário de conexão</li>
-    </ul>
-    <div style="margin-top: 20px;">
-        <a href="javascript:location.reload()"><i class="fas fa-sync-alt"></i> Tentar novamente</a>
-        <a href="/" style="margin-left: 10px; background: #6c757d;"><i class="fas fa-home"></i> Voltar para notícias</a>
+    <div class="news-article">
+        <div class="news-header">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-meta"></div>
+        </div>
+        <div class="skeleton skeleton-image"></div>
+        <div class="news-body">
+            <div class="skeleton skeleton-text" style="width:100%"></div>
+            <div class="skeleton skeleton-text" style="width:90%"></div>
+            <div class="skeleton skeleton-text" style="width:95%"></div>
+            <div class="skeleton skeleton-text" style="width:85%"></div>
+            <div class="skeleton skeleton-text" style="width:92%"></div>
+        </div>
     </div>
 </div>
 
-<div id="news-container" style="display:none;">
-    <!-- Conteúdo da notícia será carregado aqui -->
-</div>
+<!-- Loader -->
+<div class="loader" id="loader" style="display:none">
+    <div class="spinner"></div>
+    <p style="margin-top:15px;color:#666">Carregando notícia...</p>
 </div>
 
-<!-- Cache Status -->
-<div id="cache-status" class="cache-status">
-    <i class="fas fa-database"></i>
-    <span id="cache-status-text">Carregando...</span>
+<!-- Error State -->
+<div class="error-state" id="error-state" style="display:none">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h2>Notícia não encontrada</h2>
+    <p>A notícia que você está procurando não pôde ser carregada.</p>
+    <div>
+        <a href="javascript:location.reload()" class="btn-primary">
+            <i class="fas fa-sync-alt"></i> Tentar novamente
+        </a>
+        <a href="/" class="btn-secondary">
+            <i class="fas fa-home"></i> Página inicial
+        </a>
+    </div>
 </div>
+
+<!-- Conteúdo da notícia -->
+<div id="news-container" style="display:none"></div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-// ========== CONFIGURAÇÕES ==========
-const CATEGORIES = {
-    'sociedade': { name: 'Sociedade', class: 'sociedade-tag' },
-    'política': { name: 'Política', class: 'politica-tag' },
-    'economia': { name: 'Economia', class: 'economia-tag' },
-    'esportes': { name: 'Esportes', class: 'esportes-tag' },
-    'cultura': { name: 'Cultura', class: 'cultura-tag' },
-    'saúde': { name: 'Saúde', class: 'saude-tag' },
-    'tecnologia': { name: 'Tecnologia', class: 'tech-tag' }
+// ========== CONFIGURAÇÃO DE PERFORMANCE ==========
+'use strict';
+
+const CONFIG = {
+    CACHE_TTL: 3600000, // 1 hora
+    IMAGE_TIMEOUT: 3000,
+    DEBOUNCE_DELAY: 100,
+    READ_SPEED: 200 // palavras por minuto
 };
 
-// Cache local
-let newsCache = new Map();
+// Estado da aplicação
+const state = {
+    article: null,
+    isLoading: false,
+    isOffline: !navigator.onLine,
+    progress: 0,
+    scrollPosition: 0
+};
 
-// ========== FUNÇÕES UTILITÁRIAS ==========
+// Cache em memória
+const cache = new Map();
 
-function getUrlParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        n: params.get('n'), // ID da notícia
-        t: params.get('t'), // Título (para fallback)
-        s: params.get('s')  // Fonte (para fallback)
+// ========== UTILIDADES DE PERFORMANCE ==========
+
+// Debounce otimizado
+const debounce = (fn, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
     };
-}
+};
 
-function formatDate(d) {
-    if (!d) return '';
-    try {
-        const date = new Date(d);
-        return date.toLocaleDateString("pt-PT", {
+// Memoização
+const memoize = (fn) => {
+    const cache = new Map();
+    return (...args) => {
+        const key = JSON.stringify(args);
+        if (cache.has(key)) return cache.get(key);
+        const result = fn(...args);
+        cache.set(key, result);
+        return result;
+    };
+};
+
+// Hash rápido
+const fastHash = (str) => {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+        hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return (hash >>> 0).toString(36);
+};
+
+// ========== GERENCIAMENTO DE CACHE ==========
+
+const cacheManager = {
+    // Salvar no IndexedDB
+    async saveToIDB(article) {
+        if (!window.indexedDB) return;
+        
+        return new Promise((resolve) => {
+            const request = indexedDB.open('newsDB', 1);
+            
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains('articles')) {
+                    db.createObjectStore('articles', { keyPath: 'id' });
+                }
+            };
+            
+            request.onsuccess = (e) => {
+                const db = e.target.result;
+                const transaction = db.transaction(['articles'], 'readwrite');
+                const store = transaction.objectStore('articles');
+                
+                article.cachedAt = Date.now();
+                store.put(article);
+                
+                resolve(true);
+            };
+            
+            request.onerror = () => resolve(false);
+        });
+    },
+    
+    // Buscar do IndexedDB
+    async getFromIDB(id) {
+        if (!window.indexedDB) return null;
+        
+        return new Promise((resolve) => {
+            const request = indexedDB.open('newsDB', 1);
+            
+            request.onsuccess = (e) => {
+                const db = e.target.result;
+                const transaction = db.transaction(['articles'], 'readonly');
+                const store = transaction.objectStore('articles');
+                const getRequest = store.get(id);
+                
+                getRequest.onsuccess = () => {
+                    const article = getRequest.result;
+                    if (article && Date.now() - article.cachedAt < CONFIG.CACHE_TTL) {
+                        resolve(article);
+                    } else {
+                        resolve(null);
+                    }
+                };
+                
+                getRequest.onerror = () => resolve(null);
+            };
+            
+            request.onerror = () => resolve(null);
+        });
+    },
+    
+    // Cache em camadas (memória > IndexedDB > localStorage > API)
+    async getArticle(id, sourceHint) {
+        // 1. Cache em memória
+        if (cache.has(id)) {
+            console.log('Cache em memória:', id);
+            return cache.get(id);
+        }
+        
+        // 2. IndexedDB
+        const idbArticle = await this.getFromIDB(id);
+        if (idbArticle) {
+            cache.set(id, idbArticle);
+            console.log('IndexedDB cache:', id);
+            return idbArticle;
+        }
+        
+        // 3. localStorage (fallback)
+        try {
+            const localArticle = localStorage.getItem(`news_${id}`);
+            if (localArticle) {
+                const article = JSON.parse(localArticle);
+                cache.set(id, article);
+                console.log('localStorage cache:', id);
+                return article;
+            }
+        } catch (e) {
+            console.warn('localStorage error:', e);
+        }
+        
+        // 4. Buscar da fonte original
+        return await this.fetchFromSource(id, sourceHint);
+    },
+    
+    // Buscar da fonte
+    async fetchFromSource(id, sourceHint) {
+        try {
+            // Tentar API do agregador principal
+            const response = await fetch(`/api/news/${id}`, {
+                signal: AbortSignal.timeout(3000)
+            }).catch(() => null);
+            
+            if (response?.ok) {
+                const article = await response.json();
+                await this.saveToIDB(article);
+                cache.set(id, article);
+                return article;
+            }
+            
+            // Fallback: buscar da fonte original
+            if (sourceHint) {
+                const sourceResponse = await fetch(
+                    `https://${sourceHint}.co.mz/api/news/${id}`,
+                    { signal: AbortSignal.timeout(3000) }
+                ).catch(() => null);
+                
+                if (sourceResponse?.ok) {
+                    const article = await sourceResponse.json();
+                    await this.saveToIDB(article);
+                    cache.set(id, article);
+                    return article;
+                }
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('Fetch error:', error);
+            return null;
+        }
+    }
+};
+
+// ========== RENDERIZAÇÃO OTIMIZADA ==========
+
+const renderer = {
+    // Elementos DOM
+    elements: {
+        skeleton: document.getElementById('skeleton-loader'),
+        loader: document.getElementById('loader'),
+        error: document.getElementById('error-state'),
+        container: document.getElementById('news-container'),
+        progressBar: document.getElementById('progress-bar'),
+        offlineBadge: document.getElementById('offline-badge'),
+        toast: document.getElementById('toast')
+    },
+    
+    // Templates pré-compilados
+    templates: {
+        article: null,
+        shareButtons: null,
+        actionButtons: null
+    },
+    
+    init() {
+        // Compilar templates uma vez
+        this.templates.article = this.compileArticleTemplate();
+        this.templates.shareButtons = this.compileShareButtons();
+        this.templates.actionButtons = this.compileActionButtons();
+    },
+    
+    compileArticleTemplate() {
+        const template = document.createElement('div');
+        template.innerHTML = `
+            <article class="news-article" role="article">
+                <div class="news-header">
+                    <h1 class="news-title" id="article-title"></h1>
+                    <div class="news-meta" id="article-meta"></div>
+                    <div class="action-buttons" id="action-buttons"></div>
+                </div>
+                <div class="news-image-container">
+                    <img class="news-image" id="article-image" loading="lazy" alt="">
+                </div>
+                <div class="news-body" id="article-body"></div>
+                <div class="share-section">
+                    <h3 class="share-title">
+                        <i class="fas fa-share-alt"></i> Compartilhar
+                    </h3>
+                    <div class="share-buttons" id="share-buttons"></div>
+                </div>
+            </article>
+        `;
+        return template;
+    },
+    
+    compileShareButtons() {
+        return `
+            <button class="share-btn facebook" data-share="facebook">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </button>
+            <button class="share-btn twitter" data-share="twitter">
+                <i class="fab fa-twitter"></i> Twitter
+            </button>
+            <button class="share-btn whatsapp" data-share="whatsapp">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </button>
+            <button class="share-btn link" id="copy-link-btn" data-share="copy">
+                <i class="fas fa-link"></i> Copiar Link
+            </button>
+        `;
+    },
+    
+    compileActionButtons() {
+        return `
+            <button class="action-btn" id="save-offline-btn">
+                <i class="fas fa-download"></i> Salvar Offline
+            </button>
+            <button class="action-btn" id="view-original-btn">
+                <i class="fas fa-external-link-alt"></i> Ver Original
+            </button>
+            <button class="action-btn" id="read-aloud-btn">
+                <i class="fas fa-volume-up"></i> Ouvir
+            </button>
+        `;
+    },
+    
+    // Renderização otimizada com requestIdleCallback
+    renderArticle(article) {
+        this.elements.skeleton.style.display = 'none';
+        this.elements.loader.style.display = 'none';
+        this.elements.error.style.display = 'none';
+        
+        // Usar clone do template
+        const articleEl = this.templates.article.cloneNode(true);
+        
+        // Preencher conteúdo em etapas
+        requestIdleCallback(() => {
+            this.fillArticleContent(articleEl, article);
+            this.elements.container.innerHTML = '';
+            this.elements.container.appendChild(articleEl);
+            this.elements.container.style.display = 'block';
+            
+            // Atualizar título da página
+            document.title = `${article.title.substring(0, 60)}... | Notícias CLD`;
+            
+            // Atualizar meta description
+            const description = article.excerpt || 
+                article.content.replace(/<[^>]+>/g, '').substring(0, 160);
+            document.querySelector('meta[name="description"]').content = description;
+            
+            // Iniciar lazy loading de imagens
+            this.lazyLoadImages(articleEl);
+            
+            // Atualizar progresso
+            this.updateProgress(100);
+        });
+    },
+    
+    fillArticleContent(container, article) {
+        // Título
+        container.querySelector('#article-title').textContent = article.title;
+        
+        // Meta informações
+        const metaEl = container.querySelector('#article-meta');
+        metaEl.innerHTML = `
+            <span class="source-tag">${article.source}</span>
+            <span class="category-tag ${article.category}-tag">${article.category}</span>
+            <span><i class="far fa-clock"></i> ${this.formatDate(article.date)}</span>
+            <span><i class="fas fa-clock"></i> ${this.calculateReadTime(article.content)} min</span>
+        `;
+        
+        // Botões de ação
+        container.querySelector('#action-buttons').innerHTML = this.templates.actionButtons;
+        
+        // Imagem (com lazy loading)
+        const imgEl = container.querySelector('#article-image');
+        imgEl.alt = article.title;
+        imgEl.classList.add('loading');
+        
+        if (article.image && !article.image.startsWith('data:')) {
+            imgEl.dataset.src = article.image;
+        } else {
+            imgEl.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400"%3E%3Crect width="800" height="400" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="32" fill="white" text-anchor="middle" dy=".3em"%3E' + encodeURIComponent(article.source.substring(0, 3)) + '%3C/text%3E%3C/svg%3E';
+        }
+        
+        // Corpo do artigo (processado)
+        container.querySelector('#article-body').innerHTML = this.processContent(article.content);
+        
+        // Botões de compartilhamento
+        container.querySelector('#share-buttons').innerHTML = this.templates.shareButtons;
+        
+        // Adicionar event listeners
+        this.addEventListeners(container, article);
+    },
+    
+    processContent(content) {
+        // Limpar e otimizar conteúdo HTML
+        const div = document.createElement('div');
+        div.innerHTML = content;
+        
+        // Otimizar imagens
+        div.querySelectorAll('img').forEach(img => {
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            
+            // Adicionar fallback
+            img.onerror = () => {
+                img.style.display = 'none';
+            };
+        });
+        
+        // Remover elementos desnecessários
+        div.querySelectorAll('script, style, iframe[src*="ads"]').forEach(el => el.remove());
+        
+        // Adicionar classes CSS
+        div.querySelectorAll('p').forEach(p => {
+            p.className = 'article-paragraph';
+        });
+        
+        return div.innerHTML;
+    },
+    
+    lazyLoadImages(container) {
+        const imgObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        delete img.dataset.src;
+                        img.classList.remove('loading');
+                        
+                        // Timeout para garantir carregamento
+                        setTimeout(() => {
+                            if (!img.complete) {
+                                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400"%3E%3Crect width="800" height="400" fill="%231a73e8"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="32" fill="white" text-anchor="middle" dy=".3em"%3EIMG%3C/text%3E%3C/svg%3E';
+                            }
+                        }, CONFIG.IMAGE_TIMEOUT);
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px 0px',
+            threshold: 0.1
+        });
+        
+        container.querySelectorAll('img[data-src]').forEach(img => {
+            imgObserver.observe(img);
+        });
+    },
+    
+    addEventListeners(container, article) {
+        // Botão voltar
+        document.getElementById('back-btn').addEventListener('click', this.goBack);
+        
+        // Compartilhamento
+        container.querySelectorAll('[data-share]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const type = e.currentTarget.dataset.share;
+                this.handleShare(type, article);
+            });
+        });
+        
+        // Ações
+        container.querySelector('#save-offline-btn').addEventListener('click', () => {
+            this.saveOffline(article);
+        });
+        
+        container.querySelector('#view-original-btn').addEventListener('click', () => {
+            window.open(article.url, '_blank', 'noopener,noreferrer');
+        });
+        
+        container.querySelector('#read-aloud-btn').addEventListener('click', () => {
+            this.readAloud(article);
+        });
+        
+        // Atalhos de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.goBack();
+            if (e.key === 's' && e.ctrlKey) this.saveOffline(article);
+            if (e.key === 'p' && e.ctrlKey) window.print();
+        });
+    },
+    
+    handleShare(type, article) {
+        const url = window.location.href;
+        const title = article.title;
+        
+        switch(type) {
+            case 'facebook':
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'twitter':
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
+                break;
+            case 'whatsapp':
+                window.open(`https://wa.me/?text=${encodeURIComponent(`${title} - ${url}`)}`, '_blank');
+                break;
+            case 'copy':
+                navigator.clipboard.writeText(url).then(() => {
+                    this.showToast('Link copiado!', 'success');
+                }).catch(() => {
+                    this.showToast('Erro ao copiar', 'error');
+                });
+                break;
+        }
+    },
+    
+    saveOffline(article) {
+        cacheManager.saveToIDB(article).then(success => {
+            if (success) {
+                this.showToast('Salvo para leitura offline!', 'success');
+            } else {
+                this.showToast('Erro ao salvar', 'error');
+            }
+        });
+    },
+    
+    readAloud(article) {
+        const text = article.content.replace(/<[^>]+>/g, '');
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-PT';
+            utterance.rate = 1;
+            speechSynthesis.speak(utterance);
+            this.showToast('Lendo em voz alta...', 'info');
+        } else {
+            this.showToast('Navegador não suporta leitura em voz alta', 'error');
+        }
+    },
+    
+    goBack() {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    },
+    
+    showToast(message, type = 'info') {
+        const toast = this.elements.toast;
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    },
+    
+    updateProgress(percent) {
+        this.elements.progressBar.style.width = `${percent}%`;
+    },
+    
+    showError() {
+        this.elements.skeleton.style.display = 'none';
+        this.elements.loader.style.display = 'none';
+        this.elements.container.style.display = 'none';
+        this.elements.error.style.display = 'block';
+    },
+    
+    showLoader() {
+        this.elements.skeleton.style.display = 'none';
+        this.elements.loader.style.display = 'block';
+        this.elements.container.style.display = 'none';
+    },
+    
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('pt-PT', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
         });
-    } catch {
-        return d;
+    },
+    
+    calculateReadTime(content) {
+        const text = content.replace(/<[^>]+>/g, '');
+        const wordCount = text.split(/\s+/).length;
+        return Math.ceil(wordCount / CONFIG.READ_SPEED);
     }
-}
+};
 
-function determineCategory(title) {
-    const text = title.toLowerCase();
+// ========== CARREGAMENTO DE ARTIGO ==========
+
+const loadArticle = async () => {
+    const params = new URLSearchParams(window.location.search);
+    const articleId = params.get('n');
+    const sourceHint = params.get('s');
     
-    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta') || text.includes('esporte')) {
-        return 'esportes';
-    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento') || text.includes('finança')) {
-        return 'economia';
-    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro') || text.includes('parlamento')) {
-        return 'política';
-    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro') || text.includes('doença')) {
-        return 'saúde';
-    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo') || text.includes('smartphone')) {
-        return 'tecnologia';
-    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro') || text.includes('dança')) {
-        return 'cultura';
-    } else {
-        return 'sociedade';
-    }
-}
-
-// ========== FUNÇÕES DE CACHE ==========
-
-// Inicializar cache
-function initializeCache() {
-    try {
-        const cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        cachedNews.forEach(hash => {
-            try {
-                const cachedItem = localStorage.getItem(`news_${hash}`);
-                if (cachedItem) {
-                    const article = JSON.parse(cachedItem);
-                    newsCache.set(hash, article);
-                }
-            } catch (e) {
-                console.warn('Erro ao carregar do cache:', hash, e);
-            }
-        });
-        updateCacheStatus();
-        console.log('Cache inicializado:', newsCache.size, 'notícias');
-    } catch (e) {
-        console.error('Erro ao inicializar cache:', e);
-    }
-}
-
-// Buscar notícia no cache
-function findNewsInCache(newsId) {
-    // Buscar no Map primeiro (mais rápido)
-    if (newsCache.has(newsId)) {
-        console.log('Notícia encontrada no Map cache:', newsId);
-        return newsCache.get(newsId);
-    }
-    
-    // Tentar buscar no localStorage
-    try {
-        const cached = localStorage.getItem(`news_${newsId}`);
-        if (cached) {
-            const article = JSON.parse(cached);
-            newsCache.set(newsId, article); // Adicionar ao Map para próximas buscas
-            console.log('Notícia encontrada no localStorage:', newsId);
-            return article;
-        }
-    } catch (e) {
-        console.error('Erro ao buscar no localStorage:', e);
-    }
-    
-    return null;
-}
-
-// Salvar notícia no cache
-function saveToCache(article) {
-    try {
-        const cacheKey = `news_${article.id}`;
-        localStorage.setItem(cacheKey, JSON.stringify(article));
-        newsCache.set(article.id, article);
-        
-        // Adicionar à lista de cache
-        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        if (!cachedNews.includes(article.id)) {
-            cachedNews.push(article.id);
-            if (cachedNews.length > 300) {
-                const removed = cachedNews.shift();
-                localStorage.removeItem(`news_${removed}`);
-                newsCache.delete(removed);
-            }
-            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
-        }
-        
-        updateCacheStatus();
-        console.log('Notícia salva no cache:', article.id);
-        return true;
-    } catch (e) {
-        console.error('Erro ao salvar no cache:', e);
-        return false;
-    }
-}
-
-// Atualizar status do cache
-function updateCacheStatus() {
-    const statusEl = document.getElementById('cache-status');
-    const textEl = document.getElementById('cache-status-text');
-    
-    if (newsCache.size > 0) {
-        statusEl.className = 'cache-status online';
-        textEl.textContent = `${newsCache.size} notícias em cache`;
-        statusEl.style.display = 'block';
-    } else {
-        statusEl.style.display = 'none';
-    }
-}
-
-// ========== FUNÇÕES DE FALLBACK ==========
-
-// Tentar buscar notícia de fontes alternativas
-async function tryFallbackSources(newsId, titleHint, sourceHint) {
-    console.log('Tentando fontes fallback...');
-    
-    // Lista de endpoints para tentar
-    const fallbackEndpoints = [
-        'https://www.opais.co.mz/wp-json/wp/v2/posts?per_page=20&_embed',
-        'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts?per_page=20&_embed',
-        'https://cartamz.com/wp-json/wp/v2/posts?per_page=20&_embed',
-        'https://savana.co.mz/wp-json/wp/v2/posts?per_page=20&_embed'
-    ];
-    
-    for (const endpoint of fallbackEndpoints) {
-        try {
-            console.log('Tentando endpoint:', endpoint);
-            const response = await fetch(endpoint, { timeout: 5000 });
-            
-            if (!response.ok) continue;
-            
-            const articles = await response.json();
-            
-            // Tentar encontrar por título similar
-            if (titleHint) {
-                const searchSlug = decodeURIComponent(titleHint).toLowerCase();
-                
-                for (const article of articles) {
-                    const articleTitle = article.title.rendered.toLowerCase();
-                    const articleSlug = articleTitle
-                        .replace(/[^\w\s]/g, '')
-                        .replace(/\s+/g, '-');
-                    
-                    // Verificar similaridade
-                    if (articleSlug.includes(searchSlug) || searchSlug.includes(articleSlug)) {
-                        console.log('Encontrada por título similar:', article.title.rendered);
-                        return {
-                            id: newsId,
-                            title: article.title.rendered,
-                            content: article.content.rendered,
-                            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                                   article.jetpack_featured_media_url ||
-                                   "https://via.placeholder.com/800x400",
-                            source: sourceHint || 'Fonte Desconhecida',
-                            date: article.date || new Date().toISOString(),
-                            link: article.link
-                        };
-                    }
-                }
-            }
-            
-            // Tentar encontrar por data mais recente
-            if (articles.length > 0) {
-                const recentArticle = articles[0];
-                console.log('Retornando artigo mais recente como fallback');
-                return {
-                    id: newsId,
-                    title: recentArticle.title.rendered,
-                    content: recentArticle.content.rendered,
-                    image: recentArticle._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                           recentArticle.jetpack_featured_media_url ||
-                           "https://via.placeholder.com/800x400",
-                    source: sourceHint || 'Fonte Desconhecida',
-                    date: recentArticle.date,
-                    link: recentArticle.link
-                };
-            }
-            
-        } catch (error) {
-            console.warn('Erro no endpoint fallback:', endpoint, error);
-            continue;
-        }
-    }
-    
-    return null;
-}
-
-// ========== FUNÇÕES DE INTERFACE ==========
-
-function goBack() {
-    if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.hostname)) {
-        history.back();
-    } else {
-        window.location.href = '/';
-    }
-}
-
-function copyLink() {
-    const url = window.location.href;
-    const btn = document.getElementById('copy-link-btn');
-    
-    navigator.clipboard.writeText(url).then(() => {
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
-        btn.classList.add('copied');
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.remove('copied');
-        }, 2000);
-    }).catch(err => {
-        console.error('Erro ao copiar:', err);
-        alert('Não foi possível copiar o link');
-    });
-}
-
-function shareOnFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(document.title);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${title}`, '_blank');
-}
-
-function shareOnTwitter() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(document.title);
-    window.open(`https://twitter.com/intent/tweet?text=${title}&url=${url}`, '_blank');
-}
-
-function shareOnWhatsApp() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(document.title);
-    window.open(`https://wa.me/?text=${title}%20-%20${url}`, '_blank');
-}
-
-function saveForOffline() {
-    const article = window.currentArticle;
-    if (!article) return;
-    
-    if (saveToCache(article)) {
-        alert('Notícia salva para leitura offline!');
-    } else {
-        alert('Não foi possível salvar a notícia.');
-    }
-}
-
-// ========== RENDERIZAÇÃO ==========
-
-function renderNews(article) {
-    // Salvar referência global
-    window.currentArticle = article;
-    
-    const category = determineCategory(article.title);
-    
-    // Atualizar título da página
-    document.title = `${article.title.substring(0, 60)}${article.title.length > 60 ? '...' : ''} | Notícias CLD`;
-    
-    // Atualizar meta description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-        const cleanContent = article.content.replace(/<[^>]*>/g, '').substring(0, 160);
-        metaDesc.content = cleanContent;
-    }
-    
-    const newsHTML = `
-        <div class="news-header">
-            <h1 class="news-title">${article.title}</h1>
-            <div class="news-meta">
-                <span class="source-tag">${article.source}</span>
-                <span class="category-tag ${CATEGORIES[category]?.class || 'sociedade-tag'}">
-                    ${CATEGORIES[category]?.name || 'Sociedade'}
-                </span>
-                <span><i class="far fa-calendar"></i> ${formatDate(article.date)}</span>
-            </div>
-        </div>
-        
-        <div class="news-actions">
-            <button class="action-btn save" onclick="saveForOffline()">
-                <i class="fas fa-download"></i> Salvar Offline
-            </button>
-            <button class="action-btn" onclick="window.open('${article.link}', '_blank')">
-                <i class="fas fa-external-link-alt"></i> Ver Original
-            </button>
-        </div>
-        
-        ${article.image && !article.image.includes('placeholder.com') ? 
-            `<img src="${article.image}" class="news-image" alt="${article.title}" 
-                 loading="lazy" 
-                 onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">` : 
-            `<img src="https://via.placeholder.com/800x400/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}" 
-                 class="news-image" alt="${article.title}">`
-        }
-        
-        <div class="news-body">
-            ${article.content || '<p>Conteúdo não disponível.</p>'}
-        </div>
-        
-        <div class="share-section">
-            <h3 class="share-title"><i class="fas fa-share-alt"></i> Partilhar esta notícia</h3>
-            <div class="share-buttons">
-                <button class="share-btn facebook" onclick="shareOnFacebook()">
-                    <i class="fab fa-facebook-f"></i> Facebook
-                </button>
-                <button class="share-btn twitter" onclick="shareOnTwitter()">
-                    <i class="fab fa-twitter"></i> Twitter
-                </button>
-                <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </button>
-                <button class="share-btn link" id="copy-link-btn" onclick="copyLink()">
-                    <i class="fas fa-link"></i> Copiar Link
-                </button>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© ${new Date().getFullYear()} Notícias CLD - Agregador de Notícias de Moçambique</p>
-            <div class="footer-links">
-                <a href="/"><i class="fas fa-home"></i> Página Inicial</a>
-                <a href="javascript:void(0)" onclick="location.reload()"><i class="fas fa-sync-alt"></i> Recarregar</a>
-                <a href="javascript:void(0)" onclick="goBack()"><i class="fas fa-arrow-left"></i> Voltar</a>
-            </div>
-        </div>
-    `;
-    
-    // Atualizar a página
-    document.getElementById('skeleton-loader').style.display = 'none';
-    document.getElementById('news-container').innerHTML = newsHTML;
-    document.getElementById('news-container').style.display = 'block';
-    
-    // Adicionar notícia ao cache
-    saveToCache(article);
-    
-    // Adicionar analytics
-    trackNewsView(article.id);
-}
-
-// Mostrar erro
-function showError() {
-    document.getElementById('skeleton-loader').style.display = 'none';
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('error-message').style.display = 'block';
-}
-
-// Mostrar loader
-function showLoader() {
-    document.getElementById('skeleton-loader').style.display = 'none';
-    document.getElementById('loader').style.display = 'block';
-}
-
-// Rastrear visualização
-function trackNewsView(newsId) {
-    try {
-        let viewedNews = JSON.parse(localStorage.getItem('viewed_news') || '[]');
-        if (!viewedNews.includes(newsId)) {
-            viewedNews.push(newsId);
-            if (viewedNews.length > 100) {
-                viewedNews.shift();
-            }
-            localStorage.setItem('viewed_news', JSON.stringify(viewedNews));
-        }
-    } catch (e) {
-        console.warn('Não foi possível rastrear visualização:', e);
-    }
-}
-
-// ========== CARREGAMENTO PRINCIPAL ==========
-
-async function loadNews() {
-    const params = getUrlParams();
-    console.log('Parâmetros:', params);
-    
-    if (!params.n) {
-        console.error('ID da notícia não fornecido');
-        showError();
+    if (!articleId) {
+        renderer.showError();
         return;
     }
     
-    // 1. Tentar encontrar no cache local
-    let article = findNewsInCache(params.n);
-    
-    if (article) {
-        console.log('Notícia encontrada no cache');
-        renderNews(article);
-        return;
+    // Tentar carregar da sessão primeiro (para navegação rápida)
+    try {
+        const sessionArticle = sessionStorage.getItem('currentNews');
+        if (sessionArticle) {
+            const article = JSON.parse(sessionArticle);
+            if (article.id === articleId) {
+                renderer.renderArticle(article);
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('Session storage error:', e);
     }
     
-    // 2. Mostrar loader
-    showLoader();
+    // Mostrar skeleton enquanto carrega
+    renderer.updateProgress(10);
     
-    // 3. Tentar fallback
     try {
-        console.log('Tentando fallback...');
-        article = await tryFallbackSources(params.n, params.t, params.s);
+        const article = await cacheManager.getArticle(articleId, sourceHint);
         
         if (article) {
-            console.log('Notícia encontrada via fallback');
-            renderNews(article);
+            renderer.updateProgress(70);
+            state.article = article;
+            
+            // Renderizar com delay para melhor UX
+            setTimeout(() => {
+                renderer.renderArticle(article);
+            }, 150);
+            
+            // Pré-carregar notícias relacionadas em background
+            setTimeout(() => {
+                prefetchRelatedArticles(article);
+            }, 1000);
+            
         } else {
-            console.error('Notícia não encontrada em nenhuma fonte');
-            showError();
+            renderer.showError();
         }
+        
     } catch (error) {
-        console.error('Erro no fallback:', error);
-        showError();
+        console.error('Error loading article:', error);
+        renderer.showError();
+        renderer.showToast('Erro ao carregar notícia', 'error');
+    } finally {
+        renderer.updateProgress(100);
     }
-}
+};
+
+// Pré-carregar notícias relacionadas
+const prefetchRelatedArticles = async (article) => {
+    // Implementar lógica de pré-carregamento
+    // Isso pode ser feito em um Web Worker
+};
 
 // ========== INICIALIZAÇÃO ==========
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar cache
-    initializeCache();
+const init = () => {
+    // 1. Inicializar renderizador
+    renderer.init();
     
-    // Verificar se há uma notícia no hash da URL
-    const hash = window.location.hash.substring(1);
-    if (hash && hash.startsWith('n=')) {
-        const newsId = hash.replace('n=', '');
-        window.location.search = `?n=${newsId}`;
-        return;
+    // 2. Verificar offline
+    if (state.isOffline) {
+        renderer.elements.offlineBadge.style.display = 'block';
+        renderer.showToast('Modo offline ativado', 'warning');
     }
     
-    // Verificar se estamos offline
-    if (!navigator.onLine) {
-        document.getElementById('cache-status').className = 'cache-status offline';
-        document.getElementById('cache-status-text').textContent = 'Modo offline';
-        document.getElementById('cache-status').style.display = 'block';
+    // 3. Configurar eventos de rede
+    window.addEventListener('online', () => {
+        state.isOffline = false;
+        renderer.elements.offlineBadge.style.display = 'none';
+        renderer.showToast('Conexão restaurada', 'success');
+    });
+    
+    window.addEventListener('offline', () => {
+        state.isOffline = true;
+        renderer.elements.offlineBadge.style.display = 'block';
+        renderer.showToast('Modo offline', 'warning');
+    });
+    
+    // 4. Configurar leitura de progresso
+    const updateScrollProgress = debounce(() => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        
+        if (!isNaN(scrollPercent)) {
+            renderer.updateProgress(scrollPercent);
+        }
+    }, CONFIG.DEBOUNCE_DELAY);
+    
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    
+    // 5. Pré-carregar recursos
+    const prefetchResources = () => {
+        // Pré-carregar fontes
+        const fontLink = document.createElement('link');
+        fontLink.rel = 'preconnect';
+        fontLink.href = 'https://fonts.gstatic.com';
+        document.head.appendChild(fontLink);
+        
+        // Pré-carregar CSS do FontAwesome
+        const faLink = document.createElement('link');
+        faLink.rel = 'stylesheet';
+        faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+        faLink.crossOrigin = 'anonymous';
+        document.head.appendChild(faLink);
+    };
+    
+    // 6. Carregar artigo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            prefetchResources();
+            loadArticle();
+        });
+    } else {
+        prefetchResources();
+        loadArticle();
     }
     
-    // Carregar notícia
-    setTimeout(() => {
-        loadNews();
-    }, 100);
-});
-
-// Detectar mudanças de conexão
-window.addEventListener('online', () => {
-    document.getElementById('cache-status').className = 'cache-status online';
-    document.getElementById('cache-status-text').textContent = `${newsCache.size} notícias em cache`;
-});
-
-window.addEventListener('offline', () => {
-    document.getElementById('cache-status').className = 'cache-status offline';
-    document.getElementById('cache-status-text').textContent = 'Modo offline';
-});
-
-// Atalhos de teclado
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' || (e.key === 'ArrowLeft' && e.altKey)) {
-        goBack();
+    // 7. Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(console.warn);
     }
-    if (e.key === 'r' && e.ctrlKey) {
-        e.preventDefault();
-        location.reload();
-    }
-    if (e.key === 's' && e.ctrlKey) {
-        e.preventDefault();
-        saveForOffline();
-    }
-});
+    
+    console.log('Leitor otimizado carregado');
+};
 
-// Prevenir erros de imagens
-window.addEventListener('error', function(e) {
-    if (e.target.tagName === 'IMG') {
-        e.target.src = 'https://via.placeholder.com/300x150/1a73e8/ffffff?text=IMG';
-    }
-}, true);
+// Iniciar imediatamente
+init();
 
-console.log('Página de leitura carregada');
+// Exportar para debug
+window.newsApp = { state, cacheManager, renderer };
 </script>
 </body>
 </html>
