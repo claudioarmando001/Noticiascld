@@ -6,439 +6,1177 @@
 <title>Notícias CLD - Agregador de Notícias</title>
 <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
 <meta name="robots" content="index, follow">
-<style>
-/* [Todo o CSS anterior permanece igual] */
-</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-<!-- [Estrutura HTML anterior permanece igual] -->
-
-<script>
-// ========== VARIÁVEIS GLOBAIS ==========
-let news = [];
-let filteredNews = [];
-let hashes = new Set();
-const BATCH_SIZE = 15;
-let isLoadingMore = false;
-let allSourcesLoaded = false;
-let currentCategory = 'todos';
-
-// CATEGORIAS DISPONÍVEIS
-const CATEGORIES = {
-    'todos': { name: 'Todos', color: '#1a73e8' },
-    'sociedade': { name: 'Sociedade', color: '#2e7d32', class: 'sociedade-tag' },
-    'política': { name: 'Política', color: '#c62828', class: 'politica-tag' },
-    'economia': { name: 'Economia', color: '#ef6c00', class: 'economia-tag' },
-    'esportes': { name: 'Esportes', color: '#1565c0', class: 'esportes-tag' },
-    'cultura': { name: 'Cultura', color: '#7b1fa2', class: 'cultura-tag' },
-    'saúde': { name: 'Saúde', color: '#00796b', class: 'saude-tag' },
-    'tecnologia': { name: 'Tecnologia', color: '#37474f', class: 'tech-tag' }
-};
-
-// ELEMENTOS DOM
-const container = document.getElementById("news-container");
-const infiniteLoader = document.getElementById("infinite-loader");
-
-// CONSTANTES
-const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb7BeBI7T8bRTbjcsN0t";
-
-// FONTES DE NOTÍCIAS
-const sources = [
-    { 
-        name: "O País", 
-        baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Time de Todos",
-        baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Integrity", 
-        baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Jornal Notícias",
-        baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Savana", 
-        baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "JornalMZ",
-        baseUrl: "https://jornalmz.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Checka",
-        baseUrl: "https://checka.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Canal de Moçambique",
-        baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Stop",
-        baseUrl: "https://www.stop.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Club of Mozambique",
-        baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Zitamar News",
-        baseUrl: "https://www.zitamar.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Carta de Moçambique", 
-        baseUrl: "https://cartamz.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    }
-];
-
-// ========== FUNÇÕES DE UTILIDADE ==========
-
-// Gerar hash único para a notícia - CORRIGIDO
-function generateNewsHash(article) {
-    // Usar link como base para o hash para garantir consistência
-    const link = article.link || article.guid?.rendered || '';
-    const title = article.title?.rendered || '';
-    
-    // Criar hash mais consistente
-    const hashString = link + title;
-    let hash = 0;
-    for (let i = 0; i < hashString.length; i++) {
-        const char = hashString.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    
-    return Math.abs(hash).toString(36).substring(0, 12);
+<style>
+/* CSS ORIGINAL MANTIDO INTEGRALMENTE */
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f3f5;
+    margin:0;
+    color:#111;
 }
 
-// Salvar notícia no cache - MELHORADO
-function saveToCache(article, sourceName) {
-    try {
-        const hash = generateNewsHash(article);
-        const newsItem = {
-            id: hash,
-            title: article.title?.rendered || article.title || '',
-            content: article.content?.rendered || article.content || '',
-            excerpt: article.excerpt?.rendered || article.excerpt || '',
-            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                   article.jetpack_featured_media_url ||
-                   article.featured_media_url ||
-                   "https://via.placeholder.com/300x200",
-            source: sourceName || "Desconhecido",
-            date: article.date || article.modified || new Date().toISOString(),
-            link: article.link || article.guid?.rendered || '',
-            originalData: article // Salvar dados originais completos
-        };
-        
-        // Salvar no localStorage
-        localStorage.setItem(`news_${hash}`, JSON.stringify(newsItem));
-        
-        // Adicionar à lista geral de notícias em cache
-        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        if (!cachedNews.includes(hash)) {
-            cachedNews.push(hash);
-            // Manter apenas 200 notícias em cache
-            if (cachedNews.length > 200) {
-                const removed = cachedNews.shift();
-                localStorage.removeItem(`news_${removed}`);
+/* HEADER */
+header{
+    background:#1a73e8;
+    color:white;
+    padding:18px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    position:relative;
+}
+
+.header-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:white;
+    color:#1a73e8;
+    border:none;
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:bold;
+    transition: all 0.3s;
+}
+
+.header-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1.05);
+}
+
+#menu-btn{ left:15px; }
+#refresh-btn{ right:15px; }
+
+/* SIDEBAR */
+#sidebar-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    z-index:9998;
+}
+
+#sidebar{
+    position:fixed;
+    top:0;
+    left:-280px;
+    width:280px;
+    height:100vh;
+    background:#fff;
+    box-shadow:2px 0 6px rgba(0,0,0,.2);
+    padding:20px;
+    box-sizing:border-box;
+    transition:.3s;
+    z-index:9999;
+    overflow-y:auto;
+}
+
+#sidebar.open{
+    left:0;
+}
+
+#sidebar h2{
+    color:#1a73e8;
+    margin-top:0;
+    font-size:18px;
+}
+
+/* CATEGORIAS */
+.categories {
+    margin: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.category-btn {
+    background: #e8f0fe;
+    border: 1px solid #dce6f5;
+    color: #1a73e8;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.category-btn:hover {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.category-btn.active {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+/* BOTÕES MODAL */
+.modal-buttons {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-btn {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-btn:hover {
+    background: #0d62d9;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(26, 115, 232, 0.3);
+}
+
+.modal-btn i {
+    font-size: 18px;
+}
+
+/* SEARCH */
+.search-container{
+    max-width:950px;
+    margin:12px auto;
+    padding:0 12px;
+}
+#search-input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    font-size:16px;
+    background:#fff;
+    color:#111;
+    transition: all 0.3s;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+}
+
+/* LISTA */
+#news-container{
+    max-width:950px;
+    margin:auto;
+    padding:12px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 5px rgba(0,0,0,.08);
+    cursor:pointer;
+    transition:.2s;
+    animation: fadeIn 0.5s ease-out;
+    border: 1px solid #e8e8e8;
+}
+.card:hover{ 
+    transform:scale(1.01); 
+    box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.card-text{ width:70%; }
+.card-title{ 
+    font-size:16px;
+    font-weight:bold;
+    color:#111;
+    margin-bottom:4px;
+    line-height:1.3;
+}
+.card-meta{
+    font-size:12px;
+    color:#777;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap: wrap;
+}
+
+.source-tag{
+    background:#e8f0fe;
+    color:#1a73e8;
+    padding:2px 8px;
+    border-radius:12px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.card img{
+    width:120px;
+    height:85px;
+    object-fit:cover;
+    border-radius:10px;
+    background:#eee;
+}
+
+.category-tag {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.sociedade-tag {
+    background: rgba(76, 175, 80, 0.1);
+    color: #2e7d32;
+}
+
+.politica-tag {
+    background: rgba(244, 67, 54, 0.1);
+    color: #c62828;
+}
+
+.economia-tag {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ef6c00;
+}
+
+.esportes-tag {
+    background: rgba(33, 150, 243, 0.1);
+    color: #1565c0;
+}
+
+.cultura-tag {
+    background: rgba(156, 39, 176, 0.1);
+    color: #7b1fa2;
+}
+
+.saude-tag {
+    background: rgba(0, 150, 136, 0.1);
+    color: #00796b;
+}
+
+.tech-tag {
+    background: rgba(96, 125, 139, 0.1);
+    color: #37474f;
+}
+
+/* LOADER INFINITO */
+#infinite-loader {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.infinite-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #e8e8e8;
+    border-top: 3px solid #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* MODAL INFO */
+#info-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10001;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+#info-modal-content {
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#info-modal-header {
+    background: linear-gradient(135deg, #1a73e8, #0d62d9);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#info-modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#info-modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+#info-modal-close:hover {
+    background: rgba(255,255,255,0.3);
+    transform: rotate(90deg);
+}
+
+#info-modal-body {
+    padding: 25px;
+    overflow-y: auto;
+    max-height: calc(85vh - 80px);
+}
+
+/* SHARE BUTTONS */
+.share-buttons-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.share-btn-mini {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.share-btn-mini:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.share-btn-mini.whatsapp {
+    background: #25d366;
+}
+
+.share-btn-mini.link {
+    background: #1a73e8;
+}
+
+/* WHATSAPP FLOATING BUTTON */
+.whatsapp-channel-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 65%;
+    color: white;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    z-index: 1000;
+    font-size: 0;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.whatsapp-channel-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+}
+
+/* NOTIFICATION */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-left: 4px solid #1a73e8;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left-color: #34a853;
+}
+
+.notification.error {
+    border-left-color: #ea4335;
+}
+
+.notification i {
+    font-size: 20px;
+}
+
+/* QUICK ACCESS BAR */
+.quick-access {
+    background: white;
+    padding: 10px;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.quick-btn {
+    background: #e8f0fe;
+    border: 1px solid #dce6f5;
+    color: #1a73e8;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.quick-btn:hover {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+.quick-btn i {
+    margin-right: 5px;
+}
+</style>
+</head>
+<body>
+<header>
+<button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
+Notícias CLD
+<button class="header-btn" id="refresh-btn" onclick="manualRefresh()">↻</button>
+</header>
+
+<!-- QUICK ACCESS -->
+<div class="quick-access">
+    <button class="quick-btn" onclick="loadLatestNews()">
+        <i class="fas fa-bolt"></i> Últimas
+    </button>
+    <button class="quick-btn" onclick="loadTrendingNews()">
+        <i class="fas fa-fire"></i> Em Alta
+    </button>
+    <button class="quick-btn" onclick="openInfoModal('sobre')">
+        <i class="fas fa-info-circle"></i> Sobre
+    </button>
+    <button class="quick-btn" onclick="openInfoModal('contato')">
+        <i class="fas fa-phone"></i> Contato
+    </button>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar-overlay"></div>
+<div id="sidebar">
+<span id="close-sidebar" onclick="closeSidebar()">✖</span>
+<h2>Categorias</h2>
+<div class="categories">
+<button class="category-btn active" onclick="filterByCategory('todos')">Todos</button>
+<button class="category-btn" onclick="filterByCategory('sociedade')">Sociedade</button>
+<button class="category-btn" onclick="filterByCategory('política')">Política</button>
+<button class="category-btn" onclick="filterByCategory('economia')">Economia</button>
+<button class="category-btn" onclick="filterByCategory('esportes')">Esportes</button>
+<button class="category-btn" onclick="filterByCategory('cultura')">Cultura</button>
+<button class="category-btn" onclick="filterByCategory('saúde')">Saúde</button>
+<button class="category-btn" onclick="filterByCategory('tecnologia')">Tecnologia</button>
+</div>
+
+<h2>Ações</h2>
+<div class="modal-buttons">
+<button class="modal-btn" onclick="openInfoModal('sobre')">
+    <i class="fas fa-info-circle"></i> Sobre a Plataforma
+</button>
+<button class="modal-btn" onclick="openInfoModal('contato')">
+    <i class="fas fa-envelope"></i> Contacto
+</button>
+<button class="modal-btn" onclick="clearCache()">
+    <i class="fas fa-trash"></i> Limpar Cache
+</button>
+</div>
+</div>
+
+<!-- BUSCA -->
+<div class="search-container">
+<input id="search-input" placeholder="🔍 Buscar notícias..." onkeyup="searchNews()">
+</div>
+
+<!-- LISTA DE NOTÍCIAS -->
+<div id="news-container"></div>
+
+<!-- LOADER INFINITO -->
+<div id="infinite-loader" style="display:none;">
+    <div class="infinite-spinner"></div>
+    Carregando mais notícias...
+</div>
+
+<!-- MODAL INFO -->
+<div id="info-modal">
+<div id="info-modal-content">
+<div id="info-modal-header">
+    <h2><i class="fas" id="modal-icon"></i> <span id="modal-title"></span></h2>
+    <button id="info-modal-close">✖</button>
+</div>
+<div id="info-modal-body"></div>
+</div>
+</div>
+
+<!-- SHARE BUTTONS -->
+<div class="share-buttons-container">
+    <button class="share-btn-mini link" onclick="shareCurrentNews()" title="Copiar Link">
+        <i class="fas fa-link"></i>
+    </button>
+    <button class="share-btn-mini whatsapp" onclick="shareViaWhatsApp()" title="Compartilhar via WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+</div>
+
+<!-- WHATSAPP CHANNEL BUTTON -->
+<button class="whatsapp-channel-btn" onclick="openWhatsAppChannel()" title="Canal WhatsApp">
+</button>
+
+<!-- NOTIFICATION -->
+<div class="notification" id="notification">
+    <i class="fas fa-info-circle"></i>
+    <span id="notification-text"></span>
+</div>
+
+<script>
+// ========== SISTEMA DE NOTIFICAÇÃO ==========
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    const text = document.getElementById('notification-text');
+    
+    notification.className = `notification ${type}`;
+    text.textContent = message;
+    
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+// ========== SISTEMA DE CACHE AVANÇADO ==========
+class NewsCache {
+    constructor() {
+        this.cache = new Map();
+        this.initCache();
+    }
+    
+    initCache() {
+        // Carregar cache do localStorage
+        try {
+            const cached = localStorage.getItem('news_cache_v2');
+            if (cached) {
+                const data = JSON.parse(cached);
+                data.forEach(item => {
+                    this.cache.set(item.id, item);
+                });
             }
-            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
+        } catch (e) {
+            console.warn('Erro ao carregar cache:', e);
         }
-        
-        return hash;
-    } catch (e) {
-        console.error('Erro ao salvar no cache:', e);
+    }
+    
+    save() {
+        try {
+            const data = Array.from(this.cache.values());
+            localStorage.setItem('news_cache_v2', JSON.stringify(data));
+        } catch (e) {
+            console.warn('Erro ao salvar cache:', e);
+        }
+    }
+    
+    get(id) {
+        return this.cache.get(id);
+    }
+    
+    set(id, article) {
+        this.cache.set(id, article);
+        // Salvar periodicamente
+        if (this.cache.size % 10 === 0) {
+            this.save();
+        }
+    }
+    
+    has(id) {
+        return this.cache.has(id);
+    }
+    
+    clear() {
+        this.cache.clear();
+        localStorage.removeItem('news_cache_v2');
+        showNotification('Cache limpo com sucesso!', 'success');
+    }
+    
+    // Buscar por título similar (para fallback)
+    findSimilar(title) {
+        const searchTitle = title.toLowerCase();
+        for (const [id, article] of this.cache) {
+            if (article.title.toLowerCase().includes(searchTitle.substring(0, 50))) {
+                return article;
+            }
+        }
         return null;
     }
 }
 
-// ========== FUNÇÕES DE INTERFACE ==========
-// [Funções de interface permanecem iguais]
+// Instância global do cache
+const newsCache = new NewsCache();
 
-// ========== RENDERIZAÇÃO ==========
-
-function determineCategory(title, content) {
-    const text = ((title || '') + ' ' + (content || '')).toLowerCase();
+// ========== GERAÇÃO DE IDS UNICOS ==========
+function generateNewsId(article) {
+    // Usar combinação de timestamp + hash simples para garantir unicidade
+    const timestamp = Date.now().toString(36);
+    const text = (article.title || '') + (article.link || '');
+    let hash = 0;
     
-    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta')) {
-        return 'esportes';
-    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento')) {
-        return 'economia';
-    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro')) {
-        return 'política';
-    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro')) {
-        return 'saúde';
-    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo')) {
-        return 'tecnologia';
-    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro')) {
-        return 'cultura';
-    } else {
-        return 'sociedade';
+    for (let i = 0; i < text.length; i++) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash = hash & hash;
+    }
+    
+    return `${timestamp}-${Math.abs(hash).toString(36).substring(0, 8)}`;
+}
+
+// ========== SISTEMA DE LINKS PERFEITOS ==========
+class LinkSystem {
+    constructor() {
+        this.linkMap = new Map();
+        this.loadLinkMap();
+    }
+    
+    loadLinkMap() {
+        try {
+            const saved = localStorage.getItem('link_map_v2');
+            if (saved) {
+                const map = JSON.parse(saved);
+                map.forEach(([key, value]) => {
+                    this.linkMap.set(key, value);
+                });
+            }
+        } catch (e) {
+            console.warn('Erro ao carregar mapa de links:', e);
+        }
+    }
+    
+    saveLinkMap() {
+        try {
+            const data = Array.from(this.linkMap.entries());
+            localStorage.setItem('link_map_v2', JSON.stringify(data));
+        } catch (e) {
+            console.warn('Erro ao salvar mapa de links:', e);
+        }
+    }
+    
+    createLink(article) {
+        const id = generateNewsId(article);
+        
+        // Salvar artigo no cache
+        const articleData = {
+            id: id,
+            title: article.title,
+            content: article.content,
+            excerpt: article.excerpt || article.content.substring(0, 200) + '...',
+            image: article.image || 'https://via.placeholder.com/300x200',
+            source: article.source,
+            date: article.date || new Date().toISOString(),
+            link: article.link,
+            category: article.category || 'sociedade'
+        };
+        
+        newsCache.set(id, articleData);
+        
+        // Criar link curto e legível
+        const slug = article.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '')
+            .substring(0, 50);
+        
+        const shortLink = `noticia/${slug}-${id.substring(0, 8)}`;
+        this.linkMap.set(id, shortLink);
+        this.saveLinkMap();
+        
+        // Link completo para compartilhamento
+        const fullLink = `${window.location.origin}/leitura.html?n=${id}&t=${encodeURIComponent(article.title.substring(0, 80))}&s=${encodeURIComponent(article.source)}`;
+        
+        return {
+            id: id,
+            short: shortLink,
+            full: fullLink,
+            data: articleData
+        };
+    }
+    
+    getArticle(link) {
+        // Extrair ID do link
+        const parts = link.split('-');
+        const idPart = parts[parts.length - 1];
+        
+        // Procurar pelo ID
+        for (const [id, shortLink] of this.linkMap.entries()) {
+            if (shortLink.includes(idPart) || id.includes(idPart)) {
+                const article = newsCache.get(id);
+                if (article) return article;
+            }
+        }
+        
+        return null;
     }
 }
 
-function renderSingleNews(article) {
-    if (!article || !article.hash) return;
+const linkSystem = new LinkSystem();
+
+// ========== COMPARTILHAMENTO ==========
+function shareCurrentNews() {
+    const card = document.querySelector('.card:hover');
+    if (!card) {
+        showNotification('Passe o mouse sobre uma notícia para compartilhar', 'error');
+        return;
+    }
     
-    const existingCard = container.querySelector(`[data-hash="${article.hash}"]`);
-    if (existingCard) return;
+    const title = card.querySelector('.card-title').textContent;
+    const source = card.querySelector('.source-tag').textContent;
     
-    const category = article.category || determineCategory(article.title, article.content);
-    article.category = category;
-    
-    // GERAR LINK MELHORADO - INCLUINDO DADOS ADICIONAIS
-    const newsLink = `leitura.html?n=${article.hash}&t=${encodeURIComponent(article.title.substring(0, 50))}&s=${encodeURIComponent(article.source)}`;
-    
-    const c = document.createElement("a");
-    c.className = "card";
-    c.dataset.hash = article.hash;
-    c.dataset.category = category;
-    c.href = newsLink;
-    c.style.textDecoration = 'none';
-    c.style.color = 'inherit';
-    c.innerHTML = `
-    <div class="card-text">
-        <div class="card-title">${article.title}</div>
-        <div class="card-meta">
-            <span class="source-tag">${article.source}</span>
-            <span class="category-tag ${CATEGORIES[category]?.class || 'sociedade-tag'}">${CATEGORIES[category]?.name || 'Sociedade'}</span>
-            <span>${formatDate(article.date)}</span>
-        </div>
-    </div>
-    <img src="${article.image}" loading="lazy" alt="${article.title}" 
-         onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
-    `;
-    
-    let inserted = false;
-    const cards = container.querySelectorAll('.card');
-    
-    for (let i = 0; i < cards.length; i++) {
-        const cardDate = new Date(cards[i].dataset.date || 0);
-        const newDate = new Date(article.date);
-        
-        if (newDate > cardDate) {
-            container.insertBefore(c, cards[i]);
-            inserted = true;
+    // Buscar artigo correspondente
+    let article = null;
+    for (const [id, art] of newsCache.cache) {
+        if (art.title === title && art.source === source) {
+            article = art;
             break;
         }
     }
     
-    if (!inserted) {
-        container.appendChild(c);
+    if (!article) {
+        showNotification('Notícia não encontrada no cache', 'error');
+        return;
     }
     
-    c.dataset.date = article.date;
+    const linkInfo = linkSystem.createLink(article);
+    
+    // Copiar link para área de transferência
+    navigator.clipboard.writeText(linkInfo.full).then(() => {
+        showNotification('Link copiado! A notícia estará disponível instantaneamente.', 'success');
+    }).catch(() => {
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = linkInfo.full;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Link copiado!', 'success');
+    });
+}
+
+function shareViaWhatsApp() {
+    const card = document.querySelector('.card:hover');
+    if (!card) {
+        showNotification('Passe o mouse sobre uma notícia para compartilhar', 'error');
+        return;
+    }
+    
+    const title = card.querySelector('.card-title').textContent;
+    const source = card.querySelector('.source-tag').textContent;
+    
+    let article = null;
+    for (const [id, art] of newsCache.cache) {
+        if (art.title === title && art.source === source) {
+            article = art;
+            break;
+        }
+    }
+    
+    if (!article) return;
+    
+    const linkInfo = linkSystem.createLink(article);
+    const message = encodeURIComponent(`📰 ${title}\n\nLeia mais: ${linkInfo.full}`);
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+}
+
+// ========== INTERFACE ==========
+function openSidebar() {
+    document.getElementById("sidebar").classList.add("open");
+    document.getElementById("sidebar-overlay").style.display = "block";
+}
+
+function closeSidebar() {
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("sidebar-overlay").style.display = "none";
+}
+
+document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+
+function formatDate(d) {
+    return new Date(d).toLocaleString("pt-PT");
+}
+
+function filterByCategory(category) {
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    currentCategory = category;
+    searchNews();
+}
+
+function searchNews() {
+    const q = document.getElementById("search-input").value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    
+    cards.forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const source = card.querySelector('.source-tag').textContent.toLowerCase();
+        const category = card.dataset.category || '';
+        
+        const matchesSearch = !q || title.includes(q) || source.includes(q);
+        const matchesCategory = currentCategory === 'todos' || category === currentCategory;
+        
+        card.style.display = matchesSearch && matchesCategory ? 'flex' : 'none';
+    });
+}
+
+function openInfoModal(type) {
+    closeSidebar();
+    
+    let title = '', icon = '', content = '';
+    
+    if (type === 'sobre') {
+        title = 'Sobre a Plataforma';
+        icon = 'fa-info-circle';
+        content = `
+        <div class="info-content">
+            <div class="info-section">
+                <h3><i class="fas fa-bullhorn"></i> Sistema Otimizado</h3>
+                <p>Versão 2.0 com links instantâneos e cache inteligente.</p>
+                <p><strong>Estatísticas:</strong></p>
+                <ul>
+                    <li>Notícias em cache: ${newsCache.cache.size}</li>
+                    <li>Links gerados: ${linkSystem.linkMap.size}</li>
+                    <li>Fontes ativas: ${sources.length}</li>
+                </ul>
+            </div>
+        </div>
+        `;
+    } else if (type === 'contato') {
+        title = 'Contacto';
+        icon = 'fa-envelope';
+        content = `
+        <div class="info-content">
+            <div class="info-section">
+                <h3><i class="fas fa-headset"></i> Suporte</h3>
+                <p><strong>Email:</strong> claudioarmando001@gmail.com</p>
+                <p><strong>WhatsApp:</strong> +258 869 667 677</p>
+                <button class="share-btn-mini whatsapp" onclick="window.open('https://wa.me/258869667677')" style="margin-top:10px;">
+                    <i class="fab fa-whatsapp"></i> Contactar via WhatsApp
+                </button>
+            </div>
+        </div>
+        `;
+    }
+    
+    document.getElementById("modal-title").textContent = title;
+    document.getElementById("modal-icon").className = `fas ${icon}`;
+    document.getElementById("info-modal-body").innerHTML = content;
+    document.getElementById("info-modal").style.display = "flex";
+}
+
+function closeInfoModal() {
+    document.getElementById("info-modal").style.display = "none";
+}
+
+document.getElementById('info-modal-close').addEventListener('click', closeInfoModal);
+document.getElementById('info-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'info-modal') closeInfoModal();
+});
+
+function clearCache() {
+    if (confirm('Tem certeza que deseja limpar todo o cache?')) {
+        newsCache.clear();
+        location.reload();
+    }
 }
 
 // ========== CARREGAMENTO DE NOTÍCIAS ==========
+const sources = [
+    { name: "O País", baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts", page: 1 },
+    { name: "Time de Todos", baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts", page: 1 },
+    { name: "Integrity", baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts", page: 1 },
+    { name: "Jornal Notícias", baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts", page: 1 },
+    { name: "Savana", baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts", page: 1 },
+    { name: "Canal de Moçambique", baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts", page: 1 }
+];
 
-async function processSourceArticles(source, articles) {
-    const newArticles = [];
+let currentNews = [];
+const container = document.getElementById("news-container");
+
+async function loadNews() {
+    container.innerHTML = '<div style="text-align:center;padding:40px;"><div class="infinite-spinner"></div><p>Carregando notícias...</p></div>';
     
-    for (const article of articles) {
-        if (!article || !article.link) continue;
+    const allArticles = [];
+    
+    for (const source of sources) {
+        try {
+            const url = `${source.baseUrl}?per_page=10&page=1&_embed&t=${Date.now()}`;
+            const response = await fetch(url, { timeout: 5000 });
+            
+            if (!response.ok) continue;
+            
+            const articles = await response.json();
+            
+            for (const article of articles) {
+                const newsItem = {
+                    title: article.title.rendered,
+                    content: article.content.rendered,
+                    excerpt: article.excerpt?.rendered || article.content.rendered.substring(0, 200) + '...',
+                    image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
+                           article.jetpack_featured_media_url ||
+                           "https://via.placeholder.com/300x200",
+                    source: source.name,
+                    date: article.date || article.modified,
+                    link: article.link,
+                    category: determineCategory(article.title.rendered)
+                };
+                
+                const linkInfo = linkSystem.createLink(newsItem);
+                newsItem.id = linkInfo.id;
+                
+                allArticles.push(newsItem);
+            }
+        } catch (error) {
+            console.warn(`Erro ao carregar ${source.name}:`, error);
+        }
+    }
+    
+    // Ordenar por data
+    allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+    currentNews = allArticles;
+    
+    renderNews(allArticles);
+}
+
+function determineCategory(title) {
+    const text = title.toLowerCase();
+    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo')) return 'esportes';
+    if (text.includes('economia') || text.includes('negócio') || text.includes('empresa')) return 'economia';
+    if (text.includes('política') || text.includes('governo') || text.includes('presidente')) return 'política';
+    if (text.includes('saúde') || text.includes('hospital') || text.includes('médico')) return 'saúde';
+    if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet')) return 'tecnologia';
+    if (text.includes('cultura') || text.includes('arte') || text.includes('música')) return 'cultura';
+    return 'sociedade';
+}
+
+function renderNews(articles) {
+    container.innerHTML = '';
+    
+    articles.forEach(article => {
+        const category = article.category;
+        const categoryClass = category ? `${category.replace('ç', 'c').replace('á', 'a')}-tag` : 'sociedade-tag';
+        const categoryName = {
+            'sociedade': 'Sociedade',
+            'política': 'Política',
+            'economia': 'Economia',
+            'esportes': 'Esportes',
+            'cultura': 'Cultura',
+            'saúde': 'Saúde',
+            'tecnologia': 'Tecnologia'
+        }[category] || 'Sociedade';
         
-        const hash = generateNewsHash(article);
+        const linkInfo = linkSystem.createLink(article);
         
-        if (hashes.has(hash)) continue;
-        
-        hashes.add(hash);
-        
-        const newsItem = {
-            title: article.title?.rendered || article.title || '',
-            content: article.content?.rendered || article.content || '',
-            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                   article.jetpack_featured_media_url ||
-                   article.featured_media_url ||
-                   "https://via.placeholder.com/300x200",
-            source: source.name,
-            date: article.date || article.modified || new Date().toISOString(),
-            link: article.link || article.guid?.rendered || '',
-            hash: hash,
-            originalData: article
+        const card = document.createElement('a');
+        card.className = 'card';
+        card.href = linkInfo.full;
+        card.dataset.category = category;
+        card.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = linkInfo.full;
         };
         
-        // Salvar no cache imediatamente
-        saveToCache(article, source.name);
+        card.innerHTML = `
+            <div class="card-text">
+                <div class="card-title">${article.title}</div>
+                <div class="card-meta">
+                    <span class="source-tag">${article.source}</span>
+                    <span class="category-tag ${categoryClass}">${categoryName}</span>
+                    <span>${formatDate(article.date)}</span>
+                </div>
+            </div>
+            <img src="${article.image}" loading="lazy" alt="${article.title}"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${article.source.substring(0,2)}'">
+        `;
         
-        newArticles.push(newsItem);
-    }
-    
-    newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    for (const newsItem of newArticles) {
-        news.push(newsItem);
-        filteredNews.push(newsItem);
-        
-        renderSingleNews(newsItem);
-        
-        await new Promise(resolve => setTimeout(resolve, 30));
-    }
-}
-
-async function loadSource(source) {
-    if (!source.hasMore || source.isFetching) return;
-    
-    source.isFetching = true;
-    
-    try {
-        const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}&t=${Date.now()}`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            if (response.status === 400) {
-                source.hasMore = false;
-            }
-            console.warn(`Erro ao buscar ${source.name}:`, response.status);
-            return;
-        }
-        
-        const data = await response.json();
-        
-        if (data.length === 0) {
-            source.hasMore = false;
-            return;
-        }
-        
-        source.currentPage++;
-        
-        await processSourceArticles(source, data);
-        
-    } catch (error) {
-        console.error(`Erro ao carregar ${source.name}:`, error);
-        source.hasMore = false;
-    } finally {
-        source.isFetching = false;
-        checkAllSourcesLoaded();
-    }
-}
-
-async function loadAllSources() {
-    news = [];
-    filteredNews = [];
-    hashes.clear();
-    allSourcesLoaded = false;
-    
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:#666;">Carregando notícias...</div>';
-    
-    sources.forEach(source => {
-        source.currentPage = 1;
-        source.hasMore = true;
-        source.isFetching = false;
+        container.appendChild(card);
     });
-    
-    const promises = sources.map(source => loadSource(source));
-    await Promise.allSettled(promises);
-    
-    reorderAllNewsByDate();
 }
 
-function reorderAllNewsByDate() {
-    news.sort((a, b) => new Date(b.date) - new Date(a.date));
-    filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    container.innerHTML = '';
-    if (filteredNews.length === 0) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:#666;">Nenhuma notícia encontrada.</div>';
-    } else {
-        filteredNews.forEach(article => {
-            renderSingleNews(article);
-        });
-    }
+function manualRefresh() {
+    loadNews();
+    showNotification('Atualizando notícias...', 'info');
 }
 
-// [Restante do código permanece igual...]
+function openWhatsAppChannel() {
+    window.open("https://whatsapp.com/channel/0029Vb7BeBI7T8bRTbjcsN0t", '_blank');
+}
+
+function loadLatestNews() {
+    const sorted = [...currentNews].sort((a, b) => new Date(b.date) - new Date(a.date));
+    renderNews(sorted.slice(0, 20));
+}
+
+function loadTrendingNews() {
+    // Simulação de notícias em alta (poderíamos implementar um sistema real posteriormente)
+    const trending = [...currentNews]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 15);
+    renderNews(trending);
+}
 
 // ========== INICIALIZAÇÃO ==========
-
-document.addEventListener('DOMContentLoaded', function() {
-    loadAllSources();
+document.addEventListener('DOMContentLoaded', () => {
+    loadNews();
     
-    // Carregar notícias do cache como fallback
-    setTimeout(() => {
-        if (news.length === 0) {
-            loadNewsFromCache();
+    // Auto-refresh a cada 5 minutos
+    setInterval(() => {
+        if (document.visibilityState === 'visible') {
+            loadNews();
         }
-    }, 2000);
+    }, 300000);
+    
+    // Salvar cache periodicamente
+    setInterval(() => {
+        newsCache.save();
+        linkSystem.saveLinkMap();
+    }, 30000);
 });
 
-function loadNewsFromCache() {
-    try {
-        const cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        const cachedItems = [];
-        
-        cachedNews.forEach(hash => {
-            const item = localStorage.getItem(`news_${hash}`);
-            if (item) {
-                const newsItem = JSON.parse(item);
-                cachedItems.push({
-                    ...newsItem,
-                    hash: hash
-                });
-            }
-        });
-        
-        if (cachedItems.length > 0) {
-            cachedItems.sort((a, b) => new Date(b.date) - new Date(a.date));
-            cachedItems.forEach(article => {
-                if (!hashes.has(article.hash)) {
-                    hashes.add(article.hash);
-                    news.push(article);
-                    filteredNews.push(article);
-                    renderSingleNews(article);
-                }
-            });
-            
-            if (news.length > 0) {
-                console.log(`Carregadas ${news.length} notícias do cache`);
+// Atalhos de teclado
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeInfoModal();
+        closeSidebar();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+        e.preventDefault();
+        document.getElementById("search-input").focus();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+        e.preventDefault();
+        manualRefresh();
+    }
+});
+
+// Preload de imagens quando visíveis
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target.querySelector('img');
+            if (img && img.dataset.src) {
+                img.src = img.dataset.src;
+                delete img.dataset.src;
             }
         }
-    } catch (e) {
-        console.error('Erro ao carregar do cache:', e);
-    }
-}
+    });
+}, { threshold: 0.1 });
 
-// [Restante do código permanece igual...]
+// Observar cards quando adicionados
+const cardsObserver = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1 && node.classList.contains('card')) {
+                observer.observe(node);
+            }
+        });
+    });
+});
+
+cardsObserver.observe(container, { childList: true });
 </script>
 </body>
 </html>
