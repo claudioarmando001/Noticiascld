@@ -6,9 +6,397 @@
 <title>Notícia - Notícias CLD</title>
 <meta name="description" content="Leia notícias completas de Moçambique">
 <meta name="robots" content="index, follow">
-<meta property="og:type" content="article">
 <style>
-/* ... (mantenha todo o CSS anterior) ... */
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f3f5;
+    margin:0;
+    color:#111;
+}
+
+/* HEADER */
+header{
+    background:#1a73e8;
+    color:white;
+    padding:18px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    position:relative;
+}
+
+.header-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:white;
+    color:#1a73e8;
+    border:none;
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:bold;
+    transition: all 0.3s;
+}
+
+.header-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1.05);
+}
+
+#back-btn{ left:15px; }
+
+/* CONTEÚDO */
+#news-container{
+    max-width:800px;
+    margin:30px auto;
+    padding:0 20px;
+}
+
+#news-content{
+    background:white;
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+
+#news-title{
+    font-size:28px;
+    font-weight:bold;
+    color:#111;
+    margin-bottom:15px;
+    line-height:1.3;
+}
+
+#news-meta{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+    padding-bottom:20px;
+    border-bottom:2px solid #e8f0fe;
+    flex-wrap: wrap;
+}
+
+#news-image{
+    width:100%;
+    max-height:400px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-bottom:25px;
+    background:#eee;
+}
+
+#news-body{
+    font-size:18px;
+    line-height:1.7;
+    color:#333;
+}
+
+#news-body p{
+    margin-bottom:20px;
+}
+
+#news-body img{
+    max-width:100%;
+    height:auto;
+    border-radius:8px;
+    margin:20px 0;
+}
+
+#news-body h1, #news-body h2, #news-body h3{
+    color:#1a73e8;
+    margin-top:30px;
+    margin-bottom:15px;
+}
+
+#news-body a{
+    color:#1a73e8;
+    text-decoration:none;
+    font-weight:500;
+}
+
+#news-body a:hover{
+    text-decoration:underline;
+}
+
+#news-body blockquote{
+    border-left:4px solid #1a73e8;
+    padding-left:20px;
+    margin:25px 0;
+    font-style:italic;
+    color:#555;
+}
+
+#news-body ul, #news-body ol{
+    padding-left:25px;
+    margin-bottom:20px;
+}
+
+#news-body li{
+    margin-bottom:8px;
+}
+
+/* TAGS */
+.source-tag{
+    background:#e8f0fe;
+    color:#1a73e8;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.category-tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.sociedade-tag {
+    background: rgba(76, 175, 80, 0.1);
+    color: #2e7d32;
+}
+
+.politica-tag {
+    background: rgba(244, 67, 54, 0.1);
+    color: #c62828;
+}
+
+.economia-tag {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ef6c00;
+}
+
+.esportes-tag {
+    background: rgba(33, 150, 243, 0.1);
+    color: #1565c0;
+}
+
+.cultura-tag {
+    background: rgba(156, 39, 176, 0.1);
+    color: #7b1fa2;
+}
+
+.saude-tag {
+    background: rgba(0, 150, 136, 0.1);
+    color: #00796b;
+}
+
+.tech-tag {
+    background: rgba(96, 125, 139, 0.1);
+    color: #37474f;
+}
+
+/* SHARE SECTION */
+.share-section {
+    margin: 40px 0 30px;
+    padding-top: 30px;
+    border-top: 2px solid #e8f0fe;
+}
+
+.share-title {
+    font-size: 18px;
+    color: #1a73e8;
+    margin-bottom: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.share-btn.facebook {
+    background: #1877f2;
+    color: white;
+}
+
+.share-btn.twitter {
+    background: #1da1f2;
+    color: white;
+}
+
+.share-btn.whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+.share-btn.link {
+    background: #6c757d;
+    color: white;
+}
+
+.share-btn.link.copied {
+    background: #28a745;
+}
+
+/* RELATED NEWS */
+.related-news-section {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 3px solid #e8f0fe;
+}
+
+.related-title {
+    font-size: 22px;
+    color: #1a73e8;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.related-news-container {
+    display: grid;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.related-news-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 5px solid #1a73e8;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.related-news-card:hover {
+    background: #e8f0fe;
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.related-news-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.related-news-text {
+    flex: 1;
+}
+
+.related-news-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.related-news-meta {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* LOADER */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e8e8e8;
+    border-top: 4px solid #1a73e8;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-message {
+    text-align: center;
+    padding: 50px;
+    color: #666;
+    font-size: 18px;
+}
+
+.error-message button {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+
+.error-message button:hover {
+    background: #0d62d9;
+    transform: translateY(-2px);
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: #666;
+    font-size: 14px;
+    margin-top: 50px;
+    border-top: 1px solid #ddd;
+}
+
+.back-home {
+    display: inline-block;
+    background: #1a73e8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 15px;
+    transition: all 0.3s;
+}
+
+.back-home:hover {
+    background: #0d62d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -28,15 +416,8 @@ Notícias CLD
     <div id="news-error" class="error-message" style="display: none;">
         <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff9800; margin-bottom: 20px;"></i>
         <h3>Notícia não encontrada</h3>
-        <p>A notícia que você está procurando não está disponível.</p>
-        <div style="margin-top: 30px;">
-            <button onclick="window.location.href='index.html'">
-                <i class="fas fa-home"></i> Voltar para a página inicial
-            </button>
-            <button onclick="tryLoadFromNetwork()" style="background: #4caf50; margin-left: 10px;">
-                <i class="fas fa-sync-alt"></i> Tentar carregar da rede
-            </button>
-        </div>
+        <p>A notícia que você está procurando não está disponível ou foi removida.</p>
+        <button onclick="window.location.href='index.html'">Voltar para a página inicial</button>
     </div>
     
     <div id="news-display" style="display: none;">
@@ -44,14 +425,6 @@ Notícias CLD
         <div id="news-meta"></div>
         <img id="news-image" src="" alt="">
         <div id="news-body"></div>
-        
-        <div style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #1a73e8;">
-            <p style="margin: 0; color: #666; font-size: 14px;">
-                <i class="fas fa-info-circle"></i> 
-                <strong>Fonte original:</strong> 
-                <a id="original-link" href="#" target="_blank" style="color: #1a73e8; font-weight: 500;">Visitar site da fonte</a>
-            </p>
-        </div>
         
         <div class="share-section">
             <div class="share-title">
@@ -93,10 +466,7 @@ Notícias CLD
 </footer>
 
 <script>
-// ========== CONFIGURAÇÃO ==========
-const STORAGE_KEY = 'noticias_cld';
-
-// CATEGORIAS
+// CATEGORIAS DISPONÍVEIS
 const CATEGORIES = {
     'sociedade': { name: 'Sociedade', class: 'sociedade-tag' },
     'política': { name: 'Política', class: 'politica-tag' },
@@ -109,82 +479,46 @@ const CATEGORIES = {
 
 let currentArticle = null;
 
-// ========== FUNÇÕES AUXILIARES ==========
-
-// Formata data
+// Função para formatar data
 function formatDate(d) {
-    if (!d) return 'Data não disponível';
-    return new Date(d).toLocaleString("pt-PT", {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    return new Date(d).toLocaleString("pt-PT");
 }
 
-// Voltar para página anterior
+// Função para voltar
 function goBack() {
-    if (document.referrer && document.referrer.includes(window.location.hostname)) {
+    if (document.referrer.includes(window.location.hostname)) {
         window.history.back();
     } else {
         window.location.href = 'index.html';
     }
 }
 
-// Carrega artigo do localStorage
-function getArticleById(id) {
-    try {
-        const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        return storage ? storage.articles.find(article => article.id === id) : null;
-    } catch (error) {
-        console.error('Erro ao ler localStorage:', error);
-        return null;
-    }
-}
-
-// Carrega artigo pelo hash (backward compatibility)
-function getArticleByHash(hash) {
-    try {
-        const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        return storage ? storage.articles.find(article => article.hash === hash) : null;
-    } catch (error) {
-        console.error('Erro ao ler localStorage:', error);
-        return null;
-    }
-}
-
-// ========== FUNÇÕES DE COMPARTILHAMENTO ==========
-
+// Funções de compartilhamento
 function getShareUrl() {
     return window.location.href;
 }
 
 function getShareText() {
-    return currentArticle ? `📰 ${currentArticle.title} | Notícias de Moçambique` : 'Notícias de Moçambique';
+    return `📰 ${currentArticle.title} | Notícias de Moçambique`;
 }
 
 function shareOnFacebook() {
-    if (!currentArticle) return;
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}&quote=${encodeURIComponent(getShareText())}`;
     window.open(url, '_blank', 'width=600,height=400');
 }
 
 function shareOnTwitter() {
-    if (!currentArticle) return;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(getShareUrl())}`;
     window.open(url, '_blank', 'width=600,height=400');
 }
 
 function shareOnWhatsApp() {
-    if (!currentArticle) return;
     const text = `${getShareText()} - ${getShareUrl()}`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'width=600,height=600');
 }
 
 function copyLink() {
-    if (!currentArticle) return;
     const button = document.querySelector('.share-btn.link');
     navigator.clipboard.writeText(getShareUrl()).then(() => {
         const originalText = button.innerHTML;
@@ -201,31 +535,25 @@ function copyLink() {
     });
 }
 
-// ========== PROCESSAMENTO DE CONTEÚDO ==========
+// Carrega artigo pelo hash
+function loadArticleByHash(hash) {
+    const articles = JSON.parse(localStorage.getItem('noticias') || '[]');
+    return articles.find(article => article.hash === hash);
+}
 
-// Processa conteúdo HTML removendo scripts e estilos problemáticos
+// Processa conteúdo HTML
 function processContent(content) {
-    if (!content) return '<p>Conteúdo não disponível.</p>';
+    // Remove scripts e estilos inline
+    let processed = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    processed = processed.replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
     
-    let processed = content
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
-        .replace(/on\w+="[^"]*"/g, '') // Remove eventos inline
-        .replace(/<img/g, '<img style="max-width:100%;height:auto;border-radius:8px;margin:15px 0;"')
-        .replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ')
-        .replace(/<h1/g, '<h2') // Converte h1 para h2 (h1 já é usado para o título)
-        .replace(/<\/h1/g, '</h2');
-    
-    // Se não houver tags HTML, trata como texto simples
-    if (!processed.includes('<')) {
-        processed = `<p>${processed.replace(/\n/g, '</p><p>')}</p>`;
-    }
+    // Garante que imagens não excedam a largura do container
+    processed = processed.replace(/<img/g, '<img style="max-width:100%;height:auto;"');
     
     return processed;
 }
 
-// Determina categoria (mesma lógica da index.html)
+// Determina categoria baseada no conteúdo
 function determineCategory(title, content) {
     const text = (title + ' ' + content).toLowerCase();
     
@@ -250,7 +578,9 @@ function determineCategory(title, content) {
     Object.keys(keywords).forEach(cat => {
         scores[cat] = 0;
         keywords[cat].forEach(keyword => {
-            if (text.includes(keyword)) scores[cat]++;
+            if (text.includes(keyword)) {
+                scores[cat]++;
+            }
         });
     });
     
@@ -265,182 +595,81 @@ function determineCategory(title, content) {
     });
     
     if (maxScore === 0) {
-        const titleLower = title.toLowerCase();
-        if (titleLower.includes('futebol') || titleLower.includes('desporto')) return 'esportes';
-        if (titleLower.includes('econ') || titleLower.includes('negócio')) return 'economia';
-        if (titleLower.includes('arte') || titleLower.includes('música')) return 'cultura';
-        if (titleLower.includes('hospital') || titleLower.includes('médico')) return 'saúde';
-        if (titleLower.includes('tech') || titleLower.includes('digital')) return 'tecnologia';
-        
-        const categories = Object.keys(CATEGORIES);
-        return categories[Math.floor(Math.random() * categories.length)];
+        if (title.toLowerCase().includes('futebol') || title.toLowerCase().includes('desporto')) {
+            return 'esportes';
+        } else if (title.toLowerCase().includes('econ') || title.toLowerCase().includes('negócio')) {
+            return 'economia';
+        } else if (title.toLowerCase().includes('arte') || title.toLowerCase().includes('música')) {
+            return 'cultura';
+        } else if (title.toLowerCase().includes('hospital') || title.toLowerCase().includes('médico')) {
+            return 'saúde';
+        } else if (title.toLowerCase().includes('tech') || title.toLowerCase().includes('digital')) {
+            return 'tecnologia';
+        } else {
+            const categories = Object.keys(CATEGORIES);
+            return categories[Math.floor(Math.random() * categories.length)];
+        }
     }
     
     return selectedCategory;
 }
-
-// ========== EXIBIÇÃO DA NOTÍCIA ==========
-
-// Exibe a notícia na página
-function displayArticle(article) {
-    if (!article) {
-        showError();
-        return;
-    }
-    
-    currentArticle = article;
-    
-    // Atualiza metadados da página
-    document.title = `${article.title} - Notícias CLD`;
-    updateMetaTags(article);
-    
-    // Atualiza elementos da página
-    document.getElementById('news-title').textContent = article.title;
-    
-    // Determina categoria
-    const category = article.category || determineCategory(article.title, article.content);
-    article.category = category;
-    
-    // Atualiza metadados
-    const metaHTML = `
-        <span class="source-tag">${article.source}</span>
-        <span class="category-tag ${CATEGORIES[category]?.class || 'sociedade-tag'}">${CATEGORIES[category]?.name || 'Sociedade'}</span>
-        <span style="color:#666;">${formatDate(article.date)}</span>
-    `;
-    document.getElementById('news-meta').innerHTML = metaHTML;
-    
-    // Configura imagem
-    const image = document.getElementById('news-image');
-    image.src = article.image;
-    image.alt = article.title;
-    image.onerror = function() {
-        this.src = `https://via.placeholder.com/800x400/1a73e8/ffffff?text=${encodeURIComponent(article.source)}`;
-    };
-    
-    // Configura link original
-    const originalLink = document.getElementById('original-link');
-    if (article.originalLink) {
-        originalLink.href = article.originalLink;
-        originalLink.textContent = `Visitar ${article.source}`;
-    } else {
-        originalLink.style.display = 'none';
-    }
-    
-    // Processa e exibe conteúdo
-    document.getElementById('news-body').innerHTML = processContent(article.content);
-    
-    // Esconde loader e mostra conteúdo
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('news-display').style.display = 'block';
-    
-    // Carrega notícias relacionadas
-    setTimeout(loadRelatedNews, 500);
-}
-
-// Atualiza meta tags para SEO
-function updateMetaTags(article) {
-    // Meta description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-        const cleanContent = article.content.replace(/<[^>]*>/g, '').substring(0, 160);
-        metaDesc.content = cleanContent;
-    }
-    
-    // Open Graph tags
-    const ogTitle = document.querySelector('meta[property="og:title"]') || createMetaTag('og:title');
-    ogTitle.content = article.title;
-    
-    const ogDescription = document.querySelector('meta[property="og:description"]') || createMetaTag('og:description');
-    ogDescription.content = metaDesc ? metaDesc.content : '';
-    
-    const ogImage = document.querySelector('meta[property="og:image"]') || createMetaTag('og:image');
-    ogImage.content = article.image;
-    
-    const ogUrl = document.querySelector('meta[property="og:url"]') || createMetaTag('og:url');
-    ogUrl.content = window.location.href;
-    
-    // Twitter Card
-    const twitterCard = document.querySelector('meta[name="twitter:card"]') || createMetaTag('twitter:card', 'name');
-    twitterCard.content = 'summary_large_image';
-    
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]') || createMetaTag('twitter:title', 'name');
-    twitterTitle.content = article.title;
-}
-
-function createMetaTag(property, attribute = 'property') {
-    const meta = document.createElement('meta');
-    meta.setAttribute(attribute, property);
-    document.head.appendChild(meta);
-    return meta;
-}
-
-// ========== NOTÍCIAS RELACIONADAS ==========
 
 // Carrega notícias relacionadas
 function loadRelatedNews() {
     const container = document.getElementById("related-news-container");
     if (!container || !currentArticle) return;
     
-    try {
-        const storage = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (!storage || !storage.articles) {
-            showNoRelatedNews(container);
-            return;
-        }
+    const articles = JSON.parse(localStorage.getItem('noticias') || '[]');
+    const category = currentArticle.category || determineCategory(currentArticle.title, currentArticle.content);
+    const titleWords = currentArticle.title.toLowerCase().split(' ');
+    
+    // Filtra notícias relacionadas
+    const related = articles.filter(article => {
+        if (article.hash === currentArticle.hash) return false;
         
-        const articles = storage.articles;
-        const category = currentArticle.category;
-        const titleWords = currentArticle.title.toLowerCase().split(' ');
+        // Prioridade 1: mesma categoria
+        const articleCategory = article.category || determineCategory(article.title, article.content);
+        if (articleCategory === category) return true;
         
-        // Filtra notícias relacionadas
-        const related = articles.filter(article => {
-            if (article.id === currentArticle.id) return false;
-            
-            const articleCategory = article.category || determineCategory(article.title, article.content);
-            
-            // Prioridade 1: mesma categoria
-            if (articleCategory === category) return true;
-            
-            // Prioridade 2: mesma fonte
-            if (article.source === currentArticle.source) return true;
-            
-            // Prioridade 3: palavras similares no título
-            const commonWords = titleWords.filter(word => 
-                word.length > 3 && article.title.toLowerCase().includes(word)
-            );
-            
-            return commonWords.length >= 2;
-        }).slice(0, 3); // Máximo 3 notícias
+        // Prioridade 2: títulos com palavras similares
+        const commonWords = titleWords.filter(word => 
+            word.length > 3 && article.title.toLowerCase().includes(word)
+        );
         
-        displayRelatedArticles(related, container);
-        
-    } catch (error) {
-        console.error('Erro ao carregar notícias relacionadas:', error);
-        showNoRelatedNews(container);
-    }
+        return commonWords.length >= 2;
+    }).slice(0, 3); // Máximo 3 notícias
+    
+    displayRelatedArticles(related);
 }
 
 // Exibe notícias relacionadas
-function displayRelatedArticles(articles, container) {
-    if (!articles || articles.length === 0) {
-        showNoRelatedNews(container);
+function displayRelatedArticles(articles) {
+    const container = document.getElementById("related-news-container");
+    if (!container) return;
+    
+    if (articles.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:30px; color:#666; background:#f8f9fa; border-radius:8px;">
+                <i class="fas fa-newspaper" style="font-size:32px; margin-bottom:15px; color:#ccc;"></i>
+                <p>Nenhuma notícia relacionada encontrada.</p>
+            </div>
+        `;
         return;
     }
     
     let html = '';
     articles.forEach(article => {
         const category = article.category || determineCategory(article.title, article.content);
-        const articleUrl = `${window.location.origin}/leitura.html?id=${article.id}&slug=${article.slug}`;
+        const slug = createSlug(article.title);
         
         html += `
-        <a href="${articleUrl}" class="related-news-card">
-            <img src="${article.image}" class="related-news-img" alt="${article.title}" 
-                 onerror="this.src='https://via.placeholder.com/80x80/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
+        <a href="leitura.html?slug=${slug}&hash=${article.hash}" class="related-news-card">
+            <img src="${article.image}" class="related-news-img" alt="${article.title}" onerror="this.src='https://via.placeholder.com/80x80/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
             <div class="related-news-text">
                 <div class="related-news-title">${article.title.substring(0, 80)}${article.title.length > 80 ? '...' : ''}</div>
                 <div class="related-news-meta">
                     <span class="source-tag">${article.source}</span>
-                    <span class="category-tag ${CATEGORIES[category]?.class || 'sociedade-tag'}">${CATEGORIES[category]?.name || 'Sociedade'}</span>
+                    <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
                 </div>
             </div>
         </a>
@@ -450,16 +679,80 @@ function displayRelatedArticles(articles, container) {
     container.innerHTML = html;
 }
 
-function showNoRelatedNews(container) {
-    container.innerHTML = `
-        <div style="text-align:center; padding:30px; color:#666; background:#f8f9fa; border-radius:8px;">
-            <i class="fas fa-newspaper" style="font-size:32px; margin-bottom:15px; color:#ccc;"></i>
-            <p>Nenhuma notícia relacionada encontrada.</p>
-        </div>
-    `;
+// Cria slug amigável
+function createSlug(title) {
+    return title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/--+/g, '-')
+        .trim()
+        .substring(0, 60);
 }
 
-// ========== MANIPULAÇÃO DE ERROS ==========
+// Inicializa a página
+function initPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = urlParams.get('hash');
+    const slug = urlParams.get('slug');
+    
+    if (!hash) {
+        showError();
+        return;
+    }
+    
+    // Tenta carregar do localStorage
+    const article = loadArticleByHash(hash);
+    
+    if (!article) {
+        showError();
+        return;
+    }
+    
+    // Atualiza título da página
+    document.title = `${article.title} - Notícias CLD`;
+    
+    // Atualiza meta description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        metaDesc.content = article.title.substring(0, 160);
+    }
+    
+    currentArticle = article;
+    displayArticle(article);
+    
+    // Carrega notícias relacionadas
+    setTimeout(loadRelatedNews, 500);
+}
+
+// Exibe o artigo na página
+function displayArticle(article) {
+    const category = article.category || determineCategory(article.title, article.content);
+    article.category = category;
+    
+    // Atualiza elementos da página
+    document.getElementById('news-title').textContent = article.title;
+    
+    const metaHTML = `
+        <span class="source-tag">${article.source}</span>
+        <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
+        <span style="color:#666;">${formatDate(article.date)}</span>
+    `;
+    document.getElementById('news-meta').innerHTML = metaHTML;
+    
+    const image = document.getElementById('news-image');
+    image.src = article.image;
+    image.alt = article.title;
+    image.onerror = function() {
+        this.style.display = 'none';
+    };
+    
+    document.getElementById('news-body').innerHTML = processContent(article.content);
+    
+    // Esconde loader e mostra conteúdo
+    document.getElementById('loader').style.display = 'none';
+    document.getElementById('news-display').style.display = 'block';
+}
 
 // Mostra mensagem de erro
 function showError() {
@@ -467,86 +760,19 @@ function showError() {
     document.getElementById('news-error').style.display = 'block';
 }
 
-// Tenta carregar da rede (fallback)
-function tryLoadFromNetwork() {
-    document.getElementById('news-error').style.display = 'none';
-    document.getElementById('loader').style.display = 'flex';
-    
-    // Redireciona para a página inicial para carregar notícias frescas
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1000);
-}
-
-// ========== INICIALIZAÇÃO DA PÁGINA ==========
-
-// Obtém parâmetros da URL
-function getUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return {
-        id: urlParams.get('id'),
-        slug: urlParams.get('slug'),
-        hash: urlParams.get('hash') // Backward compatibility
-    };
-}
-
-// Inicializa a página
-function initPage() {
-    const params = getUrlParams();
-    
-    if (!params.id && !params.hash) {
-        showError();
-        return;
-    }
-    
-    // Tenta carregar o artigo
-    let article = null;
-    
-    // Prioridade: ID (sistema novo)
-    if (params.id) {
-        article = getArticleById(params.id);
-    }
-    
-    // Fallback: hash (sistema antigo)
-    if (!article && params.hash) {
-        article = getArticleByHash(params.hash);
-    }
-    
-    if (article) {
-        displayArticle(article);
-        
-        // Atualiza URL com slug correto se necessário
-        if (params.slug !== article.slug) {
-            const newUrl = `${window.location.origin}/leitura.html?id=${article.id}&slug=${article.slug}`;
-            window.history.replaceState({}, document.title, newUrl);
-        }
-    } else {
-        showError();
-    }
-}
-
-// ========== EVENT LISTENERS ==========
-
 // Atalhos de teclado
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' || (e.ctrlKey && e.key === 'b')) {
         goBack();
     }
     
-    if (e.key === 'c' && e.ctrlKey && currentArticle) {
+    if (e.key === 'c' && e.ctrlKey) {
         copyLink();
     }
 });
 
 // Inicializa quando a página carrega
 window.addEventListener('DOMContentLoaded', initPage);
-
-// Atualiza título quando a página fica visível
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && currentArticle) {
-        document.title = `${currentArticle.title} - Notícias CLD`;
-    }
-});
 </script>
 </body>
 </html>
