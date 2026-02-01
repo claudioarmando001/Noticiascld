@@ -9,68 +9,104 @@
     
     <!-- Estilos -->
     <style>
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background: #f2f3f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         margin: 0;
-        color: #111;
+        color: #333;
+        line-height: 1.6;
+        min-height: 100vh;
     }
 
     header {
-        background: #1a73e8;
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
         color: white;
-        padding: 18px;
+        padding: 20px;
         text-align: center;
-        font-size: 20px;
-        font-weight: bold;
-        position: relative;
+        font-size: 22px;
+        font-weight: 800;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 28px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo i {
+        color: #FFD700;
+        font-size: 32px;
     }
 
     .header-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: white;
+        background: rgba(255, 255, 255, 0.9);
         color: #1a73e8;
         border: none;
-        padding: 7px 12px;
-        border-radius: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
         cursor: pointer;
-        font-size: 18px;
-        font-weight: bold;
-        transition: all 0.3s;
+        font-size: 16px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .header-btn:hover {
-        opacity: 0.9;
-        transform: translateY(-50%) scale(1.05);
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    #menu-btn { left: 15px; }
-    #admin-btn { right: 15px; }
+    #menu-btn { background: #4CAF50; color: white; }
+    #admin-btn { background: #FF5722; color: white; }
 
     /* SIDEBAR */
     #sidebar-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(0,0,0,.5);
+        background: rgba(0,0,0,.7);
         display: none;
         z-index: 9998;
+        backdrop-filter: blur(3px);
     }
 
     #sidebar {
         position: fixed;
         top: 0;
-        left: -280px;
-        width: 280px;
+        left: -320px;
+        width: 320px;
         height: 100vh;
-        background: #fff;
-        box-shadow: 2px 0 6px rgba(0,0,0,.2);
-        padding: 20px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+        box-shadow: 5px 0 25px rgba(0,0,0,.2);
+        padding: 25px;
         box-sizing: border-box;
-        transition: .3s;
+        transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 9999;
         overflow-y: auto;
+        border-right: 5px solid #1a73e8;
     }
 
     #sidebar.open { left: 0; }
@@ -78,102 +114,195 @@
     #sidebar h2 {
         color: #1a73e8;
         margin-top: 0;
-        font-size: 18px;
+        font-size: 24px;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #e8f0fe;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #sidebar h2 i {
+        color: #FF9800;
     }
 
     #close-sidebar {
         position: absolute;
-        top: 15px;
-        right: 15px;
+        top: 20px;
+        right: 20px;
         cursor: pointer;
-        font-size: 18px;
-        color: #333;
+        font-size: 24px;
+        color: #f44336;
+        background: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+
+    #close-sidebar:hover {
+        background: #f44336;
+        color: white;
+        transform: rotate(90deg);
     }
 
     /* CATEGORIAS */
     .categories {
-        margin: 15px 0;
+        margin: 20px 0 30px;
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
     }
 
     .category-btn {
-        background: #e8f0fe;
-        border: 1px solid #dce6f5;
+        background: white;
+        border: 2px solid #e8f0fe;
         color: #1a73e8;
-        padding: 6px 12px;
-        border-radius: 20px;
+        padding: 8px 16px;
+        border-radius: 25px;
         cursor: pointer;
-        font-size: 13px;
+        font-size: 14px;
+        font-weight: 600;
         transition: all 0.3s;
-        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .category-btn i {
+        font-size: 16px;
     }
 
     .category-btn:hover,
     .category-btn.active {
-        background: #1a73e8;
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
         color: white;
         border-color: #1a73e8;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+    }
+
+    .category-count {
+        background: white;
+        color: #1a73e8;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-left: 5px;
+    }
+
+    .category-btn.active .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
     }
 
     /* BUSCA */
     .search-container {
-        max-width: 950px;
-        margin: 12px auto;
-        padding: 0 12px;
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
     }
 
     #search-input {
         width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 16px;
-        background: #fff;
-        color: #111;
+        padding: 18px 25px;
+        border-radius: 15px;
+        border: 2px solid #ddd;
+        font-size: 18px;
+        background: white;
+        color: #333;
         transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
 
     #search-input:focus {
         outline: none;
         border-color: #1a73e8;
-        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        box-shadow: 0 5px 20px rgba(26, 115, 232, 0.2);
+        transform: translateY(-2px);
+    }
+
+    #search-input::placeholder {
+        color: #999;
     }
 
     /* LISTA DE NOTÍCIAS */
     #news-container {
-        max-width: 950px;
-        margin: auto;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .news-counter {
+        text-align: center;
+        color: #666;
+        margin-bottom: 25px;
+        font-size: 16px;
+        background: white;
         padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .news-counter span {
+        color: #1a73e8;
+        font-weight: 700;
+        font-size: 20px;
     }
 
     .card {
         background: white;
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 12px;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,.08);
+        gap: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         cursor: pointer;
-        transition: .2s;
-        animation: fadeIn 0.5s ease-out;
-        border: 1px solid #e8e8e8;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
         text-decoration: none;
         color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(180deg, #1a73e8 0%, #0d47a1 100%);
     }
 
     .card:hover { 
-        transform: scale(1.01); 
-        box-shadow: 0 4px 12px rgba(0,0,0,.12);
+        transform: translateY(-5px) scale(1.01); 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border-color: #1a73e8;
     }
 
-    @keyframes fadeIn {
+    .card.saved {
+        border-color: #4CAF50;
+        background: linear-gradient(90deg, #ffffff 0%, #f1f8e9 100%);
+    }
+
+    .card.saved::before {
+        background: linear-gradient(180deg, #4CAF50 0%, #2E7D32 100%);
+    }
+
+    @keyframes fadeInUp {
         from { 
             opacity: 0; 
-            transform: translateY(20px); 
+            transform: translateY(30px); 
         }
         to { 
             opacity: 1; 
@@ -181,76 +310,133 @@
         }
     }
 
-    .card-text { width: 70%; }
+    .card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .card-content {
+        flex: 1;
+        min-width: 0;
+    }
     
     .card-title { 
-        font-size: 16px;
-        font-weight: bold;
-        color: #111;
-        margin-bottom: 4px;
-        line-height: 1.3;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a237e;
+        margin-bottom: 10px;
+        line-height: 1.4;
     }
     
     .card-meta {
-        font-size: 12px;
-        color: #777;
         display: flex;
         align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .source-tag {
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .card-date {
+        color: #666;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .card-excerpt {
+        color: #555;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-tags {
+        display: flex;
         gap: 8px;
         flex-wrap: wrap;
     }
 
-    .source-tag {
-        background: #e8f0fe;
-        color: #1a73e8;
-        padding: 2px 8px;
+    .card img {
+        width: 150px;
+        height: 120px;
+        object-fit: cover;
         border-radius: 12px;
-        font-size: 11px;
-        font-weight: bold;
+        flex-shrink: 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
     }
 
-    .card img {
-        width: 120px;
-        height: 85px;
-        object-fit: cover;
-        border-radius: 10px;
-        background: #eee;
+    .card:hover img {
+        transform: scale(1.05);
     }
 
     /* CATEGORY TAGS */
     .category-tag {
-        padding: 2px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: bold;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    .sociedade-tag { background: rgba(76, 175, 80, 0.1); color: #2e7d32; }
-    .politica-tag { background: rgba(244, 67, 54, 0.1); color: #c62828; }
-    .economia-tag { background: rgba(255, 152, 0, 0.1); color: #ef6c00; }
-    .esportes-tag { background: rgba(33, 150, 243, 0.1); color: #1565c0; }
-    .cultura-tag { background: rgba(156, 39, 176, 0.1); color: #7b1fa2; }
-    .saude-tag { background: rgba(0, 150, 136, 0.1); color: #00796b; }
-    .tech-tag { background: rgba(96, 125, 139, 0.1); color: #37474f; }
+    .sociedade-tag { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: white; }
+    .politica-tag { background: linear-gradient(135deg, #f44336 0%, #c62828 100%); color: white; }
+    .economia-tag { background: linear-gradient(135deg, #FF9800 0%, #EF6C00 100%); color: white; }
+    .esportes-tag { background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%); color: white; }
+    .cultura-tag { background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%); color: white; }
+    .saude-tag { background: linear-gradient(135deg, #00BCD4 0%, #00838F 100%); color: white; }
+    .tech-tag { background: linear-gradient(135deg, #607D8B 0%, #455A64 100%); color: white; }
+
+    /* SAVED BADGE */
+    .saved-badge {
+        background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-left: 10px;
+    }
 
     /* LOADER */
     #infinite-loader {
         text-align: center;
-        padding: 20px;
+        padding: 30px;
         color: #666;
-        font-size: 14px;
+        font-size: 16px;
         display: none;
     }
 
-    .infinite-spinner {
+    .loading-spinner {
         display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid #e8e8e8;
-        border-top: 3px solid #1a73e8;
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e8e8e8;
+        border-top: 4px solid #1a73e8;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        margin-right: 10px;
+        margin-bottom: 15px;
     }
 
     @keyframes spin {
@@ -258,32 +444,90 @@
         100% { transform: rotate(360deg); }
     }
 
-    /* ADMIN BUTTON */
-    .admin-btn {
-        background: #d32f2f;
+    /* NO NEWS MESSAGE */
+    .no-news {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin: 20px;
+    }
+
+    .no-news i {
+        font-size: 60px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .no-news h3 {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .no-news p {
+        color: #999;
+        margin-bottom: 25px;
+    }
+
+    .refresh-btn {
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
         color: white;
         border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
+        padding: 12px 30px;
+        border-radius: 25px;
         cursor: pointer;
-        font-weight: bold;
-        margin: 10px;
+        font-size: 16px;
+        font-weight: 700;
         transition: all 0.3s;
     }
 
-    .admin-btn:hover {
-        background: #b71c1c;
-        transform: translateY(-2px);
+    .refresh-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
     }
 
-    /* SAVED BADGE */
-    .saved-badge {
-        background: #4caf50;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 10px;
-        margin-left: 5px;
+    /* RESPONSIVIDADE */
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .card {
+            flex-direction: column;
+        }
+        
+        .card img {
+            width: 100%;
+            height: 180px;
+        }
+        
+        #sidebar {
+            width: 280px;
+        }
+    }
+
+    /* ANIMAÇÕES */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* FOOTER */
+    footer {
+        text-align: center;
+        padding: 30px;
+        color: #666;
+        font-size: 14px;
+        background: white;
+        margin-top: 40px;
+        border-top: 2px solid #e8f0fe;
     }
     </style>
     
@@ -291,31 +535,63 @@
 </head>
 <body>
     <header>
-        <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
-        Notícias CLD
-        <button class="header-btn" id="admin-btn" onclick="window.location.href='adm.html'">⚙️</button>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-newspaper"></i>
+                <span>Notícias CLD</span>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <button class="header-btn" id="menu-btn" onclick="openSidebar()">
+                    <i class="fas fa-bars"></i> Categorias
+                </button>
+                <button class="header-btn" id="admin-btn" onclick="accessAdmin()">
+                    <i class="fas fa-cog"></i> Admin
+                </button>
+            </div>
+        </div>
     </header>
 
     <!-- SIDEBAR -->
     <div id="sidebar-overlay"></div>
     <div id="sidebar">
         <span id="close-sidebar" onclick="closeSidebar()">✖</span>
-        <h2>Categorias</h2>
+        <h2><i class="fas fa-filter"></i> Filtros</h2>
         <div class="categories">
-            <button class="category-btn active" onclick="filterByCategory('todos')">Todos</button>
-            <button class="category-btn" onclick="filterByCategory('sociedade')">Sociedade</button>
-            <button class="category-btn" onclick="filterByCategory('política')">Política</button>
-            <button class="category-btn" onclick="filterByCategory('economia')">Economia</button>
-            <button class="category-btn" onclick="filterByCategory('esportes')">Esportes</button>
-            <button class="category-btn" onclick="filterByCategory('cultura')">Cultura</button>
-            <button class="category-btn" onclick="filterByCategory('saúde')">Saúde</button>
-            <button class="category-btn" onclick="filterByCategory('tecnologia')">Tecnologia</button>
+            <button class="category-btn active" onclick="filterByCategory('todos')">
+                <i class="fas fa-globe"></i> Todos <span class="category-count" id="count-todos">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('sociedade')">
+                <i class="fas fa-users"></i> Sociedade <span class="category-count" id="count-sociedade">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('política')">
+                <i class="fas fa-landmark"></i> Política <span class="category-count" id="count-política">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('economia')">
+                <i class="fas fa-chart-line"></i> Economia <span class="category-count" id="count-economia">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('esportes')">
+                <i class="fas fa-futbol"></i> Esportes <span class="category-count" id="count-esportes">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('cultura')">
+                <i class="fas fa-paint-brush"></i> Cultura <span class="category-count" id="count-cultura">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('saúde')">
+                <i class="fas fa-heartbeat"></i> Saúde <span class="category-count" id="count-saúde">0</span>
+            </button>
+            <button class="category-btn" onclick="filterByCategory('tecnologia')">
+                <i class="fas fa-laptop"></i> Tecnologia <span class="category-count" id="count-tecnologia">0</span>
+            </button>
         </div>
     </div>
 
     <!-- BUSCA -->
     <div class="search-container">
-        <input id="search-input" placeholder="🔍 Buscar notícias..." onkeyup="searchNews()">
+        <input id="search-input" placeholder="🔍 Buscar notícias por título, fonte ou conteúdo..." onkeyup="searchNews()">
+    </div>
+
+    <!-- CONTADOR -->
+    <div class="news-counter">
+        <i class="fas fa-newspaper"></i> Exibindo <span id="news-count">0</span> notícias
     </div>
 
     <!-- LISTA DE NOTÍCIAS -->
@@ -325,45 +601,141 @@
 
     <!-- LOADER INFINITO -->
     <div id="infinite-loader">
-        <div class="infinite-spinner"></div>
-        Carregando mais notícias...
+        <div class="loading-spinner"></div>
+        <p>Carregando mais notícias...</p>
     </div>
 
-    <script>
-    // CONFIGURAÇÃO
-    const SOURCES = JSON.parse(localStorage.getItem('news_sources') || `[
-        {"name": "O País", "url": "https://www.opais.co.mz/wp-json/wp/v2/posts", "enabled": true},
-        {"name": "Jornal Notícias", "url": "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts", "enabled": true},
-        {"name": "Canal de Moçambique", "url": "https://canal.co.mz/wp-json/wp/v2/posts", "enabled": true}
-    ]`);
+    <!-- MENSAGEM SEM NOTÍCIAS -->
+    <div id="no-news-message" class="no-news" style="display: none;">
+        <i class="fas fa-newspaper"></i>
+        <h3>Nenhuma notícia encontrada</h3>
+        <p>Tente alterar os filtros ou atualizar a página</p>
+        <button class="refresh-btn" onclick="loadAllNews()">
+            <i class="fas fa-sync-alt"></i> Atualizar Notícias
+        </button>
+    </div>
 
-    // VARIÁVEIS
+    <footer>
+        <p>© 2024 Notícias CLD - Agregador de Notícias Moçambicanas</p>
+        <p>Contato: claudioarmando001@gmail.com | Tel: +258 869 667 677</p>
+    </footer>
+
+    <script>
+    // CONFIGURAÇÃO DAS FONTES
+    const NEWS_SOURCES = [
+        {
+            name: "O País Moçambique",
+            url: "https://www.opais.co.mz/wp-json/wp/v2/posts",
+            enabled: true,
+            lang: "pt"
+        },
+        {
+            name: "Jornal Notícias",
+            url: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
+            enabled: true,
+            lang: "pt"
+        },
+        {
+            name: "Canal de Moçambique",
+            url: "https://canal.co.mz/wp-json/wp/v2/posts",
+            enabled: true,
+            lang: "pt"
+        },
+        {
+            name: "Savana",
+            url: "https://savana.co.mz/wp-json/wp/v2/posts",
+            enabled: true,
+            lang: "pt"
+        },
+        {
+            name: "Jornal MZ",
+            url: "https://jornalmz.com/wp-json/wp/v2/posts",
+            enabled: true,
+            lang: "pt"
+        }
+    ];
+
+    // VARIÁVEIS GLOBAIS
     let allNews = [];
     let filteredNews = [];
     let currentCategory = 'todos';
     let isLoading = false;
-    const hashes = new Set();
+    let isInitialLoad = true;
+    const newsCache = new Map();
+    const seenNews = new Set();
 
     // ELEMENTOS DOM
     const container = document.getElementById('news-container');
     const loader = document.getElementById('infinite-loader');
-
-    // CATEGORIAS
-    const CATEGORIES = {
-        'todos': { name: 'Todos', class: '' },
-        'sociedade': { name: 'Sociedade', class: 'sociedade-tag' },
-        'política': { name: 'Política', class: 'politica-tag' },
-        'economia': { name: 'Economia', class: 'economia-tag' },
-        'esportes': { name: 'Esportes', class: 'esportes-tag' },
-        'cultura': { name: 'Cultura', class: 'cultura-tag' },
-        'saúde': { name: 'Saúde', class: 'saude-tag' },
-        'tecnologia': { name: 'Tecnologia', class: 'tech-tag' }
+    const noNewsMessage = document.getElementById('no-news-message');
+    const newsCountEl = document.getElementById('news-count');
+    const categoryCounts = {
+        'todos': document.getElementById('count-todos'),
+        'sociedade': document.getElementById('count-sociedade'),
+        'política': document.getElementById('count-política'),
+        'economia': document.getElementById('count-economia'),
+        'esportes': document.getElementById('count-esportes'),
+        'cultura': document.getElementById('count-cultura'),
+        'saúde': document.getElementById('count-saúde'),
+        'tecnologia': document.getElementById('count-tecnologia')
     };
 
-    // FUNÇÕES SIDEBAR
+    // CONFIGURAÇÃO DAS CATEGORIAS
+    const CATEGORIES = {
+        'todos': { 
+            name: 'Todos', 
+            icon: 'fas fa-globe',
+            color: '#1a73e8'
+        },
+        'sociedade': { 
+            name: 'Sociedade', 
+            icon: 'fas fa-users',
+            color: '#4CAF50',
+            keywords: ['sociedade', 'social', 'comunidade', 'educação', 'escola', 'universidade', 'aluno', 'professor', 'família', 'habitação', 'bairro']
+        },
+        'política': { 
+            name: 'Política', 
+            icon: 'fas fa-landmark',
+            color: '#f44336',
+            keywords: ['política', 'político', 'governo', 'presidente', 'ministro', 'eleições', 'partido', 'parlamento', 'assembleia']
+        },
+        'economia': { 
+            name: 'Economia', 
+            icon: 'fas fa-chart-line',
+            color: '#FF9800',
+            keywords: ['economia', 'econômico', 'negócio', 'empresa', 'investimento', 'banco', 'finanças', 'mercado', 'bolsa']
+        },
+        'esportes': { 
+            name: 'Esportes', 
+            icon: 'fas fa-futbol',
+            color: '#2196F3',
+            keywords: ['esporte', 'futebol', 'jogo', 'atleta', 'campeonato', 'liga', 'competição', 'seleção', 'estádio']
+        },
+        'cultura': { 
+            name: 'Cultura', 
+            icon: 'fas fa-paint-brush',
+            color: '#9C27B0',
+            keywords: ['cultura', 'cultural', 'arte', 'música', 'teatro', 'cinema', 'literatura', 'poesia', 'tradição']
+        },
+        'saúde': { 
+                name: 'Saúde', 
+            icon: 'fas fa-heartbeat',
+            color: '#00BCD4',
+            keywords: ['saúde', 'hospital', 'médico', 'enfermeiro', 'doença', 'vacina', 'tratamento', 'clínica', 'epidemia']
+        },
+        'tecnologia': { 
+            name: 'Tecnologia', 
+            icon: 'fas fa-laptop',
+            color: '#607D8B',
+            keywords: ['tecnologia', 'tecnológico', 'internet', 'digital', 'aplicativo', 'software', 'startup', 'inovação']
+        }
+    };
+
+    // FUNÇÕES DA INTERFACE
     function openSidebar() {
         document.getElementById('sidebar').classList.add('open');
         document.getElementById('sidebar-overlay').style.display = 'block';
+        updateCategoryCounts();
     }
 
     function closeSidebar() {
@@ -373,14 +745,32 @@
 
     document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
 
+    function accessAdmin() {
+        const password = prompt('🔐 Digite a senha de acesso ao painel administrativo:');
+        if (password === '0800') {
+            window.location.href = 'adm.html';
+        } else if (password !== null) {
+            alert('❌ Senha incorreta!');
+        }
+    }
+
     // FILTRAR POR CATEGORIA
     function filterByCategory(category) {
         currentCategory = category;
-        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Atualiza botões ativos
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
         event.target.classList.add('active');
         
         applyFilters();
         renderNews();
+        
+        // Fecha sidebar em mobile
+        if (window.innerWidth <= 768) {
+            closeSidebar();
+        }
     }
 
     // BUSCAR NOTÍCIAS
@@ -390,7 +780,7 @@
     }
 
     function applyFilters() {
-        const searchText = document.getElementById('search-input').value.toLowerCase();
+        const searchText = document.getElementById('search-input').value.toLowerCase().trim();
         
         filteredNews = allNews.filter(news => {
             // Filtro por categoria
@@ -399,162 +789,395 @@
             }
             
             // Filtro por busca
-            if (searchText && !news.title.toLowerCase().includes(searchText) && 
-                !news.source.toLowerCase().includes(searchText)) {
-                return false;
+            if (searchText) {
+                const searchInTitle = news.title.toLowerCase().includes(searchText);
+                const searchInSource = news.source.toLowerCase().includes(searchText);
+                const searchInExcerpt = news.excerpt.toLowerCase().includes(searchText);
+                
+                return searchInTitle || searchInSource || searchInExcerpt;
             }
             
             return true;
         });
+        
+        // Atualiza contador
+        newsCountEl.textContent = filteredNews.length;
     }
 
-    // DETERMINAR CATEGORIA
-    function determineCategory(title, content) {
-        const text = (title + ' ' + content).toLowerCase();
-        const keywords = {
-            'sociedade': ['sociedade', 'social', 'comunidade', 'educação'],
-            'política': ['política', 'governo', 'presidente', 'eleições'],
-            'economia': ['economia', 'negócio', 'empresa', 'investimento'],
-            'esportes': ['esporte', 'futebol', 'jogo', 'atleta'],
-            'cultura': ['cultura', 'arte', 'música', 'teatro'],
-            'saúde': ['saúde', 'hospital', 'médico', 'doença'],
-            'tecnologia': ['tecnologia', 'internet', 'digital', 'software']
+    // ATUALIZAR CONTAGEM DE CATEGORIAS
+    function updateCategoryCounts() {
+        const counts = {
+            'todos': allNews.length,
+            'sociedade': 0,
+            'política': 0,
+            'economia': 0,
+            'esportes': 0,
+            'cultura': 0,
+            'saúde': 0,
+            'tecnologia': 0
         };
         
-        for (const [category, words] of Object.entries(keywords)) {
-            if (words.some(word => text.includes(word))) {
-                return category;
+        allNews.forEach(news => {
+            if (news.category && counts[news.category] !== undefined) {
+                counts[news.category]++;
             }
-        }
+        });
         
-        return 'sociedade';
+        // Atualiza contadores na UI
+        Object.keys(counts).forEach(category => {
+            if (categoryCounts[category]) {
+                categoryCounts[category].textContent = counts[category];
+            }
+        });
+    }
+
+    // DETERMINAR CATEGORIA DA NOTÍCIA
+    function determineCategory(title, content) {
+        const text = (title + ' ' + content).toLowerCase();
+        let maxScore = 0;
+        let selectedCategory = 'sociedade';
+        
+        Object.keys(CATEGORIES).forEach(cat => {
+            if (cat === 'todos') return;
+            
+            let score = 0;
+            CATEGORIES[cat].keywords.forEach(keyword => {
+                if (text.includes(keyword)) {
+                    score++;
+                }
+            });
+            
+            if (score > maxScore) {
+                maxScore = score;
+                selectedCategory = cat;
+            }
+        });
+        
+        return selectedCategory;
+    }
+   // FORMATAR DATA
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = Math.floor((now - date) / (1000 * 60)); // diferença em minutos
+        
+        if (diff < 60) {
+            return `${diff} min atrás`;
+        } else if (diff < 1440) {
+            return `${Math.floor(diff / 60)} h atrás`;
+        } else {
+            return date.toLocaleDateString('pt-PT', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
     }
 
     // RENDERIZAR NOTÍCIAS
     function renderNews() {
         container.innerHTML = '';
         
-        filteredNews.forEach(news => {
-            const card = document.createElement('a');
-            card.className = 'card';
-            card.href = `leitura.html?id=${news.id}`;
-            
-            const saved = isSaved(news.id);
-            const savedBadge = saved ? '<span class="saved-badge">⭐ Guardada</span>' : '';
-            
-            card.innerHTML = `
-                <div class="card-text">
-                    <div class="card-title">${news.title} ${savedBadge}</div>
-                    <div class="card-meta">
-                        <span class="source-tag">${news.source}</span>
-                        <span class="category-tag ${news.categoryClass}">${news.categoryName}</span>
-                        <span>${formatDate(news.date)}</span>
-                    </div>
-                </div>
-                <img src="${news.image}" alt="${news.title}" 
-                     onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=NEWS'">
-            `;
-            
-            container.appendChild(card);
+        if (filteredNews.length === 0) {
+            noNewsMessage.style.display = 'block';
+            container.style.display = 'none';
+            return;
+        }
+        
+        noNewsMessage.style.display = 'none';
+        container.style.display = 'block';
+        
+        filteredNews.forEach((news, index) => {
+            setTimeout(() => {
+                const card = createNewsCard(news);
+                container.appendChild(card);
+            }, index * 50); // Efeito cascata
         });
     }
 
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('pt-PT');
+    function createNewsCard(news) {
+        const saved = isNewsSaved(news.id);
+        const card = document.createElement('a');
+        card.className = `card ${saved ? 'saved' : ''}`;
+        card.href = `leitura.html?id=${news.id}`;
+        
+        const savedBadge = saved ? 
+            `<span class="saved-badge"><i class="fas fa-star"></i> Guardada</span>` : '';
+        
+        const categoryClass = news.category ? news.category.toLowerCase().replace('é', 'e') + '-tag' : 'sociedade-tag';
+        const categoryName = news.categoryName || CATEGORIES[news.category]?.name || 'Sociedade';
+        
+        card.innerHTML = `
+            <div class="card-content">
+                <div class="card-title">
+                    ${news.title} ${savedBadge}
+                </div>
+                <div class="card-meta">
+                    <span class="source-tag">
+                        <i class="fas fa-newspaper"></i> ${news.source}
+                    </span>
+                    <span class="category-tag ${categoryClass}">
+                        <i class="${CATEGORIES[news.category]?.icon || 'fas fa-tag'}"></i> ${categoryName}
+                    </span>
+                    <span class="card-date">
+                        <i class="far fa-clock"></i> ${formatDate(news.date)}
+                    </span>
+                </div>
+                ${news.excerpt ? `<div class="card-excerpt">${news.excerpt}</div>` : ''}
+                <div class="card-tags">
+                    ${news.tags ? news.tags.map(tag => 
+                        `<span class="category-tag" style="background: #e0e0e0; color: #666;">${tag}</span>`
+                    ).join('') : ''}
+                </div>
+            </div>
+            <img src="${news.image}" alt="${news.title}" 
+                 onerror="this.src='https://via.placeholder.com/150x120/1a73e8/ffffff?text=${encodeURIComponent(news.source.substring(0, 2))}'">
+        `;
+        
+        return card;
+    }
+
+    // VERIFICAR SE NOTÍCIA ESTÁ SALVA
+    function isNewsSaved(id) {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        return savedNews.some(news => news.id === id);
     }
 
     // CARREGAR NOTÍCIAS
-    async function loadNews() {
+    async function loadAllNews() {
         if (isLoading) return;
+        
         isLoading = true;
         loader.style.display = 'block';
+        container.innerHTML = '';
         
         try {
-            // Carrega notícias salvas localmente primeiro
-            const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-            savedNews.forEach(news => {
-                if (!hashes.has(news.id)) {
-                    allNews.push({
-                        ...news,
-                        categoryName: CATEGORIES[news.category]?.name || news.category,
-                        categoryClass: CATEGORIES[news.category]?.class || ''
-                    });
-                    hashes.add(news.id);
-                }
-            });
+            // Carrega notícias salvas primeiro
+            await loadSavedNews();
             
             // Carrega de fontes externas
-            for (const source of SOURCES.filter(s => s.enabled)) {
-                await fetchSourceNews(source);
-            }
+            await loadExternalNews();
             
-            // Ordena por data
+            // Ordena por data (mais recente primeiro)
             allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Remove duplicatas
+            allNews = allNews.filter((news, index, self) =>
+                index === self.findIndex((n) => n.id === news.id)
+            );
+            
+            // Limite de 100 notícias
+            allNews = allNews.slice(0, 100);
             
             applyFilters();
             renderNews();
+            updateCategoryCounts();
+            
+            if (isInitialLoad) {
+                showNotification(`Carregadas ${allNews.length} notícias`);
+                isInitialLoad = false;
+            }
             
         } catch (error) {
             console.error('Erro ao carregar notícias:', error);
+            showNotification('Erro ao carregar notícias. Tente novamente.', 'error');
         } finally {
             isLoading = false;
             loader.style.display = 'none';
         }
     }
 
-    async function fetchSourceNews(source) {
-        try {
-            const response = await fetch(`${source.url}?_embed&per_page=10&page=1&t=${Date.now()}`);
-            if (!response.ok) throw new Error(`Erro ${response.status}`);
-            
-            const articles = await response.json();
-            
-            articles.forEach(article => {
-                const hash = (article.title.rendered + article.link).replace(/\W/g, "");
-                if (hashes.has(hash)) return;
-                
-                hashes.add(hash);
-                
-                const category = determineCategory(article.title.rendered, article.content.rendered);
-                
+    async function loadSavedNews() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        
+        savedNews.forEach(news => {
+            if (!seenNews.has(news.id)) {
                 allNews.push({
-                    id: hash,
-                    title: article.title.rendered,
-                    content: article.content.rendered,
-                    excerpt: article.excerpt?.rendered || article.title.rendered.substring(0, 150) + '...',
-                    image: article._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
-                           article.jetpack_featured_media_url ||
-                           'https://via.placeholder.com/300x200/1a73e8/ffffff?text=' + encodeURIComponent(source.name.substring(0, 2)),
-                    source: source.name,
-                    date: article.date || article.modified,
-                    link: article.link,
-                    original: true,
-                    category: category,
-                    categoryName: CATEGORIES[category]?.name || category,
-                    categoryClass: CATEGORIES[category]?.class || ''
+                    ...news,
+                    saved: true
                 });
-            });
-        } catch (error) {
-            console.error(`Erro ao carregar ${source.name}:`, error);
-        }
+                seenNews.add(news.id);
+            }
+        });
     }
 
-    // VERIFICAR SE NOTÍCIA ESTÁ SALVA
-    function isSaved(id) {
-        const saved = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        return saved.some(news => news.id === id);
+    async function loadExternalNews() {
+        const promises = NEWS_SOURCES
+            .filter(source => source.enabled)
+            .map(async (source) => {
+                try {
+                    const cacheKey = `news_${source.name}_${new Date().toISOString().split('T')[0]}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    
+                    if (cached) {
+                        return JSON.parse(cached);
+                    }
+                    
+                    const response = await fetch(
+                        `${source.url}?_embed&per_page=10&page=1&timestamp=${Date.now()}`
+                    );
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    
+                    const articles = await response.json();
+                    
+                    const processedArticles = articles.map(article => {
+                        const id = `ext_${article.id}_${source.name.replace(/\s+/g, '_')}`;
+                        
+                        if (seenNews.has(id)) return null;
+                        
+                        seenNews.add(id);
+                        
+                        const category = determineCategory(
+                            article.title?.rendered || '',
+                            article.content?.rendered || ''
+                        );
+                        
+                        return {
+                            id: id,
+                            title: article.title?.rendered || 'Sem título',
+                            excerpt: article.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 150) + '...' || '',
+                            content: article.content?.rendered || '',
+                            image: article._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
+                                   article.jetpack_featured_media_url ||
+                                   `https://via.placeholder.com/600x400/1a73e8/ffffff?text=${encodeURIComponent(source.name.substring(0, 2))}`,
+                            source: source.name,
+                            date: article.date || article.modified || new Date().toISOString(),
+                            link: article.link || '#',
+                            category: category,
+                            categoryName: CATEGORIES[category]?.name || category,
+                            original: true
+                        };
+                    }).filter(article => article !== null);
+                    
+                    // Cache por 1 hora
+                    localStorage.setItem(cacheKey, JSON.stringify(processedArticles));
+                    localStorage.setItem(`${cacheKey}_timestamp`, Date.now());
+                    
+                    return processedArticles;
+                    
+                } catch (error) {
+                    console.error(`Erro ao carregar ${source.name}:`, error);
+                    return [];
+                }
+            });
+        
+        const results = await Promise.allSettled(promises);
+        
+        results.forEach(result => {
+            if (result.status === 'fulfilled' && result.value) {
+                allNews.push(...result.value);
+            }
+        });
     }
+   // NOTIFICAÇÃO
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'error' ? '#f44336' : '#4CAF50'};
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            max-width: 300px;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+
+    // ADICIONAR ESTILOS DE ANIMAÇÃO
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 
     // SCROLL INFINITO
+    let page = 1;
     window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
-            loadNews();
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && 
+            !isLoading && 
+            allNews.length < 200) {
+            page++;
+            loadAllNews();
         }
+    });
+
+    // ATALHOS DE TECLADO
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeSidebar();
+        }
+        
+        if (e.ctrlKey && e.key === 'k') {
+            e.preventDefault();
+            document.getElementById('search-input').focus();
+        }
+        
+        if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+            e.preventDefault();
+            loadAllNews();
+        }
+        
+        if (e.ctrlKey && e.key === 'a') {
+            e.preventDefault();
+            accessAdmin();
+        }
+    });
+
+    // FOCUS NO CAMPO DE BUSCA
+    document.getElementById('search-input').addEventListener('focus', function() {
+        this.select();
     });
 
     // INICIALIZAÇÃO
     document.addEventListener('DOMContentLoaded', () => {
-        loadNews();
+        loadAllNews();
+        
+        // Atualiza a cada 5 minutos se a página estiver visível
+        setInterval(() => {
+            if (document.visibilityState === 'visible' && !isLoading) {
+                loadAllNews();
+            }
+        }, 300000);
+    });
+
+    // VERIFICA CONEXÃO
+    window.addEventListener('online', () => {
+        showNotification('Conexão restaurada. Atualizando notícias...');
+        loadAllNews();
+    });
+
+    window.addEventListener('offline', () => {
+        showNotification('Você está offline. Mostrando notícias em cache.', 'error');
     });
     </script>
 </body>
