@@ -1,1457 +1,561 @@
 <!doctype html>
 <html lang="pt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Notícias CLD - Agregador de Notícias</title>
-<meta name="description" content="Agregador de notícias de Moçambique em tempo real">
-<meta name="robots" content="index, follow">
-<style>
-/* [Todo o CSS anterior permanece igual - não alterei] */
-body{
-    font-family:Arial,sans-serif;
-    background:#f2f3f5;
-    margin:0;
-    color:#111;
-}
-
-/* HEADER */
-header{
-    background:#1a73e8;
-    color:white;
-    padding:18px;
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
-    position:relative;
-}
-
-.header-btn{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    background:white;
-    color:#1a73e8;
-    border:none;
-    padding:7px 12px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:18px;
-    font-weight:bold;
-    transition: all 0.3s;
-}
-
-.header-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-50%) scale(1.05);
-}
-
-#menu-btn{ left:15px; }
-#refresh-btn{ right:15px; }
-
-/* SIDEBAR */
-#sidebar-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    display:none;
-    z-index:9998;
-}
-
-#sidebar{
-    position:fixed;
-    top:0;
-    left:-280px;
-    width:280px;
-    height:100vh;
-    background:#fff;
-    box-shadow:2px 0 6px rgba(0,0,0,.2);
-    padding:20px;
-    box-sizing:border-box;
-    transition:.3s;
-    z-index:9999;
-    overflow-y:auto;
-}
-
-#sidebar.open{
-    left:0;
-}
-
-#sidebar h2{
-    color:#1a73e8;
-    margin-top:0;
-    font-size:18px;
-}
-
-#sidebar p{
-    font-size:14px;
-    color:#555;
-    line-height:1.5;
-}
-
-#sidebar .contact div{
-    margin:8px 0;
-    font-size:14px;
-}
-
-#close-sidebar{
-    position:absolute;
-    top:15px;
-    right:15px;
-    cursor:pointer;
-    font-size:18px;
-    color:#333;
-}
-
-/* CATEGORIAS */
-.categories {
-    margin: 15px 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.category-btn {
-    background: #e8f0fe;
-    border: 1px solid #dce6f5;
-    color: #1a73e8;
-    padding: 6px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: all 0.3s;
-    font-weight: 500;
-}
-
-.category-btn:hover {
-    background: #1a73e8;
-    color: white;
-    border-color: #1a73e8;
-}
-
-.category-btn.active {
-    background: #1a73e8;
-    color: white;
-    border-color: #1a73e8;
-}
-
-/* BOTÕES MODAL */
-.modal-buttons {
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.modal-btn {
-    background: #1a73e8;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-    transition: all 0.3s;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.modal-btn:hover {
-    background: #0d62d9;
-    transform: translateY(-2px);
-    box-shadow: 0 3px 8px rgba(26, 115, 232, 0.3);
-}
-
-.modal-btn i {
-    font-size: 18px;
-}
-
-/* SEARCH */
-.search-container{
-    max-width:950px;
-    margin:12px auto;
-    padding:0 12px;
-}
-#search-input{
-    width:100%;
-    padding:12px;
-    border-radius:8px;
-    border:1px solid #ddd;
-    font-size:16px;
-    background:#fff;
-    color:#111;
-    transition: all 0.3s;
-}
-
-#search-input:focus {
-    outline: none;
-    border-color: #1a73e8;
-    box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-}
-
-/* LISTA */
-#news-container{
-    max-width:950px;
-    margin:auto;
-    padding:12px;
-}
-
-.card{
-    background:white;
-    border-radius:12px;
-    padding:12px;
-    margin-bottom:12px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 5px rgba(0,0,0,.08);
-    cursor:pointer;
-    transition:.2s;
-    animation: fadeIn 0.5s ease-out;
-    border: 1px solid #e8e8e8;
-}
-.card:hover{ 
-    transform:scale(1.01); 
-    box-shadow:0 4px 12px rgba(0,0,0,.12);
-}
-
-@keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(20px); 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Notícias CLD - Agregador Moçambicano</title>
+    <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Estilos -->
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f3f5;
+        margin: 0;
+        color: #111;
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
+
+    header {
+        background: #1a73e8;
+        color: white;
+        padding: 18px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        position: relative;
     }
-}
 
-.card-text{ width:70%; }
-.card-title{ 
-    font-size:16px;
-    font-weight:bold;
-    color:#111;
-    margin-bottom:4px;
-    line-height:1.3;
-}
-.card-meta{
-    font-size:12px;
-    color:#777;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-wrap: wrap;
-}
-
-.source-tag{
-    background:#e8f0fe;
-    color:#1a73e8;
-    padding:2px 8px;
-    border-radius:12px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.card img{
-    width:120px;
-    height:85px;
-    object-fit:cover;
-    border-radius:10px;
-    background:#eee;
-}
-
-.category-tag {
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.sociedade-tag {
-    background: rgba(76, 175, 80, 0.1);
-    color: #2e7d32;
-}
-
-.politica-tag {
-    background: rgba(244, 67, 54, 0.1);
-    color: #c62828;
-}
-
-.economia-tag {
-    background: rgba(255, 152, 0, 0.1);
-    color: #ef6c00;
-}
-
-.esportes-tag {
-    background: rgba(33, 150, 243, 0.1);
-    color: #1565c0;
-}
-
-.cultura-tag {
-    background: rgba(156, 39, 176, 0.1);
-    color: #7b1fa2;
-}
-
-.saude-tag {
-    background: rgba(0, 150, 136, 0.1);
-    color: #00796b;
-}
-
-.tech-tag {
-    background: rgba(96, 125, 139, 0.1);
-    color: #37474f;
-}
-
-/* LOADER INFINITO */
-#infinite-loader {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-size: 14px;
-}
-
-.infinite-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid #e8e8e8;
-    border-top: 3px solid #1a73e8;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 10px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* MODAL INFO (SOBRE E CONTATO) - MELHORADO */
-#info-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 10001;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease-out;
-}
-
-#info-modal-content {
-    background: #fff;
-    width: 90%;
-    max-width: 500px;
-    max-height: 85vh;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    overflow: hidden;
-    position: relative;
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
+    .header-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        color: #1a73e8;
+        border: none;
+        padding: 7px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        transition: all 0.3s;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .header-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-50%) scale(1.05);
     }
-}
 
-#info-modal-header {
-    background: linear-gradient(135deg, #1a73e8, #0d62d9);
-    color: white;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    #menu-btn { left: 15px; }
+    #admin-btn { right: 15px; }
 
-#info-modal-header h2 {
-    margin: 0;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+    /* SIDEBAR */
+    #sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.5);
+        display: none;
+        z-index: 9998;
+    }
 
-#info-modal-close {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-}
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        background: #fff;
+        box-shadow: 2px 0 6px rgba(0,0,0,.2);
+        padding: 20px;
+        box-sizing: border-box;
+        transition: .3s;
+        z-index: 9999;
+        overflow-y: auto;
+    }
 
-#info-modal-close:hover {
-    background: rgba(255,255,255,0.3);
-    transform: rotate(90deg);
-}
+    #sidebar.open { left: 0; }
 
-#info-modal-body {
-    padding: 25px;
-    overflow-y: auto;
-    max-height: calc(85vh - 80px);
-}
+    #sidebar h2 {
+        color: #1a73e8;
+        margin-top: 0;
+        font-size: 18px;
+    }
 
-/* CONTEÚDO INFO MODAL */
-.info-section {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
+    #close-sidebar {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+    }
 
-.info-section:last-child {
-    margin-bottom: 0;
-    border-bottom: none;
-}
+    /* CATEGORIAS */
+    .categories {
+        margin: 15px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 
-.info-section h3 {
-    color: #1a73e8;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .category-btn {
+        background: #e8f0fe;
+        border: 1px solid #dce6f5;
+        color: #1a73e8;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
 
-.info-section p {
-    line-height: 1.6;
-    color: #444;
-    margin-bottom: 15px;
-}
+    .category-btn:hover,
+    .category-btn.active {
+        background: #1a73e8;
+        color: white;
+        border-color: #1a73e8;
+    }
 
-.info-section ul {
-    padding-left: 20px;
-    margin-bottom: 15px;
-}
+    /* BUSCA */
+    .search-container {
+        max-width: 950px;
+        margin: 12px auto;
+        padding: 0 12px;
+    }
 
-.info-section li {
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
+    #search-input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        background: #fff;
+        color: #111;
+        transition: all 0.3s;
+    }
 
-/* CONTATO INFO */
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-}
+    #search-input:focus {
+        outline: none;
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    }
 
-.contact-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    transition: all 0.3s;
-}
+    /* LISTA DE NOTÍCIAS */
+    #news-container {
+        max-width: 950px;
+        margin: auto;
+        padding: 12px;
+    }
 
-.contact-item:hover {
-    background: #e8f0fe;
-    transform: translateX(5px);
-}
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,.08);
+        cursor: pointer;
+        transition: .2s;
+        animation: fadeIn 0.5s ease-out;
+        border: 1px solid #e8e8e8;
+        text-decoration: none;
+        color: inherit;
+    }
 
-.contact-item i {
-    color: #1a73e8;
-    font-size: 18px;
-    width: 24px;
-}
+    .card:hover { 
+        transform: scale(1.01); 
+        box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
 
-.contact-item span {
-    font-size: 15px;
-    color: #333;
-}
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(20px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
 
-.contact-link {
-    color: #1a73e8;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
-}
+    .card-text { width: 70%; }
+    
+    .card-title { 
+        font-size: 16px;
+        font-weight: bold;
+        color: #111;
+        margin-bottom: 4px;
+        line-height: 1.3;
+    }
+    
+    .card-meta {
+        font-size: 12px;
+        color: #777;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 
-.contact-link:hover {
-    color: #0d62d9;
-    text-decoration: underline;
-}
+    .source-tag {
+        background: #e8f0fe;
+        color: #1a73e8;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+    }
 
-/* SOCIAL LINKS */
-.social-links {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
+    .card img {
+        width: 120px;
+        height: 85px;
+        object-fit: cover;
+        border-radius: 10px;
+        background: #eee;
+    }
 
-.social-btn {
-    flex: 1;
-    min-width: 120px;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-}
+    /* CATEGORY TAGS */
+    .category-tag {
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+    }
 
-.social-btn i {
-    font-size: 16px;
-}
+    .sociedade-tag { background: rgba(76, 175, 80, 0.1); color: #2e7d32; }
+    .politica-tag { background: rgba(244, 67, 54, 0.1); color: #c62828; }
+    .economia-tag { background: rgba(255, 152, 0, 0.1); color: #ef6c00; }
+    .esportes-tag { background: rgba(33, 150, 243, 0.1); color: #1565c0; }
+    .cultura-tag { background: rgba(156, 39, 176, 0.1); color: #7b1fa2; }
+    .saude-tag { background: rgba(0, 150, 136, 0.1); color: #00796b; }
+    .tech-tag { background: rgba(96, 125, 139, 0.1); color: #37474f; }
 
-.social-btn.whatsapp {
-    background: #25d366;
-    color: white;
-}
+    /* LOADER */
+    #infinite-loader {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-size: 14px;
+        display: none;
+    }
 
-.social-btn.whatsapp:hover {
-    background: #1da851;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-}
+    .infinite-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #e8e8e8;
+        border-top: 3px solid #1a73e8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+    }
 
-.social-btn.email {
-    background: #ea4335;
-    color: white;
-}
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-.social-btn.email:hover {
-    background: #d23c2e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
-}
+    /* ADMIN BUTTON */
+    .admin-btn {
+        background: #d32f2f;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 10px;
+        transition: all 0.3s;
+    }
 
-.social-btn.phone {
-    background: #34a853;
-    color: white;
-}
+    .admin-btn:hover {
+        background: #b71c1c;
+        transform: translateY(-2px);
+    }
 
-.social-btn.phone:hover {
-    background: #2d9148;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(52, 168, 83, 0.3);
-}
-
-/* BADGE DESTAQUE */
-.info-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #1a73e8, #0d62d9);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-.info-highlight {
-    background: #e8f0fe;
-    border-left: 4px solid #1a73e8;
-    padding: 15px;
-    border-radius: 0 8px 8px 0;
-    margin: 20px 0;
-}
-
-.info-highlight p {
-    margin: 0;
-    color: #1a73e8;
-    font-weight: 500;
-}
-
-/* FEATURES GRID */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.feature-item {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.feature-item:hover {
-    background: #e8f0fe;
-    transform: translateY(-3px);
-}
-
-.feature-item i {
-    color: #1a73e8;
-    font-size: 20px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.feature-item span {
-    font-size: 12px;
-    color: #555;
-    font-weight: 500;
-}
-
-/* WHATSAPP FLOATING BUTTON */
-.whatsapp-channel-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #25d366;
-    background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 65%;
-    color: white;
-    border: none;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-    z-index: 1000;
-    font-size: 0;
-    transition: all 0.3s ease;
-    padding: 0;
-}
-
-.whatsapp-channel-btn:hover {
-    transform: translateY(-3px) scale(1.1);
-    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
-}
-
-.whatsapp-channel-btn::after {
-    content: attr(title);
-    position: absolute;
-    right: 70px;
-    background: #25d366;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-.whatsapp-channel-btn:hover::after {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-/* NOTÍCIAS RELACIONADAS */
-.related-news-container {
-    display: grid;
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.related-news-card {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 12px;
-    border-left: 4px solid #1a73e8;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: inherit;
-}
-
-.related-news-card:hover {
-    background: #e8f0fe;
-    transform: translateX(5px);
-    text-decoration: none;
-    color: inherit;
-}
-
-.related-news-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-.related-news-text {
-    flex: 1;
-}
-
-.related-news-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #111;
-    margin-bottom: 4px;
-    line-height: 1.3;
-}
-
-.related-news-meta {
-    font-size: 11px;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.no-related-news {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-size: 14px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    /* SAVED BADGE */
+    .saved-badge {
+        background: #4caf50;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+    </style>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<header>
-<button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
-Notícias CLD
-<button class="header-btn" id="refresh-btn" onclick="manualRefresh()">↻</button>
-</header>
+    <header>
+        <button class="header-btn" id="menu-btn" onclick="openSidebar()">☰</button>
+        Notícias CLD
+        <button class="header-btn" id="admin-btn" onclick="window.location.href='adm.html'">⚙️</button>
+    </header>
 
-<!-- SIDEBAR -->
-<div id="sidebar-overlay"></div>
-<div id="sidebar">
-<span id="close-sidebar" onclick="closeSidebar()">✖</span>
-<h2>Categorias</h2>
-<div class="categories">
-<button class="category-btn active" onclick="filterByCategory('todos')">Todos</button>
-<button class="category-btn" onclick="filterByCategory('sociedade')">Sociedade</button>
-<button class="category-btn" onclick="filterByCategory('política')">Política</button>
-<button class="category-btn" onclick="filterByCategory('economia')">Economia</button>
-<button class="category-btn" onclick="filterByCategory('esportes')">Esportes</button>
-<button class="category-btn" onclick="filterByCategory('cultura')">Cultura</button>
-<button class="category-btn" onclick="filterByCategory('saúde')">Saúde</button>
-<button class="category-btn" onclick="filterByCategory('tecnologia')">Tecnologia</button>
-</div>
-
-<h2>Ações</h2>
-<div class="modal-buttons">
-<button class="modal-btn" onclick="openInfoModal('sobre')">
-    <i class="fas fa-info-circle"></i> Sobre a Plataforma
-</button>
-<button class="modal-btn" onclick="openInfoModal('contato')">
-    <i class="fas fa-envelope"></i> Contacto
-</button>
-</div>
-</div>
-
-<!-- BUSCA -->
-<div class="search-container">
-<input id="search-input" placeholder="🔍 Buscar notícias..." onkeyup="searchNews()">
-</div>
-
-<!-- LISTA COM RENDERIZAÇÃO EM TEMPO REAL -->
-<div id="news-container">
-<!-- Notícias aparecerão aqui automaticamente -->
-</div>
-
-<!-- LOADER PARA SCROLL INFINITO -->
-<div id="infinite-loader" style="display:none;">
-    <div class="infinite-spinner"></div>
-    Carregando mais notícias...
-</div>
-
-<!-- MODAL INFO (SOBRE/CONTATO) - MELHORADA -->
-<div id="info-modal">
-<div id="info-modal-content">
-<div id="info-modal-header">
-    <h2><i class="fas" id="modal-icon"></i> <span id="modal-title"></span></h2>
-    <button id="info-modal-close">✖</button>
-</div>
-<div id="info-modal-body"></div>
-</div>
-</div>
-
-<!-- WHATSAPP CHANNEL BUTTON -->
-<button class="whatsapp-channel-btn" onclick="openWhatsAppChannel()" title="Canal WhatsApp" aria-label="Abrir canal oficial no WhatsApp">
-</button>
-
-<script>
-// ========== VARIÁVEIS GLOBAIS ==========
-let news = [];
-let filteredNews = [];
-let hashes = new Set();
-const BATCH_SIZE = 15;
-let isLoadingMore = false;
-let allSourcesLoaded = false;
-let currentCategory = 'todos';
-
-// CATEGORIAS DISPONÍVEIS
-const CATEGORIES = {
-    'todos': { name: 'Todos', color: '#1a73e8' },
-    'sociedade': { name: 'Sociedade', color: '#2e7d32', class: 'sociedade-tag' },
-    'política': { name: 'Política', color: '#c62828', class: 'politica-tag' },
-    'economia': { name: 'Economia', color: '#ef6c00', class: 'economia-tag' },
-    'esportes': { name: 'Esportes', color: '#1565c0', class: 'esportes-tag' },
-    'cultura': { name: 'Cultura', color: '#7b1fa2', class: 'cultura-tag' },
-    'saúde': { name: 'Saúde', color: '#00796b', class: 'saude-tag' },
-    'tecnologia': { name: 'Tecnologia', color: '#37474f', class: 'tech-tag' }
-};
-
-// ELEMENTOS DOM
-const container = document.getElementById("news-container");
-const infiniteLoader = document.getElementById("infinite-loader");
-const infoModal = document.getElementById("info-modal");
-const infoModalClose = document.getElementById("info-modal-close");
-const modalTitle = document.getElementById("modal-title");
-const modalIcon = document.getElementById("modal-icon");
-
-// CONSTANTES
-const WHATSAPP_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb7BeBI7T8bRTbjcsN0t";
-
-// FONTES DE NOTÍCIAS
-const sources = [
-    { 
-        name: "O País", 
-        baseUrl: "https://www.opais.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Time de Todos",
-        baseUrl: "https://timesdetodos.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Integrity", 
-        baseUrl: "https://integritymagazine.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Jornal Notícias",
-        baseUrl: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Savana", 
-        baseUrl: "https://savana.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "JornalMZ",
-        baseUrl: "https://jornalmz.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Checka",
-        baseUrl: "https://checka.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Canal de Moçambique",
-        baseUrl: "https://canal.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Stop",
-        baseUrl: "https://www.stop.co.mz/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Club of Mozambique",
-        baseUrl: "https://clubofmozambique.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    {
-        name: "Zitamar News",
-        baseUrl: "https://www.zitamar.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    },
-    { 
-        name: "Carta de Moçambique", 
-        baseUrl: "https://cartamz.com/wp-json/wp/v2/posts",
-        currentPage: 1,
-        hasMore: true,
-        isFetching: false
-    }
-];
-
-// ========== FUNÇÕES DE UTILIDADE ==========
-
-// Gerar hash único para a notícia
-function generateNewsHash(article) {
-    const text = article.title.rendered + article.link;
-    return btoa(text).replace(/[^a-zA-Z0-9]/g, '').substring(0, 12);
-}
-
-// Gerar link curto para a notícia
-function generateShortLink(hash) {
-    return `leitura.html?n=${hash}`;
-}
-
-// Salvar notícia no cache
-function saveToCache(article) {
-    try {
-        const hash = generateNewsHash(article);
-        const newsItem = {
-            id: hash,
-            title: article.title.rendered,
-            content: article.content.rendered,
-            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                   article.jetpack_featured_media_url ||
-                   "https://via.placeholder.com/300x200",
-            source: article.sourceName || "Desconhecido",
-            date: article.date || article.modified,
-            link: article.link
-        };
-        
-        // Salvar no localStorage
-        localStorage.setItem(`news_${hash}`, JSON.stringify(newsItem));
-        
-        // Adicionar à lista geral de notícias em cache
-        let cachedNews = JSON.parse(localStorage.getItem('cached_news') || '[]');
-        if (!cachedNews.includes(hash)) {
-            cachedNews.push(hash);
-            // Manter apenas 200 notícias em cache
-            if (cachedNews.length > 200) {
-                const removed = cachedNews.shift();
-                localStorage.removeItem(`news_${removed}`);
-            }
-            localStorage.setItem('cached_news', JSON.stringify(cachedNews));
-        }
-        
-        return hash;
-    } catch (e) {
-        console.error('Erro ao salvar no cache:', e);
-        return null;
-    }
-}
-
-// ========== FUNÇÕES DE INTERFACE ==========
-
-function openSidebar(){
-    document.getElementById("sidebar").classList.add("open");
-    document.getElementById("sidebar-overlay").style.display="block";
-}
-
-function closeSidebar(){
-    document.getElementById("sidebar").classList.remove("open");
-    document.getElementById("sidebar-overlay").style.display="none";
-}
-
-document.getElementById('sidebar-overlay').addEventListener('click', function(event) {
-    if (event.target === this) {
-        closeSidebar();
-    }
-});
-
-function formatDate(d){
-    return new Date(d).toLocaleString("pt-PT");
-}
-
-function filterByCategory(category) {
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    currentCategory = category;
-    
-    if (category === 'todos') {
-        filteredNews = [...news];
-    } else {
-        filteredNews = news.filter(article => {
-            const articleCategory = determineCategory(article.title, article.content);
-            return articleCategory === category;
-        });
-    }
-    
-    const searchText = document.getElementById("search-input").value.toLowerCase();
-    if (searchText) {
-        filteredNews = filteredNews.filter(n =>
-            n.title.toLowerCase().includes(searchText) || 
-            n.source.toLowerCase().includes(searchText)
-        );
-    }
-    
-    container.innerHTML = '';
-    filteredNews.forEach(article => {
-        renderSingleNews(article);
-    });
-}
-
-function searchNews(){
-    const q = document.getElementById("search-input").value.toLowerCase();
-    
-    let tempFiltered = [...news];
-    
-    if (currentCategory !== 'todos') {
-        tempFiltered = news.filter(article => {
-            const articleCategory = determineCategory(article.title, article.content);
-            return articleCategory === currentCategory;
-        });
-    }
-    
-    filteredNews = tempFiltered.filter(n =>
-        n.title.toLowerCase().includes(q) || 
-        n.source.toLowerCase().includes(q)
-    );
-    
-    container.innerHTML = '';
-    filteredNews.forEach(article => {
-        renderSingleNews(article);
-    });
-}
-
-function openInfoModal(type) {
-    closeSidebar();
-    
-    let title = '';
-    let icon = '';
-    let content = '';
-    
-    if (type === 'sobre') {
-        title = 'Sobre a Plataforma';
-        icon = 'fa-info-circle';
-        content = `
-        <div class="info-content">
-            <span class="info-badge">📰 Agregador de Notícias</span>
-            
-            <div class="info-section">
-                <h3><i class="fas fa-bullhorn"></i> Descrição</h3>
-                <p>Agregador independente de notícias de Moçambique, reunindo conteúdos de várias fontes confiáveis em tempo real.</p>
-            </div>
-            
-            <div class="info-section">
-                <h3><i class="fas fa-newspaper"></i> Fontes Incluídas</h3>
-                <ul>
-                    <li><strong>O País</strong></li>
-                    <li><strong>Jornal Notícias</strong></li>
-                    <li><strong>Canal de Moçambique</strong></li>
-                    <li><strong>Carta de Moçambique</strong></li>
-                    <li><strong>Club of Mozambique</strong></li>
-                    <li><strong>Stop</strong></li>
-                    <li><strong>Zitamar News</strong></li>
-                    <li><strong>Time de Todos</strong></li>
-                </ul>
-            </div>
-            
-            <div class="info-section">
-                <h3><i class="fas fa-tags"></i> Categorias</h3>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <i class="fas fa-users"></i>
-                        <span>Sociedade</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-landmark"></i>
-                        <span>Política</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Economia</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-futbol"></i>
-                        <span>Esportes</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-paint-brush"></i>
-                        <span>Cultura</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-heartbeat"></i>
-                        <span>Saúde</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-laptop"></i>
-                        <span>Tecnologia</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
-    } else if (type === 'contato') {
-        title = 'Contacto';
-        icon = 'fa-envelope';
-        content = `
-        <div class="info-content">
-            <span class="info-badge">📞 Entre em Contacto</span>
-            
-            <div class="info-section">
-                <h3><i class="fas fa-headset"></i> Canais de Atendimento</h3>
-                
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <strong>Email Principal</strong><br>
-                            <a href="mailto:claudioarmando001@gmail.com" class="contact-link">claudioarmando001@gmail.com</a>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <strong>Telefone/WhatsApp</strong><br>
-                            <a href="tel:+258869667677" class="contact-link">+258 869 667 677</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="info-section">
-                <h3><i class="fab fa-whatsapp"></i> Canal Oficial WhatsApp</h3>
-                <p>Receba as principais notícias diretamente no seu WhatsApp:</p>
-                <button class="social-btn whatsapp" onclick="openWhatsAppChannel()">
-                    <i class="fab fa-whatsapp"></i> Entrar no Canal
-                </button>
-            </div>
-        </div>
-        `;
-    }
-    
-    modalTitle.textContent = title;
-    modalIcon.className = `fas ${icon}`;
-    document.getElementById("info-modal-body").innerHTML = content;
-    
-    infoModal.style.display = "flex";
-    
-    setTimeout(() => {
-        document.getElementById("info-modal-content").style.transform = "translateY(0)";
-    }, 10);
-}
-
-function closeInfoModal() {
-    infoModal.style.display = "none";
-}
-
-infoModalClose.addEventListener('click', closeInfoModal);
-
-infoModal.addEventListener('click', (e) => {
-    if (e.target.id === 'info-modal') {
-        closeInfoModal();
-    }
-});
-
-// ========== RENDERIZAÇÃO ==========
-
-function determineCategory(title, content) {
-    const text = (title + ' ' + content).toLowerCase();
-    
-    if (text.includes('futebol') || text.includes('desporto') || text.includes('jogo') || text.includes('atleta')) {
-        return 'esportes';
-    } else if (text.includes('economia') || text.includes('negócio') || text.includes('empresa') || text.includes('investimento')) {
-        return 'economia';
-    } else if (text.includes('política') || text.includes('governo') || text.includes('presidente') || text.includes('ministro')) {
-        return 'política';
-    } else if (text.includes('saúde') || text.includes('hospital') || text.includes('médico') || text.includes('enfermeiro')) {
-        return 'saúde';
-    } else if (text.includes('tecnologia') || text.includes('digital') || text.includes('internet') || text.includes('aplicativo')) {
-        return 'tecnologia';
-    } else if (text.includes('cultura') || text.includes('arte') || text.includes('música') || text.includes('teatro')) {
-        return 'cultura';
-    } else {
-        return 'sociedade';
-    }
-}
-
-function renderSingleNews(article) {
-    if (container.querySelector(`[data-hash="${article.hash}"]`)) return;
-    
-    const category = article.category || determineCategory(article.title, article.content);
-    article.category = category;
-    
-    const newsLink = generateShortLink(article.hash);
-    
-    const c = document.createElement("a");
-    c.className = "card";
-    c.dataset.hash = article.hash;
-    c.dataset.category = category;
-    c.href = newsLink;
-    c.style.textDecoration = 'none';
-    c.style.color = 'inherit';
-    c.innerHTML = `
-    <div class="card-text">
-        <div class="card-title">${article.title}</div>
-        <div class="card-meta">
-            <span class="source-tag">${article.source}</span>
-            <span class="category-tag ${CATEGORIES[category].class}">${CATEGORIES[category].name}</span>
-            <span>${formatDate(article.date)}</span>
+    <!-- SIDEBAR -->
+    <div id="sidebar-overlay"></div>
+    <div id="sidebar">
+        <span id="close-sidebar" onclick="closeSidebar()">✖</span>
+        <h2>Categorias</h2>
+        <div class="categories">
+            <button class="category-btn active" onclick="filterByCategory('todos')">Todos</button>
+            <button class="category-btn" onclick="filterByCategory('sociedade')">Sociedade</button>
+            <button class="category-btn" onclick="filterByCategory('política')">Política</button>
+            <button class="category-btn" onclick="filterByCategory('economia')">Economia</button>
+            <button class="category-btn" onclick="filterByCategory('esportes')">Esportes</button>
+            <button class="category-btn" onclick="filterByCategory('cultura')">Cultura</button>
+            <button class="category-btn" onclick="filterByCategory('saúde')">Saúde</button>
+            <button class="category-btn" onclick="filterByCategory('tecnologia')">Tecnologia</button>
         </div>
     </div>
-    <img src="${article.image}" loading="lazy" alt="${article.title}" onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0,2))}'">
-    `;
-    
-    let inserted = false;
-    const cards = container.querySelectorAll('.card');
-    
-    for (let i = 0; i < cards.length; i++) {
-        const cardDate = new Date(cards[i].dataset.date || 0);
-        const newDate = new Date(article.date);
-        
-        if (newDate > cardDate) {
-            container.insertBefore(c, cards[i]);
-            inserted = true;
-            break;
-        }
-    }
-    
-    if (!inserted) {
-        container.appendChild(c);
-    }
-    
-    c.dataset.date = article.date;
-}
 
-// ========== CARREGAMENTO DE NOTÍCIAS ==========
+    <!-- BUSCA -->
+    <div class="search-container">
+        <input id="search-input" placeholder="🔍 Buscar notícias..." onkeyup="searchNews()">
+    </div>
 
-async function processSourceArticles(source, articles) {
-    const newArticles = [];
-    
-    for (const article of articles) {
-        const hash = generateNewsHash(article);
+    <!-- LISTA DE NOTÍCIAS -->
+    <div id="news-container">
+        <!-- Notícias aparecerão aqui -->
+    </div>
+
+    <!-- LOADER INFINITO -->
+    <div id="infinite-loader">
+        <div class="infinite-spinner"></div>
+        Carregando mais notícias...
+    </div>
+
+    <script>
+    // CONFIGURAÇÃO
+    const SOURCES = JSON.parse(localStorage.getItem('news_sources') || `[
+        {"name": "O País", "url": "https://www.opais.co.mz/wp-json/wp/v2/posts", "enabled": true},
+        {"name": "Jornal Notícias", "url": "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts", "enabled": true},
+        {"name": "Canal de Moçambique", "url": "https://canal.co.mz/wp-json/wp/v2/posts", "enabled": true}
+    ]`);
+
+    // VARIÁVEIS
+    let allNews = [];
+    let filteredNews = [];
+    let currentCategory = 'todos';
+    let isLoading = false;
+    const hashes = new Set();
+
+    // ELEMENTOS DOM
+    const container = document.getElementById('news-container');
+    const loader = document.getElementById('infinite-loader');
+
+    // CATEGORIAS
+    const CATEGORIES = {
+        'todos': { name: 'Todos', class: '' },
+        'sociedade': { name: 'Sociedade', class: 'sociedade-tag' },
+        'política': { name: 'Política', class: 'politica-tag' },
+        'economia': { name: 'Economia', class: 'economia-tag' },
+        'esportes': { name: 'Esportes', class: 'esportes-tag' },
+        'cultura': { name: 'Cultura', class: 'cultura-tag' },
+        'saúde': { name: 'Saúde', class: 'saude-tag' },
+        'tecnologia': { name: 'Tecnologia', class: 'tech-tag' }
+    };
+
+    // FUNÇÕES SIDEBAR
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('open');
+        document.getElementById('sidebar-overlay').style.display = 'block';
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').style.display = 'none';
+    }
+
+    document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
+
+    // FILTRAR POR CATEGORIA
+    function filterByCategory(category) {
+        currentCategory = category;
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
         
-        if (hashes.has(hash)) continue;
+        applyFilters();
+        renderNews();
+    }
+
+    // BUSCAR NOTÍCIAS
+    function searchNews() {
+        applyFilters();
+        renderNews();
+    }
+
+    function applyFilters() {
+        const searchText = document.getElementById('search-input').value.toLowerCase();
         
-        hashes.add(hash);
-        
-        const newsItem = {
-            title: article.title.rendered,
-            content: article.content.rendered,
-            image: article._embedded?.["wp:featuredmedia"]?.[0]?.source_url || 
-                   article.jetpack_featured_media_url ||
-                   "https://via.placeholder.com/300x200",
-            source: source.name,
-            date: article.date || article.modified,
-            link: article.link,
-            hash: hash
+        filteredNews = allNews.filter(news => {
+            // Filtro por categoria
+            if (currentCategory !== 'todos' && news.category !== currentCategory) {
+                return false;
+            }
+            
+            // Filtro por busca
+            if (searchText && !news.title.toLowerCase().includes(searchText) && 
+                !news.source.toLowerCase().includes(searchText)) {
+                return false;
+            }
+            
+            return true;
+        });
+    }
+
+    // DETERMINAR CATEGORIA
+    function determineCategory(title, content) {
+        const text = (title + ' ' + content).toLowerCase();
+        const keywords = {
+            'sociedade': ['sociedade', 'social', 'comunidade', 'educação'],
+            'política': ['política', 'governo', 'presidente', 'eleições'],
+            'economia': ['economia', 'negócio', 'empresa', 'investimento'],
+            'esportes': ['esporte', 'futebol', 'jogo', 'atleta'],
+            'cultura': ['cultura', 'arte', 'música', 'teatro'],
+            'saúde': ['saúde', 'hospital', 'médico', 'doença'],
+            'tecnologia': ['tecnologia', 'internet', 'digital', 'software']
         };
         
-        // Salvar no cache imediatamente
-        saveToCache({...article, sourceName: source.name});
-        
-        newArticles.push(newsItem);
-    }
-    
-    newArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    for (const newsItem of newArticles) {
-        news.push(newsItem);
-        filteredNews.push(newsItem);
-        
-        renderSingleNews(newsItem);
-        
-        await new Promise(resolve => setTimeout(resolve, 30));
-    }
-}
-
-async function loadSource(source) {
-    if (!source.hasMore || source.isFetching) return;
-    
-    source.isFetching = true;
-    
-    try {
-        const url = `${source.baseUrl}?_embed&per_page=${BATCH_SIZE}&page=${source.currentPage}&t=${Date.now()}`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            if (response.status === 400) {
-                source.hasMore = false;
+        for (const [category, words] of Object.entries(keywords)) {
+            if (words.some(word => text.includes(word))) {
+                return category;
             }
-            throw new Error(`Erro ao buscar ${source.name}`);
         }
         
-        const data = await response.json();
-        
-        if (data.length === 0) {
-            source.hasMore = false;
-            return;
-        }
-        
-        source.currentPage++;
-        
-        await processSourceArticles(source, data);
-        
-    } catch (error) {
-        console.error(`Erro ao carregar ${source.name}:`, error);
-        source.hasMore = false;
-    } finally {
-        source.isFetching = false;
-        checkAllSourcesLoaded();
+        return 'sociedade';
     }
-}
 
-async function loadAllSources() {
-    news = [];
-    filteredNews = [];
-    hashes.clear();
-    allSourcesLoaded = false;
-    
-    container.innerHTML = '';
-    
-    sources.forEach(source => {
-        source.currentPage = 1;
-        source.hasMore = true;
-        source.isFetching = false;
-    });
-    
-    const promises = sources.map(source => loadSource(source));
-    await Promise.allSettled(promises);
-    
-    reorderAllNewsByDate();
-}
-
-function reorderAllNewsByDate() {
-    news.sort((a, b) => new Date(b.date) - new Date(a.date));
-    filteredNews.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    container.innerHTML = '';
-    filteredNews.forEach(article => {
-        renderSingleNews(article);
-    });
-}
-
-async function loadMoreNews() {
-    if (isLoadingMore || allSourcesLoaded) return;
-    
-    isLoadingMore = true;
-    infiniteLoader.style.display = 'block';
-    
-    let anySourceHasMore = false;
-    const promises = [];
-    
-    for (const source of sources) {
-        if (source.hasMore) {
-            promises.push(loadSource(source));
+    // RENDERIZAR NOTÍCIAS
+    function renderNews() {
+        container.innerHTML = '';
+        
+        filteredNews.forEach(news => {
+            const card = document.createElement('a');
+            card.className = 'card';
+            card.href = `leitura.html?id=${news.id}`;
             
-            if (source.hasMore) {
-                anySourceHasMore = true;
+            const saved = isSaved(news.id);
+            const savedBadge = saved ? '<span class="saved-badge">⭐ Guardada</span>' : '';
+            
+            card.innerHTML = `
+                <div class="card-text">
+                    <div class="card-title">${news.title} ${savedBadge}</div>
+                    <div class="card-meta">
+                        <span class="source-tag">${news.source}</span>
+                        <span class="category-tag ${news.categoryClass}">${news.categoryName}</span>
+                        <span>${formatDate(news.date)}</span>
+                    </div>
+                </div>
+                <img src="${news.image}" alt="${news.title}" 
+                     onerror="this.src='https://via.placeholder.com/120x85/1a73e8/ffffff?text=NEWS'">
+            `;
+            
+            container.appendChild(card);
+        });
+    }
+
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('pt-PT');
+    }
+
+    // CARREGAR NOTÍCIAS
+    async function loadNews() {
+        if (isLoading) return;
+        isLoading = true;
+        loader.style.display = 'block';
+        
+        try {
+            // Carrega notícias salvas localmente primeiro
+            const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+            savedNews.forEach(news => {
+                if (!hashes.has(news.id)) {
+                    allNews.push({
+                        ...news,
+                        categoryName: CATEGORIES[news.category]?.name || news.category,
+                        categoryClass: CATEGORIES[news.category]?.class || ''
+                    });
+                    hashes.add(news.id);
+                }
+            });
+            
+            // Carrega de fontes externas
+            for (const source of SOURCES.filter(s => s.enabled)) {
+                await fetchSourceNews(source);
             }
+            
+            // Ordena por data
+            allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            applyFilters();
+            renderNews();
+            
+        } catch (error) {
+            console.error('Erro ao carregar notícias:', error);
+        } finally {
+            isLoading = false;
+            loader.style.display = 'none';
         }
     }
-    
-    await Promise.allSettled(promises);
-    
-    allSourcesLoaded = !anySourceHasMore;
-    
-    isLoadingMore = false;
-    infiniteLoader.style.display = 'none';
-}
 
-function checkAllSourcesLoaded() {
-    allSourcesLoaded = sources.every(source => !source.hasMore);
-    
-    if (allSourcesLoaded) {
-        infiniteLoader.style.display = 'none';
-    }
-}
-
-function manualRefresh() {
-    container.innerHTML = '';
-    closeInfoModal();
-    loadAllSources();
-}
-
-function openWhatsAppChannel() {
-    window.open(WHATSAPP_CHANNEL_URL, '_blank', 'noopener,noreferrer');
-    closeInfoModal();
-}
-
-// ========== SCROLL INFINITO ==========
-
-let scrollTimeout;
-const SCROLL_THRESHOLD = 300;
-
-window.addEventListener("scroll", () => {
-    if (scrollTimeout) clearTimeout(scrollTimeout);
-    
-    scrollTimeout = setTimeout(() => {
-        const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - SCROLL_THRESHOLD;
-        
-        if (scrollPosition >= threshold && !isLoadingMore && !allSourcesLoaded) {
-            loadMoreNews();
-        }
-    }, 150);
-});
-
-// ========== INICIALIZAÇÃO ==========
-
-loadAllSources();
-
-setInterval(() => {
-    if (document.visibilityState === 'visible' && !isLoadingMore) {
-        const scrollPosition = window.innerHeight + window.scrollY;
-        const threshold = document.body.offsetHeight - 500;
-        
-        if (scrollPosition >= threshold) {
-            loadMoreNews();
+    async function fetchSourceNews(source) {
+        try {
+            const response = await fetch(`${source.url}?_embed&per_page=10&page=1&t=${Date.now()}`);
+            if (!response.ok) throw new Error(`Erro ${response.status}`);
+            
+            const articles = await response.json();
+            
+            articles.forEach(article => {
+                const hash = (article.title.rendered + article.link).replace(/\W/g, "");
+                if (hashes.has(hash)) return;
+                
+                hashes.add(hash);
+                
+                const category = determineCategory(article.title.rendered, article.content.rendered);
+                
+                allNews.push({
+                    id: hash,
+                    title: article.title.rendered,
+                    content: article.content.rendered,
+                    excerpt: article.excerpt?.rendered || article.title.rendered.substring(0, 150) + '...',
+                    image: article._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
+                           article.jetpack_featured_media_url ||
+                           'https://via.placeholder.com/300x200/1a73e8/ffffff?text=' + encodeURIComponent(source.name.substring(0, 2)),
+                    source: source.name,
+                    date: article.date || article.modified,
+                    link: article.link,
+                    original: true,
+                    category: category,
+                    categoryName: CATEGORIES[category]?.name || category,
+                    categoryClass: CATEGORIES[category]?.class || ''
+                });
+            });
+        } catch (error) {
+            console.error(`Erro ao carregar ${source.name}:`, error);
         }
     }
-}, 300000);
 
-// ========== ATALHOS DE TECLADO ==========
+    // VERIFICAR SE NOTÍCIA ESTÁ SALVA
+    function isSaved(id) {
+        const saved = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        return saved.some(news => news.id === id);
+    }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeInfoModal();
-        closeSidebar();
-    }
-    
-    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-        e.preventDefault();
-        document.getElementById("search-input").focus();
-    }
-    
-    if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
-        e.preventDefault();
-        manualRefresh();
-    }
-});
+    // SCROLL INFINITO
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && !isLoading) {
+            loadNews();
+        }
+    });
 
-console.log('Página principal carregada com sucesso!');
-</script>
+    // INICIALIZAÇÃO
+    document.addEventListener('DOMContentLoaded', () => {
+        loadNews();
+    });
+    </script>
 </body>
 </html>
