@@ -919,7 +919,7 @@
         background: var(--primary-dark);
     }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -957,7 +957,7 @@
             
             <div class="login-footer">
                 <p><i class="fas fa-lock"></i> Acesso restrito ao administrador</p>
-                <p>Contato: claudioarmando001@gmail.com</p>
+                <p>Contato: claudioarmando001@gmail.com | Tel: +258 869 667 677</p>
             </div>
         </div>
     </div>
@@ -1035,7 +1035,7 @@
                             <div class="stat-content">
                                 <h3>Notícias Guardadas</h3>
                                 <div class="stat-number" id="stat-saved-news">0</div>
-                                <p class="stat-desc">Notícias salvas como nativas</p>
+                                <p class="stat-desc">Notícias salvas automaticamente</p>
                             </div>
                         </div>
                         
@@ -1056,14 +1056,14 @@
                         <div class="stat-card">
                             <div class="stat-header">
                                 <div class="stat-icon">
-                                    <i class="fas fa-chart-pie"></i>
+                                    <i class="fas fa-history"></i>
                                 </div>
                                 <span class="stat-trend positive">+15%</span>
                             </div>
                             <div class="stat-content">
-                                <h3>Categorias</h3>
-                                <div class="stat-number">7</div>
-                                <p class="stat-desc">Categorias de notícias disponíveis</p>
+                                <h3>Vencimento</h3>
+                                <div class="stat-number" id="stat-expiring">0</div>
+                                <p class="stat-desc">Notícias próximas do vencimento</p>
                             </div>
                         </div>
                     </div>
@@ -1077,6 +1077,9 @@
                         <div class="section-actions">
                             <button class="action-btn primary" onclick="refreshAllSources()">
                                 <i class="fas fa-sync-alt"></i> Atualizar Tudo
+                            </button>
+                            <button class="action-btn warning" onclick="cleanExpiredNews()">
+                                <i class="fas fa-broom"></i> Limpar Vencidas
                             </button>
                         </div>
                     </div>
@@ -1100,8 +1103,7 @@
                             </button>
                         </div>
                     </div>
-
-                    <!-- FORMULÁRIO DE ADIÇÃO -->
+     <!-- FORMULÁRIO DE ADIÇÃO -->
                     <div id="add-source-form" class="form-section" style="display: none;">
                         <h3 style="color: var(--dark); margin-bottom: 25px;">
                             <i class="fas fa-plus-circle"></i> Adicionar Nova Fonte
@@ -1132,7 +1134,7 @@
                             </div>
                             <div class="form-control">
                                 <label>Limite de Notícias</label>
-                                <input type="number" id="source-limit" min="1" max="50" value="10">
+                                <input type="number" id="source-limit" min="10" max="100" value="20">
                             </div>
                         </div>
                         
@@ -1174,6 +1176,9 @@
                             <button class="action-btn warning" onclick="exportSavedNews()">
                                 <i class="fas fa-download"></i> Exportar
                             </button>
+                            <button class="action-btn danger" onclick="confirmClearExpired()">
+                                <i class="fas fa-broom"></i> Limpar Vencidas
+                            </button>
                             <button class="action-btn danger" onclick="confirmClearSaved()">
                                 <i class="fas fa-trash"></i> Limpar Tudo
                             </button>
@@ -1209,12 +1214,28 @@
                                 <input type="number" id="update-interval" min="5" max="120" value="30">
                             </div>
                             <div class="form-control">
-                                <label>Notícias por Página</label>
-                                <input type="number" id="per-page" min="10" max="50" value="15">
+                                <label>Notícias por Carregamento</label>
+                                <input type="number" id="per-load" min="10" max="100" value="20">
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="auto-refresh" checked>
                                 <label for="auto-refresh">Atualização automática</label>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h3><i class="fas fa-save"></i> Guardar Automático</h3>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="auto-save" checked>
+                                <label for="auto-save">Guardar notícias automaticamente</label>
+                            </div>
+                            <div class="form-control">
+                                <label>Validade (meses)</label>
+                                <input type="number" id="expire-months" min="1" max="12" value="2">
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="cleanup-enabled" checked>
+                                <label for="cleanup-enabled">Limpeza automática</label>
                             </div>
                         </div>
 
@@ -1239,10 +1260,6 @@
                                 <label>Senha Admin</label>
                                 <input type="password" id="admin-pass" value="0800" maxlength="4">
                                 <small style="color: #666;">Senha atual: 0800</small>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="require-login">
-                                <label for="require-login">Exigir login para guardar</label>
                             </div>
                         </div>
 
@@ -1270,8 +1287,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FERRAMENTAS -->
+      <!-- FERRAMENTAS -->
             <div id="tools-tab" class="tab-content">
                 <div class="sources-section">
                     <h2 class="section-title" style="margin-bottom: 40px;">
@@ -1465,17 +1481,25 @@
         event.target.classList.add('active');
         document.getElementById(`${tabName}-tab`).classList.add('active');
     }
-
     // DASHBOARD
     function loadDashboard() {
-        // Estatísticas
+        // Carrega notícias salvas e verifica vencimento
         const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
         const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
         
+        // Verifica notícias próximas do vencimento (1 mês ou menos)
+        const now = new Date();
+        const oneMonthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+        const expiringCount = savedNews.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate <= oneMonthAgo;
+        }).length;
+        
         document.getElementById('stat-total-news').textContent = allNews.length;
         document.getElementById('stat-saved-news').textContent = savedNews.length;
         document.getElementById('stat-active-sources').textContent = sources.filter(s => s.enabled).length;
+        document.getElementById('stat-expiring').textContent = expiringCount;
         
         // Status das fontes
         updateSourcesStatus();
@@ -1529,6 +1553,28 @@
             loadDashboard();
         }, 2000);
     }
+
+    function cleanExpiredNews() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        const expireMonths = settings.expireMonths || 2;
+        
+        const now = new Date();
+        const expireDate = new Date(now.getTime() - (expireMonths * 30 * 24 * 60 * 60 * 1000));
+        
+        const filtered = savedNews.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate >= expireDate;
+        });
+        
+        localStorage.setItem('saved_news', JSON.stringify(filtered));
+        
+        const removedCount = savedNews.length - filtered.length;
+        showMessage(`${removedCount} notícias vencidas removidas!`, 'success');
+        
+        loadDashboard();
+        loadSavedNews();
+    }
     // GERENCIAR FONTES
     function showAddSourceForm() {
         document.getElementById('add-source-form').style.display = 'block';
@@ -1544,7 +1590,7 @@
         document.getElementById('source-name').value = '';
         document.getElementById('source-url').value = '';
         document.getElementById('source-lang').value = 'pt';
-        document.getElementById('source-limit').value = '10';
+        document.getElementById('source-limit').value = '20';
         document.getElementById('source-enabled').checked = true;
     }
 
@@ -1579,7 +1625,7 @@
                                 <i class="fas fa-language"></i> ${source.lang || 'pt'}
                             </span>
                             <span style="color: #666;">
-                                <i class="fas fa-filter"></i> ${source.limit || 10} notícias
+                                <i class="fas fa-filter"></i> ${source.limit || 20} notícias
                             </span>
                         </div>
                     </div>
@@ -1624,8 +1670,7 @@
         }
         
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        
-        // Verifica se já existe
+     // Verifica se já existe
         if (sources.some(s => s.url === url)) {
             showMessage('Esta fonte já está configurada!', 'error');
             return;
@@ -1677,13 +1722,14 @@
         document.getElementById('source-name').value = source.name;
         document.getElementById('source-url').value = source.url;
         document.getElementById('source-lang').value = source.lang || 'pt';
-        document.getElementById('source-limit').value = source.limit || 10;
+        document.getElementById('source-limit').value = source.limit || 20;
         document.getElementById('source-enabled').checked = source.enabled;
         
         // Remove da lista
         sources.splice(sources.findIndex(s => s.name === sourceName), 1);
         localStorage.setItem('news_sources', JSON.stringify(sources));
-    // Mostra formulário
+        
+        // Mostra formulário
         showAddSourceForm();
         loadSources();
         
@@ -1718,7 +1764,7 @@
             <div style="text-align: center; padding: 50px; color: #666; background: #f8f9fa; border-radius: 15px;">
                 <i class="fas fa-save" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
                 <h3>Nenhuma notícia guardada</h3>
-                <p>As notícias guardadas aparecerão aqui</p>
+                <p>As notícias guardadas automaticamente aparecerão aqui</p>
             </div>
             `;
             return;
@@ -1726,19 +1772,27 @@
         
         let html = '';
         savedNews.forEach((news, index) => {
-            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
+            const savedDate = new Date(news.savedDate || news.date);
+            const now = new Date();
+            const diffMonths = (now.getTime() - savedDate.getTime()) / (1000 * 60 * 60 * 24 * 30);
+            const isExpired = diffMonths >= 2;
+            const dateStr = savedDate.toLocaleDateString('pt-PT');
+            const timeAgo = formatTimeAgo(savedDate);
             
             html += `
-            <div class="saved-item">
+            <div class="saved-item" style="${isExpired ? 'border-color: #f44336;' : ''}">
                 <div class="saved-item-header">
-                    <div class="saved-title">${news.title}</div>
+                    <div class="saved-title">
+                        ${news.title}
+                        ${isExpired ? '<span style="color: #f44336; font-size: 12px; margin-left: 10px;">(VENCIDA)</span>' : ''}
+                    </div>
                     <button class="source-btn delete" onclick="deleteSavedNews(${index})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
                 <div class="saved-meta">
                     <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${date}</span>
+                    <span><i class="far fa-clock"></i> ${dateStr} (${timeAgo})</span>
                     <span><i class="fas fa-tag"></i> ${news.categoryName || news.category}</span>
                 </div>
                 <div class="saved-actions">
@@ -1754,6 +1808,21 @@
         });
         
         container.innerHTML = html;
+    }
+
+    function formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffMins < 60) return `${diffMins} min atrás`;
+        if (diffHours < 24) return `${diffHours} h atrás`;
+        if (diffDays < 30) return `${diffDays} dias atrás`;
+        
+        const diffMonths = Math.floor(diffDays / 30);
+        return `${diffMonths} meses atrás`;
     }
 
     function searchSavedNews() {
@@ -1784,7 +1853,9 @@
         
         let html = '';
         filtered.forEach((news, index) => {
-            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
+            const savedDate = new Date(news.savedDate || news.date);
+            const dateStr = savedDate.toLocaleDateString('pt-PT');
+            const timeAgo = formatTimeAgo(savedDate);
             
             html += `
             <div class="saved-item">
@@ -1796,7 +1867,7 @@
                 </div>
                 <div class="saved-meta">
                     <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${date}</span>
+                    <span><i class="far fa-clock"></i> ${dateStr} (${timeAgo})</span>
                 </div>
             </div>
             `;
@@ -1854,10 +1925,49 @@
         showMessage('Notícias exportadas com sucesso!', 'success');
     }
 
+    function confirmClearExpired() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        const expireMonths = settings.expireMonths || 2;
+        
+        const now = new Date();
+        const expireDate = new Date(now.getTime() - (expireMonths * 30 * 24 * 60 * 60 * 1000));
+        
+        const expiredCount = savedNews.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate < expireDate;
+        }).length;
+        
+        if (expiredCount === 0) {
+            showMessage('Não há notícias vencidas para limpar!', 'info');
+            return;
+        }
+        
+        showModal(
+            'Limpar Notícias Vencidas',
+            `<p style="color: #FF9800; font-weight: bold;">ATENÇÃO!</p>
+            <p>${expiredCount} notícias vencidas (com mais de ${expireMonths} meses) serão removidas.</p>
+            <p>Esta ação não pode ser desfeita!</p>`,
+            () => {
+                const filtered = savedNews.filter(news => {
+                    const savedDate = new Date(news.savedDate || news.date);
+                    return savedDate >= expireDate;
+                });
+                
+                localStorage.setItem('saved_news', JSON.stringify(filtered));
+                
+                loadSavedNews();
+                loadDashboard();
+                
+                showMessage(`${expiredCount} notícias vencidas removidas!`, 'success');
+            }
+        );
+    }
+
     function confirmClearSaved() {
         showModal(
             'Limpar Todas as Notícias',
-            '<p style="color: #f44336; font-weight: bold;">ATENÇÃO!</p>' +
+            '<p style="color: #f44336; font-weight: bold;">ATENÇÃO EXTREMA!</p>' +
             '<p>Todas as notícias guardadas serão permanentemente removidas.</p>' +
             '<p>Esta ação não pode ser desfeita!</p>',
             () => {
@@ -1874,12 +1984,14 @@
         
         // Preenche os campos
         document.getElementById('update-interval').value = settings.updateInterval || 30;
-        document.getElementById('per-page').value = settings.perPage || 15;
+        document.getElementById('per-load').value = settings.perLoad || 20;
         document.getElementById('auto-refresh').checked = settings.autoRefresh !== false;
+        document.getElementById('auto-save').checked = settings.autoSave !== false;
+        document.getElementById('expire-months').value = settings.expireMonths || 2;
+        document.getElementById('cleanup-enabled').checked = settings.cleanupEnabled !== false;
         document.getElementById('cache-enabled').checked = settings.cacheEnabled !== false;
         document.getElementById('cache-time').value = settings.cacheTime || 6;
         document.getElementById('admin-pass').value = settings.adminPassword || '0800';
-        document.getElementById('require-login').checked = settings.requireLogin || false;
         document.getElementById('theme').value = settings.theme || 'light';
         document.getElementById('primary-color').value = settings.primaryColor || '#1a73e8';
     }
@@ -1887,12 +1999,14 @@
     function saveSettings() {
         const settings = {
             updateInterval: parseInt(document.getElementById('update-interval').value) || 30,
-            perPage: parseInt(document.getElementById('per-page').value) || 15,
+            perLoad: parseInt(document.getElementById('per-load').value) || 20,
             autoRefresh: document.getElementById('auto-refresh').checked,
+            autoSave: document.getElementById('auto-save').checked,
+            expireMonths: parseInt(document.getElementById('expire-months').value) || 2,
+            cleanupEnabled: document.getElementById('cleanup-enabled').checked,
             cacheEnabled: document.getElementById('cache-enabled').checked,
             cacheTime: parseInt(document.getElementById('cache-time').value) || 6,
-            adminPassword: document.getElementById('admin-password').value || '0800',
-            requireLogin: document.getElementById('require-login').checked,
+            adminPassword: document.getElementById('admin-pass').value || '0800',
             theme: document.getElementById('theme').value,
             primaryColor: document.getElementById('primary-color').value,
             lastModified: new Date().toISOString()
@@ -1922,7 +2036,7 @@
             settings: JSON.parse(localStorage.getItem('news_settings') || '{}'),
             cache: JSON.parse(localStorage.getItem('all_news_cache') || '[]'),
             exportDate: new Date().toISOString(),
-            version: '1.0.0'
+            version: '1.1.0'
         };
         
         const dataStr = JSON.stringify(data, null, 2);
@@ -1989,7 +2103,7 @@
     function optimizeDatabase() {
         showModal(
             'Otimizar Base de Dados',
-            'Esta ação irá remover notícias duplicadas e otimizar o armazenamento.',
+            'Esta ação irá remover notícias duplicadas, otimizar o armazenamento e limpar dados temporários.',
             () => {
                 // Remove duplicatas das notícias salvas
                 const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
@@ -2001,7 +2115,7 @@
                 // Limpa cache antigo
                 const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
                 Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('news_')) {
+                    if (key.startsWith('news_') && key !== 'news_sources' && key !== 'news_settings' && key !== 'saved_news') {
                         try {
                             const timestamp = localStorage.getItem(`${key}_timestamp`);
                             if (timestamp && parseInt(timestamp) < oneDayAgo) {
@@ -2025,18 +2139,29 @@
         const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
         const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        
+        const now = new Date();
+        const expireDate = new Date(now.getTime() - ((settings.expireMonths || 2) * 30 * 24 * 60 * 60 * 1000));
+        const expiredCount = savedNews.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate < expireDate;
+        }).length;
         
         const info = `
         <div style="text-align: left; line-height: 1.8;">
-            <p><strong>Versão do Sistema:</strong> 1.0.0</p>
+            <p><strong>Versão do Sistema:</strong> 1.1.0</p>
             <p><strong>Total de Fontes:</strong> ${sources.length}</p>
             <p><strong>Fontes Ativas:</strong> ${sources.filter(s => s.enabled).length}</p>
             <p><strong>Notícias Guardadas:</strong> ${savedNews.length}</p>
+            <p><strong>Notícias Vencidas:</strong> ${expiredCount}</p>
             <p><strong>Notícias em Cache:</strong> ${allNews.length}</p>
             <p><strong>Armazenamento Usado:</strong> ${(JSON.stringify(localStorage).length / 1024).toFixed(2)} KB</p>
+            <p><strong>Validade Configurada:</strong> ${settings.expireMonths || 2} meses</p>
+            <p><strong>Auto-guardar:</strong> ${settings.autoSave !== false ? 'Ativo' : 'Inativo'}</p>
             <p><strong>Última Atualização:</strong> ${new Date().toLocaleString()}</p>
             <hr>
-            <p><small>Notícias CLD - Sistema de Agregação</small></p>
+            <p><small>Notícias CLD - Sistema de Agregação com Auto-Save</small></p>
         </div>
         `;
         
@@ -2106,7 +2231,17 @@
         } else {
             localStorage.removeItem('admin_last_login');
         }
+        
+        // Executa limpeza automática se configurado
+        autoCleanup();
     });
+
+    function autoCleanup() {
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        if (settings.cleanupEnabled !== false) {
+            cleanExpiredNews();
+        }
+    }
 
     // SALVA TIMESTAMP DO LOGIN
     function saveLoginTimestamp() {
