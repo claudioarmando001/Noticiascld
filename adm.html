@@ -1089,8 +1089,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- FONTES -->
+  <!-- FONTES -->
             <div id="sources-tab" class="tab-content">
                 <div class="sources-section">
                     <div class="section-header">
@@ -1103,7 +1102,8 @@
                             </button>
                         </div>
                     </div>
-     <!-- FORMULÁRIO DE ADIÇÃO -->
+
+                    <!-- FORMULÁRIO DE ADIÇÃO -->
                     <div id="add-source-form" class="form-section" style="display: none;">
                         <h3 style="color: var(--dark); margin-bottom: 25px;">
                             <i class="fas fa-plus-circle"></i> Adicionar Nova Fonte
@@ -1211,11 +1211,11 @@
                             <h3><i class="fas fa-sync-alt"></i> Atualização</h3>
                             <div class="form-control">
                                 <label>Intervalo (minutos)</label>
-                                <input type="number" id="update-interval" min="5" max="120" value="30">
+                                <input type="number" id="update-interval" min="1" max="60" value="5">
                             </div>
                             <div class="form-control">
                                 <label>Notícias por Carregamento</label>
-                                <input type="number" id="per-load" min="10" max="100" value="20">
+                                <input type="number" id="per-load" min="10" max="100" value="15">
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="auto-refresh" checked>
@@ -1247,7 +1247,7 @@
                             </div>
                             <div class="form-control">
                                 <label>Tempo de Cache (horas)</label>
-                                <input type="number" id="cache-time" min="1" max="24" value="6">
+                                <input type="number" id="cache-time" min="1" max="24" value="3">
                             </div>
                             <button class="action-btn warning" onclick="clearCache()" style="margin-top: 20px;">
                                 <i class="fas fa-broom"></i> Limpar Cache
@@ -1287,7 +1287,7 @@
                     </div>
                 </div>
             </div>
-      <!-- FERRAMENTAS -->
+   <!-- FERRAMENTAS -->
             <div id="tools-tab" class="tab-content">
                 <div class="sources-section">
                     <h2 class="section-title" style="margin-bottom: 40px;">
@@ -1434,7 +1434,6 @@
             login();
         }
     });
-
     // MENSAGENS
     function showMessage(text, type = 'success') {
         messageEl.textContent = text;
@@ -1481,6 +1480,7 @@
         event.target.classList.add('active');
         document.getElementById(`${tabName}-tab`).classList.add('active');
     }
+
     // DASHBOARD
     function loadDashboard() {
         // Carrega notícias salvas e verifica vencimento
@@ -1632,7 +1632,7 @@
                     <span class="source-status ${source.enabled ? 'status-active' : 'status-inactive'}">
                         <i class="fas fa-${source.enabled ? 'check' : 'times'}-circle"></i>
                         ${source.enabled ? 'Ativa' : 'Inativa'}
-                    </span>
+    </span>
                 </div>
                 <div class="source-actions">
                     <button class="source-btn toggle" onclick="toggleSource('${source.name}')">
@@ -1670,7 +1670,8 @@
         }
         
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-     // Verifica se já existe
+        
+        // Verifica se já existe
         if (sources.some(s => s.url === url)) {
             showMessage('Esta fonte já está configurada!', 'error');
             return;
@@ -1872,8 +1873,7 @@
             </div>
             `;
         });
-        
-        container.innerHTML = html;
+     container.innerHTML = html;
     }
 
     function viewSavedNews(id) {
@@ -1983,14 +1983,14 @@
         const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
         
         // Preenche os campos
-        document.getElementById('update-interval').value = settings.updateInterval || 30;
-        document.getElementById('per-load').value = settings.perLoad || 20;
+        document.getElementById('update-interval').value = settings.updateInterval || 5;
+        document.getElementById('per-load').value = settings.perLoad || 15;
         document.getElementById('auto-refresh').checked = settings.autoRefresh !== false;
         document.getElementById('auto-save').checked = settings.autoSave !== false;
         document.getElementById('expire-months').value = settings.expireMonths || 2;
         document.getElementById('cleanup-enabled').checked = settings.cleanupEnabled !== false;
         document.getElementById('cache-enabled').checked = settings.cacheEnabled !== false;
-        document.getElementById('cache-time').value = settings.cacheTime || 6;
+        document.getElementById('cache-time').value = settings.cacheTime || 3;
         document.getElementById('admin-pass').value = settings.adminPassword || '0800';
         document.getElementById('theme').value = settings.theme || 'light';
         document.getElementById('primary-color').value = settings.primaryColor || '#1a73e8';
@@ -1998,14 +1998,14 @@
 
     function saveSettings() {
         const settings = {
-            updateInterval: parseInt(document.getElementById('update-interval').value) || 30,
-            perLoad: parseInt(document.getElementById('per-load').value) || 20,
+            updateInterval: parseInt(document.getElementById('update-interval').value) || 5,
+            perLoad: parseInt(document.getElementById('per-load').value) || 15,
             autoRefresh: document.getElementById('auto-refresh').checked,
             autoSave: document.getElementById('auto-save').checked,
             expireMonths: parseInt(document.getElementById('expire-months').value) || 2,
             cleanupEnabled: document.getElementById('cleanup-enabled').checked,
             cacheEnabled: document.getElementById('cache-enabled').checked,
-            cacheTime: parseInt(document.getElementById('cache-time').value) || 6,
+            cacheTime: parseInt(document.getElementById('cache-time').value) || 3,
             adminPassword: document.getElementById('admin-pass').value || '0800',
             theme: document.getElementById('theme').value,
             primaryColor: document.getElementById('primary-color').value,
@@ -2036,7 +2036,7 @@
             settings: JSON.parse(localStorage.getItem('news_settings') || '{}'),
             cache: JSON.parse(localStorage.getItem('all_news_cache') || '[]'),
             exportDate: new Date().toISOString(),
-            version: '1.1.0'
+            version: '2.0.0'
         };
         
         const dataStr = JSON.stringify(data, null, 2);
@@ -2150,7 +2150,7 @@
         
         const info = `
         <div style="text-align: left; line-height: 1.8;">
-            <p><strong>Versão do Sistema:</strong> 1.1.0</p>
+            <p><strong>Versão do Sistema:</strong> 2.0.0</p>
             <p><strong>Total de Fontes:</strong> ${sources.length}</p>
             <p><strong>Fontes Ativas:</strong> ${sources.filter(s => s.enabled).length}</p>
             <p><strong>Notícias Guardadas:</strong> ${savedNews.length}</p>
@@ -2159,15 +2159,15 @@
             <p><strong>Armazenamento Usado:</strong> ${(JSON.stringify(localStorage).length / 1024).toFixed(2)} KB</p>
             <p><strong>Validade Configurada:</strong> ${settings.expireMonths || 2} meses</p>
             <p><strong>Auto-guardar:</strong> ${settings.autoSave !== false ? 'Ativo' : 'Inativo'}</p>
+            <p><strong>Atualização:</strong> ${settings.updateInterval || 5} minutos</p>
             <p><strong>Última Atualização:</strong> ${new Date().toLocaleString()}</p>
             <hr>
-            <p><small>Notícias CLD - Sistema de Agregação com Auto-Save</small></p>
+            <p><small>Notícias CLD - Sistema de Agregação Profissional</small></p>
         </div>
         `;
         
         showModal('Informações do Sistema', info, null);
     }
-
     function resetSystem() {
         showModal(
             'Resetar Sistema Completo',
