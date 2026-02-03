@@ -329,8 +329,7 @@
     .print-btn:hover {
         background: linear-gradient(135deg, #8e24aa 0%, #6a1b9a 100%);
     }
-
-    /* NOTIFICAÇÕES */
+ /* NOTIFICAÇÕES */
     .notification {
         padding: 20px;
         border-radius: 12px;
@@ -355,6 +354,12 @@
         background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
         border-left-color: #f44336;
         color: #c62828;
+    }
+
+    .info-notification {
+        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+        border-left-color: #2196F3;
+        color: #1565C0;
     }
 
     /* SHARE SECTION */
@@ -600,8 +605,7 @@
             grid-template-columns: 1fr;
         }
     }
-
-    /* DARK MODE SUPPORT */
+/* DARK MODE SUPPORT */
     @media (prefers-color-scheme: dark) {
         .container {
             background: #1a1a1a;
@@ -673,9 +677,6 @@
             <!-- AÇÕES -->
             <div class="action-section">
                 <div class="action-buttons">
-                    <button class="action-btn save-btn" id="save-btn" onclick="saveArticle()">
-                        <i class="fas fa-save"></i> Guardar Notícia
-                    </button>
                     <button class="action-btn share-btn" onclick="toggleShareSection()">
                         <i class="fas fa-share-alt"></i> Partilhar
                     </button>
@@ -684,7 +685,7 @@
                     </button>
                 </div>
                 
-                <div class="link-section" id="link-section" style="display: none;">
+                <div class="link-section" id="link-section">
                     <div class="link-header">
                         <span class="link-title">
                             <i class="fas fa-link"></i> Link Nativo
@@ -694,6 +695,9 @@
                         </button>
                     </div>
                     <input type="text" id="native-link" class="link-input" readonly>
+                    <small style="display: block; margin-top: 10px; color: #666;">
+                        <i class="fas fa-info-circle"></i> Esta notícia foi guardada automaticamente
+                    </small>
                 </div>
             </div>
 
@@ -737,7 +741,8 @@
             <!-- FOOTER -->
             <div class="article-footer">
                 <p>© 2024 Notícias CLD - Agregador de Notícias Moçambicanas</p>
-                <p>Esta notícia foi disponibilizada através do nosso agregador de notícias</p>
+                <p>Esta notícia foi guardada automaticamente e expira após 2 meses</p>
+                <p>Contato: claudioarmando001@gmail.com | Tel: +258 869 667 677</p>
             </div>
         </div>
 
@@ -763,13 +768,9 @@
     const contentEl = document.getElementById('article-content');
     const errorEl = document.getElementById('article-error');
     const notificationEl = document.getElementById('notification');
-    const saveBtn = document.getElementById('save-btn');
-    const linkSection = document.getElementById('link-section');
-    const shareSection = document.getElementById('share-section');
 
     // VARIÁVEIS
     let currentArticle = null;
-    let isSaved = false;
     let nativeLink = '';
 
     // CARREGAR ARTIGO
@@ -796,9 +797,11 @@
             if (article) {
                 displayArticle(article);
                 loadRelatedNews(article);
-                checkIfSaved(articleId);
                 setupShareLinks(article);
                 generateNativeLink(article);
+// Guarda a notícia automaticamente
+                await autoSaveArticle(article);
+                
             } else {
                 showError();
             }
@@ -828,13 +831,17 @@
         const sourceNameDecoded = sourceName.replace(/_/g, ' ');
         
         // Encontra a fonte correspondente
-        const sources = [
-            { name: "O País Moçambique", url: "https://www.opais.co.mz/wp-json/wp/v2/posts" },
-            { name: "Jornal Notícias", url: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts" },
-            { name: "Canal de Moçambique", url: "https://canal.co.mz/wp-json/wp/v2/posts" },
-            { name: "Savana", url: "https://savana.co.mz/wp-json/wp/v2/posts" },
-            { name: "Jornal MZ", url: "https://jornalmz.com/wp-json/wp/v2/posts" }
-        ];
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        if (sources.length === 0) {
+            // Fontes padrão se não houver configuração
+            sources.push(
+                { name: "O País Moçambique", url: "https://www.opais.co.mz/wp-json/wp/v2/posts" },
+                { name: "Jornal Notícias", url: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts" },
+                { name: "Canal de Moçambique", url: "https://canal.co.mz/wp-json/wp/v2/posts" },
+                { name: "Savana", url: "https://savana.co.mz/wp-json/wp/v2/posts" },
+                { name: "Jornal MZ", url: "https://jornalmz.com/wp-json/wp/v2/posts" }
+            );
+        }
         
         const source = sources.find(s => s.name === sourceNameDecoded);
         if (!source) return null;
@@ -941,48 +948,42 @@
             minute: '2-digit'
         });
     }
-
-    // GUARDAR NOTÍCIA
-    function saveArticle() {
-        if (!currentArticle) return;
+ // GUARDAR NOTÍCIA AUTOMATICAMENTE
+    async function autoSaveArticle(article) {
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
         
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-    // Verifica se já está salva
-        const existingIndex = savedNews.findIndex(news => news.id === currentArticle.id);
-        
-        if (existingIndex === -1) {
-            // Adiciona data de salvamento
-            const articleToSave = {
-                ...currentArticle,
-                savedDate: new Date().toISOString(),
-                saved: true,
-                nativeLink: `${window.location.origin}${window.location.pathname}?id=${currentArticle.id}`
-            };
+        // Verifica se o auto-save está ativo (padrão é true)
+        if (settings.autoSave !== false) {
+            const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
             
-            savedNews.push(articleToSave);
-            localStorage.setItem('saved_news', JSON.stringify(savedNews));
+            // Verifica se já está salva
+            const existingIndex = savedNews.findIndex(news => news.id === article.id);
             
-            // Atualiza cache
-            updateNewsCache(articleToSave);
+            if (existingIndex === -1) {
+                // Adiciona data de salvamento
+                const articleToSave = {
+                    ...article,
+                    savedDate: new Date().toISOString(),
+                    saved: true,
+                    nativeLink: `${window.location.origin}${window.location.pathname}?id=${article.id}`
+                };
+                
+                savedNews.push(articleToSave);
+                localStorage.setItem('saved_news', JSON.stringify(savedNews));
+                
+                // Atualiza cache
+                updateNewsCache(articleToSave);
+                
+                showNotification('Notícia guardada automaticamente!', 'info');
+                
+            } else {
+                // Atualiza data de acesso
+                savedNews[existingIndex].savedDate = new Date().toISOString();
+                localStorage.setItem('saved_news', JSON.stringify(savedNews));
+            }
             
-            isSaved = true;
-            updateSaveButton();
-            showNotification('Notícia guardada com sucesso!', 'success');
-            
-            // Mostra link nativo
-            linkSection.style.display = 'block';
-            generateNativeLink(currentArticle);
-            
-        } else {
-            // Remove se já estiver salva
-            savedNews.splice(existingIndex, 1);
-            localStorage.setItem('saved_news', JSON.stringify(savedNews));
-            
-            isSaved = false;
-            updateSaveButton();
-            showNotification('Notícia removida das guardadas.', 'error');
-            
-            linkSection.style.display = 'none';
+            // Limpa notícias vencidas
+            cleanExpiredNews();
         }
     }
 
@@ -996,30 +997,30 @@
         localStorage.setItem('all_news_cache', JSON.stringify(allNews));
     }
 
-    function checkIfSaved(id) {
+    // LIMPAR NOTÍCIAS VENCIDAS
+    function cleanExpiredNews() {
         const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        isSaved = savedNews.some(news => news.id === id);
-        updateSaveButton();
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        const expireMonths = settings.expireMonths || 2;
         
-        if (isSaved) {
-            linkSection.style.display = 'block';
-        }
-    }
-
-    function updateSaveButton() {
-        if (isSaved) {
-            saveBtn.innerHTML = '<i class="fas fa-check"></i> Notícia Guardada';
-            saveBtn.classList.add('saved');
-        } else {
-            saveBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Notícia';
-            saveBtn.classList.remove('saved');
+        const now = new Date();
+        const expireDate = new Date(now.getTime() - (expireMonths * 30 * 24 * 60 * 60 * 1000));
+        
+        const filtered = savedNews.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate >= expireDate;
+        });
+        
+        if (filtered.length !== savedNews.length) {
+            localStorage.setItem('saved_news', JSON.stringify(filtered));
+            console.log(`Limpeza automática: ${savedNews.length - filtered.length} notícias vencidas removidas.`);
         }
     }
 
     // NOTIFICAÇÕES
     function showNotification(message, type = 'success') {
         notificationEl.textContent = message;
-        notificationEl.className = `notification ${type === 'success' ? 'success-notification' : 'error-notification'}`;
+        notificationEl.className = `notification ${type}-notification`;
         notificationEl.style.display = 'block';
         
         setTimeout(() => {
@@ -1086,6 +1087,7 @@
     }
 
     function toggleShareSection() {
+        const shareSection = document.getElementById('share-section');
         shareSection.style.display = shareSection.style.display === 'none' ? 'block' : 'none';
     }
 
@@ -1142,8 +1144,7 @@
             `;
         }
     }
-
-    // ERRO
+ // ERRO
     function showError() {
         loadingEl.style.display = 'none';
         errorEl.style.display = 'block';
@@ -1153,11 +1154,6 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             window.history.back();
-        }
-        
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            saveArticle();
         }
         
         if (e.ctrlKey && e.key === 'c' && nativeLink) {
