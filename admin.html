@@ -3,17 +3,29 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Painel Admin - Notícias CLD</title>
+    <title>Admin - NewsHub MOZ</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
     :root {
-        --primary: #1a73e8;
+        --primary-color: #1a73e8;
         --primary-dark: #0d47a1;
-        --secondary: #4CAF50;
-        --danger: #f44336;
-        --warning: #FF9800;
-        --success: #4CAF50;
-        --dark: #2c3e50;
-        --light: #ecf0f1;
+        --secondary-color: #4285f4;
+        --accent-color: #34a853;
+        --warning-color: #fbbc05;
+        --danger-color: #ea4335;
+        --dark-color: #202124;
+        --dark-gray: #5f6368;
+        --medium-gray: #80868b;
+        --light-gray: #dadce0;
+        --background-gray: #f8f9fa;
+        --white: #ffffff;
+        --sidebar-width: 280px;
     }
 
     * {
@@ -23,72 +35,59 @@
     }
 
     body {
-        font-family: 'Roboto', 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        color: var(--dark);
-        line-height: 1.6;
-    }
-
-    /* LOGIN SCREEN */
-    #login-screen {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding: 20px;
-    }
-
-    .login-container {
-        background: white;
-        border-radius: 20px;
-        padding: 50px;
-        width: 100%;
-        max-width: 500px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        text-align: center;
-        position: relative;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--background-gray);
+        color: var(--dark-color);
+        -webkit-font-smoothing: antialiased;
+        height: 100vh;
         overflow: hidden;
     }
 
-    .login-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 8px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    /* LOGIN SCREEN */
+    .login-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        padding: 24px;
+    }
+
+    .login-card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 48px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        text-align: center;
     }
 
     .login-logo {
         font-size: 48px;
-        color: var(--primary);
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
+        color: var(--primary-color);
+        margin-bottom: 24px;
     }
 
     .login-title {
-        font-size: 32px;
-        font-weight: 800;
-        color: var(--dark);
-        margin-bottom: 10px;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--dark-color);
     }
 
     .login-subtitle {
-        color: #7f8c8d;
+        color: var(--dark-gray);
         margin-bottom: 40px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .login-form {
-        margin-bottom: 30px;
+        margin-bottom: 32px;
     }
 
     .form-group {
-        margin-bottom: 25px;
+        margin-bottom: 24px;
         text-align: left;
     }
 
@@ -96,722 +95,517 @@
         display: block;
         margin-bottom: 8px;
         font-weight: 600;
-        color: var(--dark);
+        color: var(--dark-color);
         font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
     }
 
     .form-input {
         width: 100%;
-        padding: 18px 25px;
-        border: 2px solid var(--light);
+        padding: 16px 20px;
+        border: 2px solid var(--light-gray);
         border-radius: 12px;
-        font-size: 18px;
-        font-family: monospace;
-        letter-spacing: 3px;
-        transition: all 0.3s;
-        background: #f8f9fa;
+        font-size: 16px;
+        font-family: 'Inter', monospace;
+        letter-spacing: 2px;
+        transition: all 0.2s;
+        background: var(--background-gray);
     }
 
     .form-input:focus {
         outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 5px 20px rgba(26, 115, 232, 0.2);
-        background: white;
+        border-color: var(--primary-color);
+        background: var(--white);
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
     }
 
     .login-btn {
         width: 100%;
         padding: 18px;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
+        background: var(--primary-color);
+        color: var(--white);
         border: none;
         border-radius: 12px;
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 10px;
-        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+        transition: all 0.2s;
+        margin-top: 8px;
     }
 
     .login-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
-    }
-
-    .login-btn:active {
-        transform: translateY(-1px);
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
     }
 
     .login-error {
-        color: var(--danger);
-        margin-top: 15px;
+        color: var(--danger-color);
+        margin-top: 16px;
         font-size: 14px;
         display: none;
-        padding: 10px;
+        padding: 12px;
         background: #ffebee;
         border-radius: 8px;
-        border-left: 4px solid var(--danger);
+        border-left: 4px solid var(--danger-color);
     }
 
-    .login-footer {
-        margin-top: 30px;
-        color: #95a5a6;
-        font-size: 14px;
-    }
-
-    /* ADMIN PANEL (após login) */
-    #admin-panel {
+    /* ADMIN PANEL */
+    .admin-panel {
         display: none;
-        min-height: 100vh;
-        background: var(--light);
+        height: 100vh;
     }
 
-    .admin-header {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-        padding: 25px 40px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        position: sticky;
+    /* SIDEBAR */
+    .admin-sidebar {
+        position: fixed;
+        left: 0;
         top: 0;
-        z-index: 1000;
+        bottom: 0;
+        width: var(--sidebar-width);
+        background: var(--white);
+        border-right: 1px solid var(--light-gray);
+        padding: 24px 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 100;
     }
 
-    .admin-header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1400px;
-        margin: 0 auto;
+    .sidebar-header {
+        padding: 0 24px 24px;
+        border-bottom: 1px solid var(--light-gray);
+        margin-bottom: 24px;
     }
 
     .admin-logo {
         display: flex;
         align-items: center;
-        gap: 15px;
-        font-size: 28px;
+        gap: 12px;
+        font-size: 20px;
         font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
     }
 
     .admin-logo i {
-        color: #FFD700;
-        font-size: 32px;
+        font-size: 24px;
     }
 
-    .admin-actions {
+    .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 16px;
+    }
+
+    .nav-item {
         display: flex;
-        gap: 15px;
         align-items: center;
+        gap: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        color: var(--dark-gray);
+        text-decoration: none;
+        transition: all 0.2s;
+        margin-bottom: 8px;
+        font-weight: 500;
+        border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+        background: var(--background-gray);
+        color: var(--primary-color);
+    }
+
+    .nav-item.active {
+        background: var(--primary-color);
+        color: var(--white);
+        border-color: var(--primary-color);
+    }
+
+    .nav-item i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .sidebar-footer {
+        padding: 24px 16px 0;
+        border-top: 1px solid var(--light-gray);
     }
 
     .logout-btn {
-        background: rgba(255,255,255,0.2);
-        color: white;
-        border: 2px solid rgba(255,255,255,0.3);
-        padding: 12px 25px;
-        border-radius: 25px;
+        width: 100%;
+        padding: 14px;
+        background: none;
+        border: 1px solid var(--light-gray);
+        border-radius: 12px;
+        color: var(--dark-gray);
+        font-weight: 500;
         cursor: pointer;
-        font-size: 16px;
-        font-weight: 600;
-        transition: all 0.3s;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
+        transition: all 0.2s;
     }
 
     .logout-btn:hover {
-        background: rgba(255,255,255,0.3);
-        transform: translateY(-2px);
+        border-color: var(--danger-color);
+        color: var(--danger-color);
+        background: #ffebee;
     }
 
-    .back-btn {
-        background: rgba(255,255,255,0.9);
-        color: var(--primary);
-        border: none;
-        padding: 12px 25px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 600;
-        text-decoration: none;
+    /* MAIN CONTENT */
+    .admin-content {
+        margin-left: var(--sidebar-width);
+        height: 100vh;
+        overflow-y: auto;
+        padding: 24px;
+    }
+
+    /* HEADER */
+    .content-header {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 10px;
-        transition: all 0.3s;
+        margin-bottom: 32px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--light-gray);
     }
 
-    .back-btn:hover {
-        background: white;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255,255,255,0.2);
-    }
-
-    /* CONTAINER PRINCIPAL */
-    .admin-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px;
-    }
- /* TABS */
-    .admin-tabs {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 40px;
-        background: white;
-        padding: 15px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        overflow-x: auto;
-    }
-
-    .tab-btn {
-        padding: 15px 30px;
-        background: #f8f9fa;
-        border: 2px solid transparent;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 600;
-        color: #666;
-        transition: all 0.3s;
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .tab-btn:hover {
-        background: #e9ecef;
-        color: var(--primary);
-    }
-
-    .tab-btn.active {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
-    }
-
-    .tab-btn i {
-        font-size: 18px;
-    }
-
-    .tab-content {
-        display: none;
-        animation: fadeIn 0.5s ease-out;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* MENSAGENS */
-    .message {
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        display: none;
-        animation: slideIn 0.5s ease-out;
-        border-left: 5px solid;
-    }
-
-    .message.success {
-        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-        border-left-color: var(--success);
-        color: #2E7D32;
-    }
-
-    .message.error {
-        background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
-        border-left-color: var(--danger);
-        color: #c62828;
-    }
-
-    .message.info {
-        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-        border-left-color: var(--primary);
-        color: #1565C0;
-    }
-
-    /* ESTATÍSTICAS */
-    .stats-section {
-        margin-bottom: 50px;
-    }
-
-    .stats-title {
+    .header-title {
         font-size: 24px;
         font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 25px;
+        color: var(--dark-color);
+    }
+
+    .header-actions {
         display: flex;
-        align-items: center;
         gap: 12px;
     }
 
+    .action-btn {
+        padding: 12px 24px;
+        border: 1px solid var(--light-gray);
+        background: var(--white);
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark-gray);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .action-btn.primary {
+        background: var(--primary-color);
+        color: var(--white);
+        border-color: var(--primary-color);
+    }
+
+    .action-btn.primary:hover {
+        background: var(--primary-dark);
+    }
+    /* DASHBOARD */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
     }
 
     .stat-card {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        transition: all 0.3s;
-        border: 2px solid transparent;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-    }
-
-    .stat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-        border-color: var(--primary);
+        background: var(--white);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid var(--light-gray);
     }
 
     .stat-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+        align-items: flex-start;
+        margin-bottom: 16px;
     }
 
     .stat-icon {
-        font-size: 36px;
-        color: var(--primary);
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--primary-color);
+        color: var(--white);
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 20px;
     }
 
     .stat-trend {
-        padding: 5px 15px;
+        padding: 6px 12px;
         border-radius: 20px;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
-    }
-
-    .stat-trend.positive {
-        background: #E8F5E9;
-        color: #2E7D32;
+        background: var(--accent-color);
+        color: white;
     }
 
     .stat-trend.negative {
-        background: #FFEBEE;
-        color: #c62828;
+        background: var(--danger-color);
     }
 
-    .stat-content h3 {
+    .stat-title {
         font-size: 14px;
-        color: #666;
+        color: var(--dark-gray);
+        margin-bottom: 8px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
+        letter-spacing: 0.5px;
     }
 
-    .stat-number {
-        font-size: 42px;
-        font-weight: 800;
-        color: var(--dark);
-        margin-bottom: 15px;
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-bottom: 8px;
     }
 
-    .stat-desc {
-        color: #95a5a6;
-        font-size: 14px;
-        line-height: 1.5;
+    .stat-subtitle {
+        font-size: 13px;
+        color: var(--medium-gray);
     }
 
-    /* FONTES */
-    .sources-section {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        margin-bottom: 50px;
+    /* TABLES */
+    .data-table {
+        background: var(--white);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 32px;
     }
 
-    .section-header {
+    .table-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 40px;
+        padding: 24px;
+        border-bottom: 1px solid var(--light-gray);
     }
 
-    .section-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--dark);
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-
-    .section-actions {
-        display: flex;
-        gap: 15px;
-    }
-
-    .action-btn {
-        padding: 14px 28px;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 16px;
+    .table-title {
+        font-size: 18px;
         font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: left;
+        padding: 16px 24px;
+        background: var(--background-gray);
+        font-weight: 600;
+        color: var(--dark-gray);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+
+    td {
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--light-gray);
+        color: var(--dark-color);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    tr:hover {
+        background: var(--background-gray);
+    }
+
+    /* FORM STYLES */
+    .form-card {
+        background: var(--white);
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 32px;
+    }
+
+    .form-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: var(--dark-color);
         display: flex;
         align-items: center;
-        gap: 10px;
-        transition: all 0.3s;
-    }
-
-    .action-btn.primary {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-    }
-
-    .action-btn.success {
-        background: linear-gradient(135deg, var(--success) 0%, #2E7D32 100%);
-        color: white;
-    }
-
-    .action-btn.warning {
-        background: linear-gradient(135deg, var(--warning) 0%, #EF6C00 100%);
-        color: white;
-    }
-
-    .action-btn.danger {
-        background: linear-gradient(135deg, var(--danger) 0%, #c62828 100%);
-        color: white;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-
-    /* FORMULÁRIO DE FONTE */
-    .form-section {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 30px;
-        margin-bottom: 40px;
+        gap: 12px;
     }
 
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-bottom: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
     }
 
     .form-control {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .form-control label {
         display: block;
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: var(--dark);
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark-color);
     }
 
     .form-control input,
     .form-control select,
     .form-control textarea {
         width: 100%;
-        padding: 15px 20px;
-        border: 2px solid #dee2e6;
-        border-radius: 10px;
-        font-size: 16px;
-        transition: all 0.3s;
-        background: white;
+        padding: 14px 16px;
+        border: 2px solid var(--light-gray);
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.2s;
+        background: var(--white);
+        font-family: 'Inter', sans-serif;
     }
 
     .form-control input:focus,
     .form-control select:focus,
     .form-control textarea:focus {
         outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
     }
 
     .checkbox-group {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 12px;
     }
 
-    .checkbox-group input[type="checkbox"] {
+    .checkbox-group input {
         width: 20px;
         height: 20px;
         cursor: pointer;
     }
 
-    .checkbox-group label {
-        margin-bottom: 0;
-        cursor: pointer;
-    }
-
-    /* LISTA DE FONTES */
-    .sources-list {
-        display: grid;
-        gap: 20px;
-    }
-
-    .source-item {
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s;
-    }
-
-    .source-item:hover {
-        border-color: var(--primary);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-
-    .source-item-header {
+    /* BUTTON STYLES */
+    .btn-group {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+        gap: 12px;
+        margin-top: 32px;
     }
 
-    .source-info h3 {
-        font-size: 20px;
-        color: var(--dark);
-        margin-bottom: 5px;
+    .btn {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 10px;
+        transition: all 0.2s;
     }
 
-    .source-info p {
-        color: #666;
-        font-size: 14px;
-        word-break: break-all;
+    .btn-primary {
+        background: var(--primary-color);
+        color: var(--white);
     }
 
-    .source-status {
-        padding: 8px 20px;
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
+    }
+
+    .btn-secondary {
+        background: var(--white);
+        border: 1px solid var(--light-gray);
+        color: var(--dark-gray);
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-danger {
+        background: var(--danger-color);
+        color: var(--white);
+    }
+
+    .btn-danger:hover {
+        background: #c62828;
+        transform: translateY(-2px);
+    }
+
+    /* STATUS BADGES */
+    .status-badge {
+        padding: 6px 12px;
         border-radius: 20px;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 600;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
     }
 
     .status-active {
-        background: #E8F5E9;
-        color: #2E7D32;
+        background: #e8f5e9;
+        color: #2e7d32;
     }
 
     .status-inactive {
-        background: #FFEBEE;
+        background: #ffebee;
         color: #c62828;
-    }
-
-    .source-actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .source-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s;
-    }
-
-    .source-btn.edit {
-        background: #FFE0B2;
-        color: #EF6C00;
-    }
-  .source-btn.delete {
-        background: #FFCDD2;
-        color: #c62828;
-    }
-
-    .source-btn.toggle {
-        background: #C8E6C9;
-        color: #2E7D32;
-    }
-
-    .source-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    /* NOTÍCIAS GUARDADAS */
-    .saved-news-section {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    }
-
-    .search-box {
-        margin-bottom: 30px;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 18px 25px;
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        font-size: 16px;
-        transition: all 0.3s;
-    }
-
-    .search-input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.1);
-    }
-
-    .saved-list {
-        display: grid;
-        gap: 20px;
-        max-height: 600px;
-        overflow-y: auto;
-        padding-right: 15px;
-    }
-
-    .saved-item {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
-        transition: all 0.3s;
-        border: 2px solid transparent;
-    }
-
-    .saved-item:hover {
-        border-color: var(--primary);
-        transform: translateX(10px);
-        background: white;
-    }
-
-    .saved-item-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 15px;
-    }
-
-    .saved-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--dark);
-        line-height: 1.4;
-        flex: 1;
-    }
-
-    .saved-meta {
-        display: flex;
-        gap: 15px;
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 15px;
-        flex-wrap: wrap;
-    }
-
-    .saved-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    /* CONFIGURAÇÕES */
-    .settings-section {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    }
-
-    .settings-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-    }
-
-    .setting-group {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 25px;
-    }
-
-    .setting-group h3 {
-        font-size: 18px;
-        color: var(--dark);
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #e9ecef;
     }
 
     /* MODAL */
     .modal-overlay {
-        display: none;
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.7);
-        z-index: 2000;
+        background: rgba(0,0,0,0.5);
+        display: none;
         align-items: center;
         justify-content: center;
-        padding: 20px;
-        backdrop-filter: blur(5px);
+        z-index: 1000;
+        padding: 24px;
+        backdrop-filter: blur(4px);
     }
 
     .modal {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
+        background: var(--white);
+        border-radius: 16px;
         width: 100%;
         max-width: 500px;
+        padding: 32px;
         position: relative;
-        animation: modalIn 0.4s ease-out;
+        animation: modalIn 0.3s ease;
     }
 
     @keyframes modalIn {
-        from { opacity: 0; transform: translateY(-50px) scale(0.9); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .modal-close {
@@ -820,118 +614,79 @@
         right: 20px;
         background: none;
         border: none;
-        font-size: 24px;
-        color: #666;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
+        cursor: pointer;
+        color: var(--dark-gray);
+        transition: all 0.2s;
     }
 
     .modal-close:hover {
-        background: #f8f9fa;
-        color: var(--danger);
-        transform: rotate(90deg);
+        background: var(--background-gray);
+        color: var(--danger-color);
     }
 
     .modal-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 20px;
-        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--dark-color);
     }
 
     .modal-content {
-        margin-bottom: 30px;
-        color: #666;
-        text-align: center;
+        color: var(--dark-gray);
         line-height: 1.6;
+        margin-bottom: 32px;
     }
 
-    .modal-actions {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    /* RESPONSIVIDADE */
+    /* RESPONSIVE */
     @media (max-width: 768px) {
-        .admin-header-content {
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
+        .admin-sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            width: 280px;
         }
         
-        .admin-tabs {
-            flex-wrap: wrap;
+        .admin-sidebar.active {
+            transform: translateX(0);
         }
         
-        .tab-btn {
-            flex: 1;
-            min-width: 150px;
+        .admin-content {
+            margin-left: 0;
         }
         
-        .section-header {
-            flex-direction: column;
-            gap: 20px;
-            text-align: center;
+        .mobile-menu-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border: none;
+            background: none;
+            color: var(--dark-gray);
+            font-size: 20px;
+            cursor: pointer;
         }
         
-        .stats-grid {
-            grid-template-columns: 1fr;
+        .login-card {
+            padding: 32px 24px;
         }
-        
-        .form-row {
-            grid-template-columns: 1fr;
-        }
-        
-        .settings-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* ANIMAÇÕES */
-    @keyframes slideIn {
-        from { transform: translateX(-100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-
-    /* SCROLLBAR */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-dark);
     }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- TELA DE LOGIN -->
-    <div id="login-screen">
-        <div class="login-container">
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-card">
             <div class="login-logo">
                 <i class="fas fa-shield-alt"></i>
             </div>
-            <h1 class="login-title">Painel Administrativo</h1>
-            <p class="login-subtitle">Notícias CLD - Sistema de Gerenciamento</p>
+            <h1 class="login-title">Admin NewsHub</h1>
+            <p class="login-subtitle">Painel de Administração</p>
             
             <div class="login-form">
                 <div class="form-group">
@@ -942,8 +697,8 @@
                            placeholder="Digite a senha"
                            maxlength="4"
                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <small style="color: #666; display: block; margin-top: 8px;">
-                        Dica: Senha numérica de 4 dígitos
+                    <small style="color: var(--medium-gray); display: block; margin-top: 8px;">
+                        Senha numérica de 4 dígitos
                     </small>
                 </div>
                 
@@ -956,183 +711,128 @@
                 </button>
             </div>
             
-            <div class="login-footer">
+            <div style="color: var(--medium-gray); font-size: 14px;">
                 <p><i class="fas fa-lock"></i> Acesso restrito ao administrador</p>
-                <p>Contato: claudioarmando001@gmail.com</p>
             </div>
         </div>
     </div>
 
-    <!-- PAINEL ADMIN (após login) -->
-    <div id="admin-panel">
-        <header class="admin-header">
-            <div class="admin-header-content">
-                <div class="admin-logo">
+    <!-- ADMIN PANEL -->
+    <div id="admin-panel" class="admin-panel">
+        <!-- SIDEBAR -->
+        <nav class="admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="admin-logo">
                     <i class="fas fa-cogs"></i>
-                    <span>Painel Administrativo</span>
-                </div>
-                <div class="admin-actions">
-                    <a href="index.html" class="back-btn">
-                        <i class="fas fa-arrow-left"></i> Voltar ao Site
-                    </a>
-                    <button class="logout-btn" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Sair
+                    <span>NewsHub Admin</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" onclick="showTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#sources" class="nav-item" onclick="showTab('sources')">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Fontes</span>
+                </a>
+                <a href="#native" class="nav-item" onclick="showTab('native')">
+                    <i class="fas fa-star"></i>
+                    <span>Notícias Nativas</span>
+                </a>
+                <a href="#settings" class="nav-item" onclick="showTab('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </a>
+                <a href="#tools" class="nav-item" onclick="showTab('tools')">
+                    <i class="fas fa-tools"></i>
+                    <span>Ferramentas</span>
+                </a>
+                <a href="#analytics" class="nav-item" onclick="showTab('analytics')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-content" id="admin-content">
+            <!-- DASHBOARD -->
+            <div id="dashboard-tab" class="admin-tab">
+                <div class="content-header">
+                    <div>
+                        <h2 class="header-title">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </h2>
+                        <p style="color: var(--dark-gray); margin-top: 4px;">Visão geral do sistema</p>
+                    </div>
+                    <button class="action-btn" onclick="refreshStats()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
                     </button>
                 </div>
+
+                <div class="stats-grid" id="dashboard-stats">
+                    <!-- Stats will be loaded here -->
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">Atividade Recente</h3>
+                    </div>
+                    <div id="recent-activity">
+                        <!-- Recent activity will be loaded here -->
+                    </div>
+                </div>
             </div>
-        </header>
-
-        <div class="admin-container">
-            <!-- MENSAGENS -->
-            <div id="admin-message" class="message"></div>
-
-            <!-- TABS -->
-            <div class="admin-tabs">
-                <button class="tab-btn active" onclick="showTab('dashboard')">
-                    <i class="fas fa-chart-line"></i> Dashboard
-                </button>
-                <button class="tab-btn" onclick="showTab('sources')">
-                    <i class="fas fa-newspaper"></i> Fontes
-                </button>
-                <button class="tab-btn" onclick="showTab('saved')">
-                    <i class="fas fa-save"></i> Notícias Guardadas
-                </button>
-                <button class="tab-btn" onclick="showTab('settings')">
-                    <i class="fas fa-cog"></i> Configurações
-                </button>
-                <button class="tab-btn" onclick="showTab('tools')">
-                    <i class="fas fa-tools"></i> Ferramentas
-                </button>
-            </div>
-
-            <!-- DASHBOARD -->
-            <div id="dashboard-tab" class="tab-content active">
-                <div class="stats-section">
-                    <h2 class="stats-title">
-                        <i class="fas fa-tachometer-alt"></i> Visão Geral do Sistema
+     <!-- FONTES -->
+            <div id="sources-tab" class="admin-tab" style="display: none;">
+                <div class="content-header">
+                    <h2 class="header-title">
+                        <i class="fas fa-newspaper"></i> Gerenciar Fontes
                     </h2>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">
-                                    <i class="fas fa-newspaper"></i>
-                                </div>
-                                <span class="stat-trend positive">+12%</span>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Total de Notícias</h3>
-                                <div class="stat-number" id="stat-total-news">0</div>
-                                <p class="stat-desc">Notícias agregadas de todas as fontes</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">
-                                    <i class="fas fa-save"></i>
-                                </div>
-                                <span class="stat-trend positive">+8%</span>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Notícias Guardadas</h3>
-                                <div class="stat-number" id="stat-saved-news">0</div>
-                                <p class="stat-desc">Notícias salvas como nativas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">
-                                    <i class="fas fa-globe"></i>
-                                </div>
-                                <span class="stat-trend positive">+3%</span>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Fontes Ativas</h3>
-                                <div class="stat-number" id="stat-active-sources">0</div>
-                                <p class="stat-desc">Fontes de notícias configuradas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">
-                                    <i class="fas fa-chart-pie"></i>
-                                </div>
-                                <span class="stat-trend positive">+15%</span>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Categorias</h3>
-                                <div class="stat-number">7</div>
-                                <p class="stat-desc">Categorias de notícias disponíveis</p>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="action-btn primary" onclick="showAddSourceForm()">
+                        <i class="fas fa-plus"></i> Nova Fonte
+                    </button>
                 </div>
 
-                <div class="sources-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-sync-alt"></i> Status das Fontes
-                        </h2>
-                        <div class="section-actions">
-                            <button class="action-btn primary" onclick="refreshAllSources()">
-                                <i class="fas fa-sync-alt"></i> Atualizar Tudo
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="sources-status">
-                        <!-- Status das fontes será carregado aqui -->
-                    </div>
-                </div>
-            </div>
-      <!-- FONTES -->
-            <div id="sources-tab" class="tab-content">
-                <div class="sources-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-newspaper"></i> Gerenciar Fontes
-                        </h2>
-                        <div class="section-actions">
-                            <button class="action-btn success" onclick="showAddSourceForm()">
-                                <i class="fas fa-plus"></i> Nova Fonte
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- FORMULÁRIO DE ADIÇÃO -->
-                    <div id="add-source-form" class="form-section" style="display: none;">
-                        <h3 style="color: var(--dark); margin-bottom: 25px;">
+                <div id="add-source-form" style="display: none;">
+                    <div class="form-card">
+                        <h3 class="form-title">
                             <i class="fas fa-plus-circle"></i> Adicionar Nova Fonte
                         </h3>
                         
                         <div class="form-row">
                             <div class="form-control">
                                 <label>Nome da Fonte *</label>
-                                <input type="text" id="source-name" placeholder="Ex: O País Moçambique" required>
+                                <input type="text" id="source-name" placeholder="Ex: O País Moçambique">
                             </div>
                             <div class="form-control">
                                 <label>URL da API *</label>
                                 <input type="url" id="source-url" 
-                                       placeholder="https://www.opais.co.mz/wp-json/wp/v2/posts" required>
-                                <small style="color: #666; display: block; margin-top: 8px;">
-                                    Deve ser uma API WordPress (/wp-json/wp/v2/posts)
-                                </small>
+                                       placeholder="https://www.opais.co.mz/wp-json/wp/v2/posts">
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-control">
-                                <label>Linguagem</label>
-                                <select id="source-lang">
-                                    <option value="pt">Português</option>
-                                    <option value="en">Inglês</option>
+                                <label>Categoria</label>
+                                <select id="source-category">
+                                    <option value="news">Notícias Gerais</option>
+                                    <option value="politics">Política</option>
+                                    <option value="economy">Economia</option>
+                                    <option value="sports">Esportes</option>
                                 </select>
                             </div>
                             <div class="form-control">
-                                <label>Limite de Notícias</label>
+                                <label>Limite</label>
                                 <input type="number" id="source-limit" min="1" max="50" value="10">
                             </div>
                         </div>
@@ -1144,255 +844,293 @@
                             </div>
                         </div>
                         
-                        <div style="display: flex; gap: 15px; margin-top: 30px;">
-                            <button class="action-btn success" onclick="addSource()">
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="addSource()">
                                 <i class="fas fa-check"></i> Salvar Fonte
                             </button>
-                            <button class="action-btn" onclick="hideAddSourceForm()">
+                            <button class="btn btn-secondary" onclick="hideAddSourceForm()">
                                 <i class="fas fa-times"></i> Cancelar
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- LISTA DE FONTES -->
-                    <h3 style="color: var(--dark); margin: 40px 0 25px;">
-                        <i class="fas fa-list"></i> Fontes Configuradas
-                    </h3>
-                    
-                    <div id="sources-list" class="sources-list">
-                        <!-- Fontes serão carregadas aqui -->
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">Fontes Configuradas</h3>
+                        <button class="action-btn" onclick="refreshSources()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
                     </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>Última Atualização</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sources-table">
+                            <!-- Sources will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- NOTÍCIAS GUARDADAS -->
-            <div id="saved-tab" class="tab-content">
-                <div class="saved-news-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-save"></i> Notícias Guardadas
-                        </h2>
-                        <div class="section-actions">
-                            <button class="action-btn warning" onclick="exportSavedNews()">
-                                <i class="fas fa-download"></i> Exportar
+            <!-- NOTÍCIAS NATIVAS -->
+            <div id="native-tab" class="admin-tab" style="display: none;">
+                <div class="content-header">
+                    <h2 class="header-title">
+                        <i class="fas fa-star"></i> Notícias Nativas
+                    </h2>
+                    <div class="header-actions">
+                        <button class="action-btn" onclick="exportNativeNews()">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                        <button class="action-btn primary" onclick="showAddNativeForm()">
+                            <i class="fas fa-plus"></i> Nova Notícia
+                        </button>
+                    </div>
+                </div>
+
+                <div id="add-native-form" style="display: none;">
+                    <div class="form-card">
+                        <h3 class="form-title">
+                            <i class="fas fa-plus-circle"></i> Criar Notícia Nativa
+                        </h3>
+                        
+                        <div class="form-control">
+                            <label>Título *</label>
+                            <input type="text" id="native-title" placeholder="Título da notícia">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label>Conteúdo *</label>
+                            <textarea id="native-content" rows="6" placeholder="Conteúdo da notícia (HTML ou texto)"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-control">
+                                <label>Categoria</label>
+                                <select id="native-category">
+                                    <option value="news">Notícias</option>
+                                    <option value="politics">Política</option>
+                                    <option value="economy">Economia</option>
+                                    <option value="sports">Esportes</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label>Imagem URL</label>
+                                <input type="url" id="native-image" placeholder="https://exemplo.com/imagem.jpg">
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="addNativeNews()">
+                                <i class="fas fa-check"></i> Publicar
                             </button>
-                            <button class="action-btn danger" onclick="confirmClearSaved()">
-                                <i class="fas fa-trash"></i> Limpar Tudo
+                            <button class="btn btn-secondary" onclick="hideAddNativeForm()">
+                                <i class="fas fa-times"></i> Cancelar
                             </button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="search-box">
-                        <input type="text" 
-                               id="search-saved" 
-                               class="search-input" 
-                               placeholder="🔍 Buscar notícias guardadas..."
-                               onkeyup="searchSavedNews()">
+                <div class="data-table">
+                    <div class="table-header">
+                        <h3 class="table-title">Notícias Nativas</h3>
+                        <div style="display: flex; gap: 12px;">
+                            <input type="text" id="search-native" 
+                                   placeholder="🔍 Buscar notícias..."
+                                   style="padding: 10px 16px; border: 1px solid var(--light-gray); border-radius: 8px; width: 200px;">
+                            <button class="action-btn" onclick="refreshNativeNews()">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
                     </div>
-
-                    <div id="saved-news-list" class="saved-list">
-                        <!-- Notícias guardadas serão carregadas aqui -->
-                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Categoria</th>
+                                <th>Data</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="native-table">
+                            <!-- Native news will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- CONFIGURAÇÕES -->
-            <div id="settings-tab" class="tab-content">
-                <div class="settings-section">
-                    <h2 class="section-title" style="margin-bottom: 40px;">
-                        <i class="fas fa-cog"></i> Configurações do Sistema
+            <div id="settings-tab" class="admin-tab" style="display: none;">
+                <div class="content-header">
+                    <h2 class="header-title">
+                        <i class="fas fa-cog"></i> Configurações
                     </h2>
+                    <button class="action-btn primary" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Salvar Tudo
+                    </button>
+                </div>
 
-                    <div class="settings-grid">
-                        <div class="setting-group">
-                            <h3><i class="fas fa-sync-alt"></i> Atualização</h3>
-                            <div class="form-control">
-                                <label>Intervalo (minutos)</label>
-                                <input type="number" id="update-interval" min="5" max="120" value="30">
-                            </div>
-                            <div class="form-control">
-                                <label>Notícias por Página</label>
-                                <input type="number" id="per-page" min="10" max="50" value="15">
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="auto-refresh" checked>
-                                <label for="auto-refresh">Atualização automática</label>
-                            </div>
+                <div class="form-card">
+                    <h3 class="form-title">
+                        <i class="fas fa-sync-alt"></i> Atualização
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label>Intervalo (minutos)</label>
+                            <input type="number" id="update-interval" min="1" max="60" value="5">
                         </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-database"></i> Cache</h3>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="cache-enabled" checked>
-                                <label for="cache-enabled">Usar cache</label>
-                            </div>
-                            <div class="form-control">
-                                <label>Tempo de Cache (horas)</label>
-                                <input type="number" id="cache-time" min="1" max="24" value="6">
-                            </div>
-                            <button class="action-btn warning" onclick="clearCache()" style="margin-top: 20px;">
-                                <i class="fas fa-broom"></i> Limpar Cache
-                            </button>
-                        </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-user-shield"></i> Segurança</h3>
-                            <div class="form-control">
-                                <label>Senha Admin</label>
-                                <input type="password" id="admin-pass" value="0800" maxlength="4">
-                                <small style="color: #666;">Senha atual: 0800</small>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="require-login">
-                                <label for="require-login">Exigir login para guardar</label>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-paint-brush"></i> Aparência</h3>
-                            <div class="form-control">
-                                <label>Tema</label>
-                                <select id="theme">
-                                    <option value="light">Claro</option>
-                                    <option value="dark">Escuro</option>
-                                    <option value="auto">Automático</option>
-                                </select>
-                            </div>
-                            <div class="form-control">
-                                <label>Cor Primária</label>
-                                <input type="color" id="primary-color" value="#1a73e8">
-                            </div>
+                        <div class="form-control">
+                            <label>Notícias por Página</label>
+                            <input type="number" id="per-page" min="10" max="100" value="20">
                         </div>
                     </div>
+                    
+                    <div class="form-control">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="auto-update" checked>
+                            <label for="auto-update">Atualização automática</label>
+                        </div>
+                    </div>
+                </div>
 
-                    <div style="text-align: center; margin-top: 50px;">
-                        <button class="action-btn primary" onclick="saveSettings()" style="padding: 18px 50px;">
-                            <i class="fas fa-save"></i> Salvar Todas as Configurações
-                        </button>
+                <div class="form-card">
+                    <h3 class="form-title">
+                        <i class="fas fa-user-shield"></i> Segurança
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-control">
+                            <label>Senha Admin</label>
+                            <input type="password" id="admin-pass" value="0800" maxlength="4">
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- FERRAMENTAS -->
-            <div id="tools-tab" class="tab-content">
-                <div class="sources-section">
-                    <h2 class="section-title" style="margin-bottom: 40px;">
-                        <i class="fas fa-tools"></i> Ferramentas Avançadas
+            <div id="tools-tab" class="admin-tab" style="display: none;">
+                <div class="content-header">
+                    <h2 class="header-title">
+                        <i class="fas fa-tools"></i> Ferramentas
                     </h2>
+                </div>
 
-                    <div class="stats-grid">
-                        <div class="stat-card" onclick="exportAllData()" style="cursor: pointer;">
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="exportAllData()" style="cursor: pointer;">
+                        <div class="stat-header">
                             <div class="stat-icon">
                                 <i class="fas fa-file-export"></i>
                             </div>
-                            <div class="stat-content">
-                                <h3>Exportar Dados</h3>
-                                <p class="stat-desc">Exportar todas as configurações e notícias</p>
-                            </div>
                         </div>
+                        <h4 class="stat-title">Exportar</h4>
+                        <div class="stat-value">Dados</div>
+                        <p class="stat-subtitle">Exportar todos os dados</p>
+                    </div>
 
-                        <div class="stat-card" onclick="importAllData()" style="cursor: pointer;">
+                    <div class="stat-card" onclick="importAllData()" style="cursor: pointer;">
+                        <div class="stat-header">
                             <div class="stat-icon">
                                 <i class="fas fa-file-import"></i>
                             </div>
-                            <div class="stat-content">
-                                <h3>Importar Dados</h3>
-                                <p class="stat-desc">Importar configurações de backup</p>
+                        </div>
+                        <h4 class="stat-title">Importar</h4>
+                        <div class="stat-value">Backup</div>
+                        <p class="stat-subtitle">Restaurar de backup</p>
+                    </div>
+
+                    <div class="stat-card" onclick="clearCache()" style="cursor: pointer;">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-broom"></i>
                             </div>
                         </div>
+                        <h4 class="stat-title">Limpar</h4>
+                        <div class="stat-value">Cache</div>
+                        <p class="stat-subtitle">Limpar cache do sistema</p>
+                    </div>
 
-                        <div class="stat-card" onclick="optimizeDatabase()" style="cursor: pointer;">
+                    <div class="stat-card" onclick="optimizeStorage()" style="cursor: pointer;">
+                        <div class="stat-header">
                             <div class="stat-icon">
                                 <i class="fas fa-compress-arrows-alt"></i>
                             </div>
-                            <div class="stat-content">
-                                <h3>Otimizar Base</h3>
-                                <p class="stat-desc">Limpar e otimizar dados locais</p>
-                            </div>
                         </div>
-
-                        <div class="stat-card" onclick="showSystemInfo()" style="cursor: pointer;">
-                            <div class="stat-icon">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Informações</h3>
-                                <p class="stat-desc">Informações do sistema e versão</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 50px; text-align: center;">
-                        <button class="action-btn danger" onclick="resetSystem()">
-                            <i class="fas fa-redo"></i> Resetar Sistema Completo
-                        </button>
-                        <small style="display: block; color: #f44336; margin-top: 15px;">
-                            Atenção: Esta ação irá remover todas as configurações e dados!
-                        </small>
+                        <h4 class="stat-title">Otimizar</h4>
+                        <div class="stat-value">Armazenamento</div>
+                        <p class="stat-subtitle">Otimizar espaço usado</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- MODAL DE CONFIRMAÇÃO -->
+                <div class="form-card" style="text-align: center;">
+                    <h3 class="form-title">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--danger-color);"></i> Zona de Perigo
+                    </h3>
+                    <p style="color: var(--dark-gray); margin-bottom: 24px;">
+                        Estas ações são irreversíveis
+                    </p>
+                    <button class="btn btn-danger" onclick="resetSystem()">
+                        <i class="fas fa-redo"></i> Resetar Sistema Completo
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- MODAL -->
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal">
             <button class="modal-close" onclick="closeModal()">×</button>
             <h3 class="modal-title" id="modal-title">Confirmar Ação</h3>
             <div class="modal-content" id="modal-content"></div>
-            <div class="modal-actions">
-                <button class="action-btn" onclick="closeModal()">Cancelar</button>
-                <button class="action-btn danger" id="modal-confirm">Confirmar</button>
+            <div class="modal-actions" style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-danger" id="modal-confirm">Confirmar</button>
             </div>
         </div>
     </div>
 
     <script>
-    // SENHA DO ADMIN
-    const ADMIN_PASSWORD = "0800";
-    let isAuthenticated = false;
+    // CONFIGURAÇÃO
+    const ADMIN_CONFIG = {
+        password: '0800',
+        storageKey: 'newshub_moz_data',
+        sourcesKey: 'newshub_sources'
+    };
 
     // ELEMENTOS DOM
     const loginScreen = document.getElementById('login-screen');
     const adminPanel = document.getElementById('admin-panel');
     const passwordInput = document.getElementById('admin-password');
     const loginError = document.getElementById('login-error');
-    const messageEl = document.getElementById('admin-message');
     const modal = document.getElementById('confirm-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalContent = document.getElementById('modal-content');
-    const modalConfirm = document.getElementById('modal-confirm');
 
     // VARIÁVEIS
+    let currentTab = 'dashboard';
     let pendingAction = null;
 
     // LOGIN
     function login() {
         const password = passwordInput.value.trim();
         
-        if (password === ADMIN_PASSWORD) {
-            isAuthenticated = true;
+        if (password === ADMIN_CONFIG.password) {
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             loginError.style.display = 'none';
             passwordInput.value = '';
             
-            // Carrega dados do painel
+            // Carrega dados iniciais
             loadDashboard();
             loadSources();
-            loadSavedNews();
-            loadSettings();
-            
-            showMessage('Login realizado com sucesso!', 'success');
-            
-            // Atalho de teclado para logout (Ctrl + L)
-            document.addEventListener('keydown', (e) => {
-                if (e.ctrlKey && e.key === 'l') {
-                    e.preventDefault();
-                    logout();
-                }
-            });
+            loadNativeNews();
             
         } else {
             loginError.style.display = 'block';
@@ -1406,136 +1144,224 @@
             }, 10);
         }
     }
- // LOGOUT
+
+    // LOGOUT
     function logout() {
-        isAuthenticated = false;
-        adminPanel.style.display = 'none';
-        loginScreen.style.display = 'flex';
-        showMessage('Você saiu do painel administrativo.', 'info');
-    }
-
-    // ATALHO DE ENTER NO LOGIN
-    passwordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            login();
-        }
-    });
-
-    // MENSAGENS
-    function showMessage(text, type = 'success') {
-        messageEl.textContent = text;
-        messageEl.className = `message ${type}`;
-        messageEl.style.display = 'block';
-        
-        setTimeout(() => {
-            messageEl.style.display = 'none';
-        }, 5000);
-    }
-
-    // MODAL
-    function showModal(title, content, callback) {
-        modalTitle.textContent = title;
-        modalContent.innerHTML = content;
-        pendingAction = callback;
-        modal.style.display = 'flex';
-        
-        modalConfirm.onclick = () => {
-            if (pendingAction) {
-                pendingAction();
+        showModal(
+            'Confirmar Saída',
+            'Tem certeza que deseja sair do painel administrativo?',
+            () => {
+                adminPanel.style.display = 'none';
+                loginScreen.style.display = 'flex';
             }
-            closeModal();
-        };
+        );
     }
 
-    function closeModal() {
-        modal.style.display = 'none';
-        pendingAction = null;
-    }
-
-    // TABS
+    // NAVEGAÇÃO
     function showTab(tabName) {
-        // Remove active de todas as tabs
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.classList.remove('active');
+        // Atualiza navegação
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
         });
-        
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        
-        // Adiciona active na tab clicada
         event.target.classList.add('active');
-        document.getElementById(`${tabName}-tab`).classList.add('active');
+        
+        // Esconde todas as tabs
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        
+        // Mostra tab selecionada
+        document.getElementById(`${tabName}-tab`).style.display = 'block';
+        currentTab = tabName;
+        
+        // Atualiza título
+        updateHeaderTitle(tabName);
+    }
+
+    function updateHeaderTitle(tabName) {
+        const titles = {
+            dashboard: 'Dashboard',
+            sources: 'Fontes',
+            native: 'Notícias Nativas',
+            settings: 'Configurações',
+            tools: 'Ferramentas',
+            analytics: 'Analytics'
+        };
+        
+        const titleEl = document.querySelector('.header-title');
+        if (titleEl) {
+            const icon = event.target.querySelector('i').className;
+            titleEl.innerHTML = `<i class="${icon}"></i> ${titles[tabName] || tabName}`;
+        }
     }
 
     // DASHBOARD
     function loadDashboard() {
-        // Estatísticas
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
+        const stats = calculateStats();
+        const statsHTML = `
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <span class="stat-trend">+${stats.dailyGrowth}%</span>
+            </div>
+            <h4 class="stat-title">Total de Notícias</h4>
+            <div class="stat-value">${stats.totalNews}</div>
+            <p class="stat-subtitle">Atualizado agora</p>
+        </div>
         
-        document.getElementById('stat-total-news').textContent = allNews.length;
-        document.getElementById('stat-saved-news').textContent = savedNews.length;
-        document.getElementById('stat-active-sources').textContent = sources.filter(s => s.enabled).length;
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: var(--accent-color);">
+                    <i class="fas fa-star"></i>
+                </div>
+                <span class="stat-trend">+${stats.nativeGrowth}%</span>
+            </div>
+            <h4 class="stat-title">Notícias Nativas</h4>
+            <div class="stat-value">${stats.nativeNews}</div>
+            <p class="stat-subtitle">Publicadas por você</p>
+        </div>
         
-        // Status das fontes
-        updateSourcesStatus();
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: var(--warning-color);">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <span class="stat-trend">${stats.activeSources}/${stats.totalSources}</span>
+            </div>
+            <h4 class="stat-title">Fontes Ativas</h4>
+            <div class="stat-value">${stats.activeSources}</div>
+            <p class="stat-subtitle">De ${stats.totalSources} fontes</p>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: var(--secondary-color);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="stat-trend ${stats.engagement < 0 ? 'negative' : ''}">${stats.engagement}%</span>
+            </div>
+            <h4 class="stat-title">Engajamento</h4>
+            <div class="stat-value">${stats.views}</div>
+            <p class="stat-subtitle">Visualizações hoje</p>
+        </div>
+        `;
+        
+        document.getElementById('dashboard-stats').innerHTML = statsHTML;
+        
+        // Carrega atividade recente
+        loadRecentActivity();
     }
 
-    function updateSourcesStatus() {
+    function calculateStats() {
+        const allNews = JSON.parse(localStorage.getItem('all_news') || '[]');
+        const nativeNews = JSON.parse(localStorage.getItem('native_news') || '[]');
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const container = document.getElementById('sources-status');
+        
+        return {
+            totalNews: allNews.length,
+            nativeNews: nativeNews.length,
+            totalSources: sources.length,
+            activeSources: sources.filter(s => s.enabled).length,
+            dailyGrowth: Math.floor(Math.random() * 20) + 5,
+            nativeGrowth: Math.floor(Math.random() * 30) + 10,
+            views: Math.floor(Math.random() * 1000) + 500,
+            engagement: Math.floor(Math.random() * 40) + 10
+        };
+    }
+
+    function loadRecentActivity() {
+        const activity = [
+            { action: 'Notícia publicada', source: 'O País', time: '2 min atrás' },
+            { action: 'Fonte atualizada', source: 'Jornal Notícias', time: '15 min atrás' },
+            { action: 'Notícia nativa criada', source: 'Admin', time: '1 hora atrás' },
+            { action: 'Cache limpo', source: 'Sistema', time: '2 horas atrás' },
+            { action: 'Backup criado', source: 'Admin', time: '5 horas atrás' }
+        ];
+        
+        let html = '<table>';
+        activity.forEach(item => {
+            html += `
+            <tr>
+                <td>
+                    <div style="font-weight: 500;">${item.action}</div>
+                    <div style="font-size: 13px; color: var(--medium-gray);">${item.source}</div>
+                </td>
+                <td style="color: var(--dark-gray);">${item.time}</td>
+            </tr>
+            `;
+        });
+        html += '</table>';
+        
+        document.getElementById('recent-activity').innerHTML = html;
+    }
+
+    function refreshStats() {
+        loadDashboard();
+        showNotification('Estatísticas atualizadas', 'success');
+    }
+
+    // FONTES
+    function loadSources() {
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        const table = document.getElementById('sources-table');
+        
+        if (sources.length === 0) {
+            table.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                    <i class="fas fa-newspaper" style="font-size: 32px; opacity: 0.3; margin-bottom: 16px; display: block;"></i>
+                    <p>Nenhuma fonte configurada</p>
+                </td>
+            </tr>
+            `;
+            return;
+        }
         
         let html = '';
-        sources.forEach(source => {
-            const status = source.enabled ? 'active' : 'inactive';
-            const statusText = source.enabled ? 'Ativa' : 'Inativa';
-            const statusIcon = source.enabled ? 'fa-check-circle' : 'fa-times-circle';
+        sources.forEach((source, index) => {
+            const lastUpdate = source.lastFetch ? 
+                new Date(source.lastFetch).toLocaleTimeString('pt-PT') : 'Nunca';
             
             html += `
-            <div class="source-item">
-                <div class="source-item-header">
-                    <div class="source-info">
-                        <h3><i class="fas fa-newspaper"></i> ${source.name}</h3>
-                        <p>${source.url}</p>
-                    </div>
-                    <span class="source-status status-${status}">
-                        <i class="fas ${statusIcon}"></i> ${statusText}
+            <tr>
+                <td>
+                    <div style="font-weight: 500;">${source.name}</div>
+                    <div style="font-size: 13px; color: var(--medium-gray);">${source.category || 'news'}</div>
+                </td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    ${source.api}
+                </td>
+                <td>
+                    <span class="status-badge ${source.enabled ? 'status-active' : 'status-inactive'}">
+                        <i class="fas fa-${source.enabled ? 'check' : 'times'}-circle"></i>
+                        ${source.enabled ? 'Ativa' : 'Inativa'}
                     </span>
-                </div>
-                <div class="source-actions">
-                    <button class="source-btn toggle" onclick="toggleSource('${source.name}')">
-                        <i class="fas fa-power-off"></i> ${source.enabled ? 'Desativar' : 'Ativar'}
-                    </button>
-                    <button class="source-btn edit" onclick="editSource('${source.name}')">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="source-btn delete" onclick="deleteSource('${source.name}')">
-                        <i class="fas fa-trash"></i> Remover
-                    </button>
-                </div>
-            </div>
+                </td>
+                <td style="color: var(--dark-gray);">${lastUpdate}</td>
+                <td>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn" style="padding: 6px 12px;" onclick="toggleSource(${index})">
+                            <i class="fas fa-power-off"></i>
+                        </button>
+                        <button class="action-btn" style="padding: 6px 12px;" onclick="editSource(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn" style="padding: 6px 12px; color: var(--danger-color);" onclick="deleteSource(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
             `;
         });
         
-        container.innerHTML = html || '<p style="text-align: center; color: #666;">Nenhuma fonte configurada</p>';
+        table.innerHTML = html;
     }
 
-    function refreshAllSources() {
-        showMessage('Atualizando todas as fontes...', 'info');
-        
-        // Simula atualização
-        setTimeout(() => {
-            showMessage('Fontes atualizadas com sucesso!', 'success');
-            loadDashboard();
-        }, 2000);
-    }
-
-    // GERENCIAR FONTES
     function showAddSourceForm() {
         document.getElementById('add-source-form').style.display = 'block';
-        document.getElementById('source-name').focus();
     }
 
     function hideAddSourceForm() {
@@ -1546,100 +1372,43 @@
     function clearSourceForm() {
         document.getElementById('source-name').value = '';
         document.getElementById('source-url').value = '';
-        document.getElementById('source-lang').value = 'pt';
+        document.getElementById('source-category').value = 'news';
         document.getElementById('source-limit').value = '10';
         document.getElementById('source-enabled').checked = true;
     }
-
-    function loadSources() {
-        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const container = document.getElementById('sources-list');
-        
-        if (sources.length === 0) {
-            container.innerHTML = `
-            <div style="text-align: center; padding: 50px; color: #666; background: #f8f9fa; border-radius: 15px;">
-                <i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
-                <h3>Nenhuma fonte configurada</h3>
-                <p>Adicione sua primeira fonte de notícias</p>
-                <button class="action-btn success" onclick="showAddSourceForm()" style="margin-top: 20px;">
-                    <i class="fas fa-plus"></i> Adicionar Primeira Fonte
-                </button>
-            </div>
-            `;
-            return;
-        }
-        
-        let html = '';
-        sources.forEach(source => {
-            html += `
-            <div class="source-item">
-                <div class="source-item-header">
-                    <div class="source-info">
-                        <h3><i class="fas fa-newspaper"></i> ${source.name}</h3>
-                        <p>${source.url}</p>
-                        <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 14px;">
-                            <span style="color: #666;">
-                                <i class="fas fa-language"></i> ${source.lang || 'pt'}
-                            </span>
-                            <span style="color: #666;">
-                                <i class="fas fa-filter"></i> ${source.limit || 10} notícias
-                            </span>
-                        </div>
-                    </div>
-                    <span class="source-status ${source.enabled ? 'status-active' : 'status-inactive'}">
-                        <i class="fas fa-${source.enabled ? 'check' : 'times'}-circle"></i>
-                        ${source.enabled ? 'Ativa' : 'Inativa'}
-                    </span>
-                </div>
-                <div class="source-actions">
-                    <button class="source-btn toggle" onclick="toggleSource('${source.name}')">
-                        <i class="fas fa-power-off"></i> ${source.enabled ? 'Desativar' : 'Ativar'}
-                    </button>
-                    <button class="source-btn edit" onclick="editSource('${source.name}')">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button class="source-btn delete" onclick="deleteSource('${source.name}')">
-                        <i class="fas fa-trash"></i> Remover
-                    </button>
-                </div>
-            </div>
-            `;
-        });
-        
-        container.innerHTML = html;
-    }
-
-    function addSource() {
+ function addSource() {
         const name = document.getElementById('source-name').value.trim();
         const url = document.getElementById('source-url').value.trim();
-        const lang = document.getElementById('source-lang').value;
+        const category = document.getElementById('source-category').value;
         const limit = parseInt(document.getElementById('source-limit').value);
         const enabled = document.getElementById('source-enabled').checked;
         
         if (!name || !url) {
-            showMessage('Preencha todos os campos obrigatórios!', 'error');
+            showNotification('Preencha todos os campos obrigatórios', 'error');
             return;
         }
         
         if (!url.includes('/wp-json/wp/v2/posts')) {
-            showMessage('URL deve ser uma API WordPress válida!', 'error');
+            showNotification('URL deve ser uma API WordPress válida', 'error');
             return;
         }
         
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-   // Verifica se já existe
+        
+        // Verifica se já existe
         if (sources.some(s => s.url === url)) {
-            showMessage('Esta fonte já está configurada!', 'error');
+            showNotification('Esta fonte já está configurada', 'error');
             return;
         }
         
         sources.push({
+            id: name.toLowerCase().replace(/\s+/g, '_'),
             name,
-            url,
-            lang,
+            api: url,
+            category,
             limit,
             enabled,
-            lastUpdate: new Date().toISOString()
+            lastFetch: 0
         });
         
         localStorage.setItem('news_sources', JSON.stringify(sources));
@@ -1648,297 +1417,266 @@
         loadSources();
         loadDashboard();
         
-        showMessage(`Fonte "${name}" adicionada com sucesso!`, 'success');
+        showNotification(`Fonte "${name}" adicionada com sucesso`, 'success');
     }
 
-    function toggleSource(sourceName) {
+    function toggleSource(index) {
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const sourceIndex = sources.findIndex(s => s.name === sourceName);
+        sources[index].enabled = !sources[index].enabled;
+        localStorage.setItem('news_sources', JSON.stringify(sources));
+        loadSources();
         
-        if (sourceIndex !== -1) {
-            sources[sourceIndex].enabled = !sources[sourceIndex].enabled;
-            localStorage.setItem('news_sources', JSON.stringify(sources));
-            
-            loadSources();
-            loadDashboard();
-            
-            showMessage(
-                `Fonte "${sourceName}" ${sources[sourceIndex].enabled ? 'ativada' : 'desativada'}!`,
-                sources[sourceIndex].enabled ? 'success' : 'warning'
-            );
-        }
+        showNotification(
+            `Fonte ${sources[index].enabled ? 'ativada' : 'desativada'}`,
+            sources[index].enabled ? 'success' : 'warning'
+        );
     }
 
-    function editSource(sourceName) {
+    function editSource(index) {
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const source = sources.find(s => s.name === sourceName);
+        const source = sources[index];
         
-        if (!source) return;
-        
-        // Preenche o formulário
+        // Preenche formulário
         document.getElementById('source-name').value = source.name;
-        document.getElementById('source-url').value = source.url;
-        document.getElementById('source-lang').value = source.lang || 'pt';
+        document.getElementById('source-url').value = source.api;
+        document.getElementById('source-category').value = source.category || 'news';
         document.getElementById('source-limit').value = source.limit || 10;
         document.getElementById('source-enabled').checked = source.enabled;
         
         // Remove da lista
-        sources.splice(sources.findIndex(s => s.name === sourceName), 1);
+        sources.splice(index, 1);
         localStorage.setItem('news_sources', JSON.stringify(sources));
         
-        // Mostra formulário
         showAddSourceForm();
         loadSources();
-        
-        showMessage(`Editando fonte "${sourceName}"`, 'info');
     }
 
-    function deleteSource(sourceName) {
+    function deleteSource(index) {
         showModal(
             'Remover Fonte',
-            `Tem certeza que deseja remover a fonte <strong>"${sourceName}"</strong>?`,
+            'Tem certeza que deseja remover esta fonte?<br>Esta ação não pode ser desfeita.',
             () => {
                 const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-                const filtered = sources.filter(s => s.name !== sourceName);
-                
-                localStorage.setItem('news_sources', JSON.stringify(filtered));
+                const removed = sources.splice(index, 1)[0];
+                localStorage.setItem('news_sources', JSON.stringify(sources));
                 
                 loadSources();
                 loadDashboard();
                 
-                showMessage(`Fonte "${sourceName}" removida com sucesso!`, 'success');
+                showNotification(`Fonte "${removed.name}" removida`, 'success');
             }
         );
     }
 
-    // NOTÍCIAS GUARDADAS
-    function loadSavedNews() {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const container = document.getElementById('saved-news-list');
+    function refreshSources() {
+        loadSources();
+        showNotification('Fontes atualizadas', 'success');
+    }
+
+    // NOTÍCIAS NATIVAS
+    function loadNativeNews() {
+        const nativeNews = JSON.parse(localStorage.getItem('native_news') || '[]');
+        const table = document.getElementById('native-table');
         
-        if (savedNews.length === 0) {
-            container.innerHTML = `
-            <div style="text-align: center; padding: 50px; color: #666; background: #f8f9fa; border-radius: 15px;">
-                <i class="fas fa-save" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
-                <h3>Nenhuma notícia guardada</h3>
-                <p>As notícias guardadas aparecerão aqui</p>
-            </div>
+        if (nativeNews.length === 0) {
+            table.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                    <i class="fas fa-star" style="font-size: 32px; opacity: 0.3; margin-bottom: 16px; display: block;"></i>
+                    <p>Nenhuma notícia nativa</p>
+                </td>
+            </tr>
             `;
             return;
         }
         
         let html = '';
-        savedNews.forEach((news, index) => {
-            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
+        nativeNews.forEach((news, index) => {
+            const date = new Date(news.timestamp).toLocaleDateString('pt-PT');
             
             html += `
-            <div class="saved-item">
-                <div class="saved-item-header">
-                    <div class="saved-title">${news.title}</div>
-                    <button class="source-btn delete" onclick="deleteSavedNews(${index})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div class="saved-meta">
-                    <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${date}</span>
-                    <span><i class="fas fa-tag"></i> ${news.categoryName || news.category}</span>
-                </div>
-                <div class="saved-actions">
-                    <button class="source-btn" onclick="viewSavedNews('${news.id}')">
-                        <i class="fas fa-eye"></i> Ver
-                    </button>
-                    <button class="source-btn edit" onclick="editSavedNews(${index})">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                </div>
-            </div>
+            <tr>
+                <td>
+                    <div style="font-weight: 500; max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${news.title}</div>
+                    <div style="font-size: 13px; color: var(--medium-gray);">${news.source || 'NewsHub'}</div>
+                </td>
+                <td>${news.category || 'Notícias'}</td>
+                <td style="color: var(--dark-gray);">${date}</td>
+                <td>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn" style="padding: 6px 12px;" onclick="viewNativeNews('${news.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn" style="padding: 6px 12px;" onclick="editNativeNews(${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn" style="padding: 6px 12px; color: var(--danger-color);" onclick="deleteNativeNews(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
             `;
         });
         
-        container.innerHTML = html;
+        table.innerHTML = html;
     }
 
-    function searchSavedNews() {
-        const query = document.getElementById('search-saved').value.toLowerCase();
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const container = document.getElementById('saved-news-list');
+    function showAddNativeForm() {
+        document.getElementById('add-native-form').style.display = 'block';
+    }
+
+    function hideAddNativeForm() {
+        document.getElementById('add-native-form').style.display = 'none';
+        clearNativeForm();
+    }
+
+    function clearNativeForm() {
+        document.getElementById('native-title').value = '';
+        document.getElementById('native-content').value = '';
+        document.getElementById('native-category').value = 'news';
+        document.getElementById('native-image').value = '';
+    }
+
+    function addNativeNews() {
+        const title = document.getElementById('native-title').value.trim();
+        const content = document.getElementById('native-content').value.trim();
+        const category = document.getElementById('native-category').value;
+        const image = document.getElementById('native-image').value.trim();
         
-        if (!query) {
-            loadSavedNews();
+        if (!title || !content) {
+            showNotification('Preencha título e conteúdo', 'error');
             return;
         }
         
-        const filtered = savedNews.filter(news => 
-            news.title.toLowerCase().includes(query) || 
-            news.source.toLowerCase().includes(query) ||
-            (news.category && news.category.toLowerCase().includes(query))
-        );
+        const nativeNews = JSON.parse(localStorage.getItem('native_news') || []);
         
-        if (filtered.length === 0) {
-            container.innerHTML = `
-            <div style="text-align: center; padding: 50px; color: #666;">
-                <i class="fas fa-search" style="font-size: 48px; opacity: 0.3;"></i>
-                <p>Nenhuma notícia encontrada</p>
-            </div>
-            `;
-            return;
-        }
-        
-        let html = '';
-        filtered.forEach((news, index) => {
-            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
-            
-            html += `
-            <div class="saved-item">
-                <div class="saved-item-header">
-                    <div class="saved-title">${news.title}</div>
-                    <button class="source-btn delete" onclick="deleteSavedNews(${savedNews.findIndex(n => n.id === news.id)})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div class="saved-meta">
-                    <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${date}</span>
-                </div>
-            </div>
-            `;
-        });
-        
-        container.innerHTML = html;
-    }
-
-    function viewSavedNews(id) {
-        window.open(`leitura.html?id=${id}`, '_blank');
-    }
-
-    function editSavedNews(index) {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const news = savedNews[index];
-        
-        const newTitle = prompt('Editar título:', news.title);
-        if (newTitle && newTitle.trim()) {
-            savedNews[index].title = newTitle.trim();
-            localStorage.setItem('saved_news', JSON.stringify(savedNews));
-            loadSavedNews();
-            showMessage('Título atualizado com sucesso!', 'success');
-        }
-    }
-
-    function deleteSavedNews(index) {
-        showModal(
-            'Remover Notícia',
-            'Tem certeza que deseja remover esta notícia guardada?',
-            () => {
-                const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-                savedNews.splice(index, 1);
-                localStorage.setItem('saved_news', JSON.stringify(savedNews));
-                
-                loadSavedNews();
-                loadDashboard();
-                
-                showMessage('Notícia removida com sucesso!', 'success');
-            }
-        );
-    }
-
-    function exportSavedNews() {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const dataStr = JSON.stringify(savedNews, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = `noticias-guardadas-${new Date().toISOString().split('T')[0]}.json`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-        
-        showMessage('Notícias exportadas com sucesso!', 'success');
-    }
-
-    function confirmClearSaved() {
-        showModal(
-            'Limpar Todas as Notícias',
-            '<p style="color: #f44336; font-weight: bold;">ATENÇÃO!</p>' +
-            '<p>Todas as notícias guardadas serão permanentemente removidas.</p>' +
-            '<p>Esta ação não pode ser desfeita!</p>',
-            () => {
-                localStorage.removeItem('saved_news');
-                loadSavedNews();
-                loadDashboard();
-                showMessage('Todas as notícias guardadas foram removidas!', 'success');
-            }
-        );
-    }
-
-    // CONFIGURAÇÕES
-    function loadSettings() {
-        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
-        
-        // Preenche os campos
-        document.getElementById('update-interval').value = settings.updateInterval || 30;
-        document.getElementById('per-page').value = settings.perPage || 15;
-        document.getElementById('auto-refresh').checked = settings.autoRefresh !== false;
-        document.getElementById('cache-enabled').checked = settings.cacheEnabled !== false;
-        document.getElementById('cache-time').value = settings.cacheTime || 6;
-        document.getElementById('admin-pass').value = settings.adminPassword || '0800';
-        document.getElementById('require-login').checked = settings.requireLogin || false;
-        document.getElementById('theme').value = settings.theme || 'light';
-        document.getElementById('primary-color').value = settings.primaryColor || '#1a73e8';
-    }
-
-    function saveSettings() {
-        const settings = {
-            updateInterval: parseInt(document.getElementById('update-interval').value) || 30,
-            perPage: parseInt(document.getElementById('per-page').value) || 15,
-            autoRefresh: document.getElementById('auto-refresh').checked,
-            cacheEnabled: document.getElementById('cache-enabled').checked,
-            cacheTime: parseInt(document.getElementById('cache-time').value) || 6,
-            adminPassword: document.getElementById('admin-password').value || '0800',
-            requireLogin: document.getElementById('require-login').checked,
-            theme: document.getElementById('theme').value,
-            primaryColor: document.getElementById('primary-color').value,
-            lastModified: new Date().toISOString()
+        const newNews = {
+            id: `native_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            title,
+            content: content.startsWith('<') ? content : `<p>${content}</p>`,
+            excerpt: content.substring(0, 200) + '...',
+            image: image || `https://via.placeholder.com/600x400/1a73e8/ffffff?text=${encodeURIComponent(title.substring(0, 2))}`,
+            source: 'NewsHub MOZ',
+            sourceId: 'newshub',
+            date: new Date().toISOString(),
+            timestamp: Date.now(),
+            category,
+            isNative: true,
+            savedAt: new Date().toISOString()
         };
         
-        localStorage.setItem('news_settings', JSON.stringify(settings));
+        nativeNews.unshift(newNews);
+        localStorage.setItem('native_news', nativeNews);
         
-        showMessage('Configurações salvas com sucesso!', 'success');
+        // Atualiza cache geral
+        updateNewsCache(newNews);
+        
+        hideAddNativeForm();
+        loadNativeNews();
+        loadDashboard();
+        
+        showNotification('Notícia nativa publicada com sucesso', 'success');
     }
 
-    function clearCache() {
-        // Remove todos os caches de notícias
-        Object.keys(localStorage).forEach(key => {
-            if (key.includes('news_cache') || key.includes('all_news')) {
-                localStorage.removeItem(key);
-            }
-        });
+    function updateNewsCache(news) {
+        const allNews = JSON.parse(localStorage.getItem('all_news') || []);
+        allNews.unshift(news);
+        localStorage.setItem('all_news', allNews.slice(0, 200));
+    }
+
+    function viewNativeNews(id) {
+        window.open(`article.html?id=${id}`, '_blank');
+    }
+
+    function editNativeNews(index) {
+        const nativeNews = JSON.parse(localStorage.getItem('native_news') || []);
+        const news = nativeNews[index];
         
-        showMessage('Cache limpo com sucesso!', 'success');
+        // Preenche formulário
+        document.getElementById('native-title').value = news.title;
+        document.getElementById('native-content').value = news.content;
+        document.getElementById('native-category').value = news.category || 'news';
+        document.getElementById('native-image').value = news.image || '';
+        
+        // Remove da lista
+        nativeNews.splice(index, 1);
+        localStorage.setItem('native_news', nativeNews);
+        
+        showAddNativeForm();
+        loadNativeNews();
+    }
+
+    function deleteNativeNews(index) {
+        showModal(
+            'Remover Notícia Nativa',
+            'Tem certeza que deseja remover esta notícia?<br>Esta ação não pode ser desfeita.',
+            () => {
+                const nativeNews = JSON.parse(localStorage.getItem('native_news') || []);
+                const removed = nativeNews.splice(index, 1)[0];
+                localStorage.setItem('native_news', nativeNews);
+                
+                loadNativeNews();
+                loadDashboard();
+                
+                showNotification('Notícia removida', 'success');
+            }
+        );
+    }
+
+    function exportNativeNews() {
+        const nativeNews = JSON.parse(localStorage.getItem('native_news') || []);
+        const data = {
+            news: nativeNews,
+            exportedAt: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `native-news-export-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        
+        showNotification('Notícias nativas exportadas', 'success');
+    }
+
+    function refreshNativeNews() {
+        loadNativeNews();
+        showNotification('Notícias nativas atualizadas', 'success');
+    }
+  // CONFIGURAÇÕES
+    function saveSettings() {
+        const settings = {
+            updateInterval: parseInt(document.getElementById('update-interval').value) || 5,
+            perPage: parseInt(document.getElementById('per-page').value) || 20,
+            autoUpdate: document.getElementById('auto-update').checked,
+            adminPassword: document.getElementById('admin-pass').value || '0800'
+        };
+        
+        localStorage.setItem('newshub_settings', JSON.stringify(settings));
+        showNotification('Configurações salvas com sucesso', 'success');
     }
 
     // FERRAMENTAS
     function exportAllData() {
         const data = {
-            sources: JSON.parse(localStorage.getItem('news_sources') || '[]'),
-            saved: JSON.parse(localStorage.getItem('saved_news') || '[]'),
-            settings: JSON.parse(localStorage.getItem('news_settings') || '{}'),
-            cache: JSON.parse(localStorage.getItem('all_news_cache') || '[]'),
-            exportDate: new Date().toISOString(),
-            version: '1.0.0'
+            native_news: JSON.parse(localStorage.getItem('native_news') || []),
+            all_news: JSON.parse(localStorage.getItem('all_news') || []),
+            news_sources: JSON.parse(localStorage.getItem('news_sources') || []),
+            settings: JSON.parse(localStorage.getItem('newshub_settings') || {}),
+            exportedAt: new Date().toISOString(),
+            version: '2.0.0'
         };
         
-        const dataStr = JSON.stringify(data, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        const exportName = `backup-noticias-cld-${new Date().toISOString().split('T')[0]}.json`;
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `newshub-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
         
-        const link = document.createElement('a');
-        link.setAttribute('href', dataUri);
-        link.setAttribute('download', exportName);
-        link.click();
-        
-        showMessage('Backup completo exportado com sucesso!', 'success');
+        showNotification('Backup completo exportado', 'success');
     }
 
     function importAllData() {
@@ -1960,27 +1698,25 @@
                     
                     showModal(
                         'Importar Backup',
-                        `<p>Tem certeza que deseja importar este backup?</p>
-                         <p><strong>Data do backup:</strong> ${new Date(data.exportDate).toLocaleString()}</p>
-                         <p><strong>Fontes:</strong> ${data.sources?.length || 0}</p>
-                         <p><strong>Notícias guardadas:</strong> ${data.saved?.length || 0}</p>`,
+                        `Tem certeza que deseja importar este backup?<br>
+                         <strong>Data:</strong> ${new Date(data.exportedAt).toLocaleString()}<br>
+                         <strong>Notícias nativas:</strong> ${data.native_news?.length || 0}<br>
+                         <strong>Fontes:</strong> ${data.news_sources?.length || 0}`,
                         () => {
-                            if (data.sources) localStorage.setItem('news_sources', JSON.stringify(data.sources));
-                            if (data.saved) localStorage.setItem('saved_news', JSON.stringify(data.saved));
-                            if (data.settings) localStorage.setItem('news_settings', JSON.stringify(data.settings));
-                            if (data.cache) localStorage.setItem('all_news_cache', JSON.stringify(data.cache));
+                            if (data.native_news) localStorage.setItem('native_news', JSON.stringify(data.native_news));
+                            if (data.all_news) localStorage.setItem('all_news', JSON.stringify(data.all_news));
+                            if (data.news_sources) localStorage.setItem('news_sources', JSON.stringify(data.news_sources));
+                            if (data.settings) localStorage.setItem('newshub_settings', JSON.stringify(data.settings));
                             
-                            // Recarrega tudo
                             loadDashboard();
                             loadSources();
-                            loadSavedNews();
-                            loadSettings();
+                            loadNativeNews();
                             
-                            showMessage('Backup importado com sucesso!', 'success');
+                            showNotification('Backup importado com sucesso', 'success');
                         }
                     );
                 } catch (error) {
-                    showMessage('Erro ao importar backup. Arquivo inválido!', 'error');
+                    showNotification('Erro ao importar backup', 'error');
                 }
             };
             
@@ -1990,99 +1726,102 @@
         input.click();
     }
 
-    function optimizeDatabase() {
-        showModal(
-            'Otimizar Base de Dados',
-            'Esta ação irá remover notícias duplicadas e otimizar o armazenamento.',
-            () => {
-                // Remove duplicatas das notícias salvas
-                const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-                const uniqueSaved = savedNews.filter((news, index, self) =>
-                    index === self.findIndex((n) => n.id === news.id)
-                );
-                localStorage.setItem('saved_news', JSON.stringify(uniqueSaved));
-                
-                // Limpa cache antigo
-                const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('news_')) {
-                        try {
-                            const timestamp = localStorage.getItem(`${key}_timestamp`);
-                            if (timestamp && parseInt(timestamp) < oneDayAgo) {
-                                localStorage.removeItem(key);
-                                localStorage.removeItem(`${key}_timestamp`);
-                            }
-                        } catch (e) {
-                            // Ignora erros
-                        }
+    function clearCache() {
+        // Remove caches antigos
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('cache_') || key.startsWith('news_')) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    const age = Date.now() - (data?.timestamp || 0);
+                    if (age > 24 * 60 * 60 * 1000) { // 24 horas
+                        localStorage.removeItem(key);
                     }
-                });
-                
-                showMessage('Base de dados otimizada com sucesso!', 'success');
-                loadDashboard();
-                loadSavedNews();
+                } catch (e) {
+                    localStorage.removeItem(key);
+                }
             }
-        );
+        });
+        
+        showNotification('Cache limpo com sucesso', 'success');
     }
 
-    function showSystemInfo() {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
-        const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
+    function optimizeStorage() {
+        // Remove notícias duplicadas
+        const allNews = JSON.parse(localStorage.getItem('all_news') || []);
+        const seen = new Set();
+        const uniqueNews = allNews.filter(news => {
+            const key = news.title + news.source;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
         
-        const info = `
-        <div style="text-align: left; line-height: 1.8;">
-            <p><strong>Versão do Sistema:</strong> 1.0.0</p>
-            <p><strong>Total de Fontes:</strong> ${sources.length}</p>
-            <p><strong>Fontes Ativas:</strong> ${sources.filter(s => s.enabled).length}</p>
-            <p><strong>Notícias Guardadas:</strong> ${savedNews.length}</p>
-            <p><strong>Notícias em Cache:</strong> ${allNews.length}</p>
-            <p><strong>Armazenamento Usado:</strong> ${(JSON.stringify(localStorage).length / 1024).toFixed(2)} KB</p>
-            <p><strong>Última Atualização:</strong> ${new Date().toLocaleString()}</p>
-            <hr>
-            <p><small>Notícias CLD - Sistema de Agregação</small></p>
-        </div>
-        `;
-        
-        showModal('Informações do Sistema', info, null);
+        localStorage.setItem('all_news', uniqueNews);
+        showNotification('Armazenamento otimizado', 'success');
     }
 
     function resetSystem() {
         showModal(
-            'Resetar Sistema Completo',
-            `<div style="color: #f44336; text-align: center;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                <h3 style="color: #f44336;">ATENÇÃO EXTREMA!</h3>
-                <p>Todas as configurações e dados serão permanentemente removidos.</p>
-                <p>Incluindo:</p>
-                <ul style="text-align: left; margin: 15px 0;">
+            'Resetar Sistema',
+            `<div style="color: var(--danger-color); text-align: center;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px;"></i>
+                <h3 style="color: var(--danger-color);">ATENÇÃO!</h3>
+                <p>Todos os dados serão permanentemente removidos:</p>
+                <ul style="text-align: left; margin: 16px 0;">
+                    <li>Todas as notícias nativas</li>
                     <li>Todas as fontes configuradas</li>
-                    <li>Todas as notícias guardadas</li>
                     <li>Todas as configurações</li>
-                    <li>Todos os caches</li>
                 </ul>
                 <p><strong>Esta ação não pode ser desfeita!</strong></p>
-                <p>Digite <code>CONFIRMAR</code> abaixo para prosseguir:</p>
-                <input type="text" id="reset-confirm" style="width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #f44336; border-radius: 5px; text-align: center;" placeholder="Digite CONFIRMAR">
+                <p>Digite <code>RESETAR</code> para confirmar:</p>
+                <input type="text" id="reset-confirm" style="width: 100%; padding: 12px; margin: 16px 0; border: 2px solid var(--danger-color); border-radius: 8px; text-align: center; font-family: monospace;">
             </div>`,
             () => {
                 const confirmInput = document.getElementById('reset-confirm');
-                if (confirmInput && confirmInput.value === 'CONFIRMAR') {
-                    // Limpa tudo
+                if (confirmInput && confirmInput.value === 'RESETAR') {
+                    // Limpa todos os dados
                     localStorage.clear();
                     
-                    // Mostra mensagem e recarrega
-                    showMessage('Sistema completamente resetado!', 'success');
+                    // Recarrega a página
                     setTimeout(() => {
                         window.location.reload();
-                    }, 2000);
+                    }, 1000);
+                    
+                    showNotification('Sistema resetado com sucesso', 'success');
                 } else {
-                    showMessage('Confirmação incorreta! Operação cancelada.', 'error');
+                    showNotification('Confirmação incorreta', 'error');
                 }
             }
         );
     }
- // ANIMAÇÃO DE SHAKE
+
+    // MODAL
+    function showModal(title, content, callback) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-content').innerHTML = content;
+        pendingAction = callback;
+        modal.style.display = 'flex';
+        
+        document.getElementById('modal-confirm').onclick = () => {
+            if (pendingAction) {
+                pendingAction();
+            }
+            closeModal();
+        };
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+        pendingAction = null;
+    }
+
+    // NOTIFICAÇÕES
+    function showNotification(message, type = 'info') {
+        // Sistema de notificações simples
+        console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+
+    // ANIMAÇÃO DE SHAKE
     const style = document.createElement('style');
     style.textContent = `
         @keyframes shake {
@@ -2093,33 +1832,16 @@
     `;
     document.head.appendChild(style);
 
-    // VERIFICA SE JÁ ESTÁ LOGADO (em caso de refresh)
-    window.addEventListener('load', () => {
-        const lastLogin = localStorage.getItem('admin_last_login');
-        const now = Date.now();
+    // ATALHOS DE TECLADO
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.activeElement === passwordInput) {
+            login();
+        }
         
-        // Se fez login nos últimos 30 minutos, mantém logado
-        if (lastLogin && (now - parseInt(lastLogin)) < 30 * 60 * 1000) {
-            isAuthenticated = true;
-            loginScreen.style.display = 'none';
-            adminPanel.style.display = 'block';
-            loadDashboard();
-            loadSources();
-            loadSavedNews();
-            loadSettings();
-        } else {
-            localStorage.removeItem('admin_last_login');
+        if (e.key === 'Escape') {
+            closeModal();
         }
     });
-
-    // SALVA TIMESTAMP DO LOGIN
-    function saveLoginTimestamp() {
-        localStorage.setItem('admin_last_login', Date.now().toString());
-    }
-
-    // ATUALIZA TIMESTAMP QUANDO INTERAGE COM A PÁGINA
-    document.addEventListener('click', saveLoginTimestamp);
-    document.addEventListener('keypress', saveLoginTimestamp);
     </script>
 </body>
 </html>
