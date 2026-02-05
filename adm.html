@@ -254,8 +254,7 @@
         margin: 0 auto;
         padding: 40px;
     }
-
-    /* TABS */
+ /* TABS */
     .admin-tabs {
         display: flex;
         gap: 10px;
@@ -444,6 +443,7 @@
         font-size: 14px;
         line-height: 1.5;
     }
+
     /* FONTES */
     .sources-section {
         background: white;
@@ -658,8 +658,7 @@
         background: #FFE0B2;
         color: #EF6C00;
     }
-
-    .source-btn.delete {
+  .source-btn.delete {
         background: #FFCDD2;
         color: #c62828;
     }
@@ -672,56 +671,6 @@
     .source-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    /* NOTÍCIAS NATIVAS */
-    .native-news-section {
-        background: white;
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        margin-bottom: 50px;
-    }
-
-    .native-news-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    .native-stats {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-    }
-
-    .native-stat-item {
-        background: #f8f9fa;
-        padding: 20px;
-        border-radius: 12px;
-        min-width: 200px;
-    }
-
-    .native-stat-item h4 {
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-
-    .native-stat-item .number {
-        font-size: 32px;
-        font-weight: 800;
-        color: var(--dark);
-    }
-
-    .native-stat-item .trend {
-        font-size: 12px;
-        color: #4CAF50;
-        display: flex;
-        align-items: center;
-        gap: 5px;
     }
 
     /* NOTÍCIAS GUARDADAS */
@@ -833,7 +782,8 @@
         padding-bottom: 15px;
         border-bottom: 2px solid #e9ecef;
     }
-   /* MODAL */
+
+    /* MODAL */
     .modal-overlay {
         display: none;
         position: fixed;
@@ -943,14 +893,6 @@
         .settings-grid {
             grid-template-columns: 1fr;
         }
-        
-        .native-stats {
-            flex-direction: column;
-        }
-        
-        .native-stat-item {
-            min-width: 100%;
-        }
     }
 
     /* ANIMAÇÕES */
@@ -978,7 +920,6 @@
         background: var(--primary-dark);
     }
     </style>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
@@ -990,7 +931,7 @@
                 <i class="fas fa-shield-alt"></i>
             </div>
             <h1 class="login-title">Painel Administrativo</h1>
-            <p class="login-subtitle">Notícias CLD - Sistema de Notícias Nativas</p>
+            <p class="login-subtitle">Notícias CLD - Sistema de Gerenciamento</p>
             
             <div class="login-form">
                 <div class="form-group">
@@ -1017,7 +958,7 @@
             
             <div class="login-footer">
                 <p><i class="fas fa-lock"></i> Acesso restrito ao administrador</p>
-                <p>Contato: claudioarmando001@gmail.com | Tel: +258 869 667 677</p>
+                <p>Contato: claudioarmando001@gmail.com</p>
             </div>
         </div>
     </div>
@@ -1050,9 +991,6 @@
                 <button class="tab-btn active" onclick="showTab('dashboard')">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </button>
-                <button class="tab-btn" onclick="showTab('native')">
-                    <i class="fas fa-database"></i> Notícias Nativas
-                </button>
                 <button class="tab-btn" onclick="showTab('sources')">
                     <i class="fas fa-newspaper"></i> Fontes
                 </button>
@@ -1066,7 +1004,8 @@
                     <i class="fas fa-tools"></i> Ferramentas
                 </button>
             </div>
-           <!-- DASHBOARD -->
+
+            <!-- DASHBOARD -->
             <div id="dashboard-tab" class="tab-content active">
                 <div class="stats-section">
                     <h2 class="stats-title">
@@ -1091,20 +1030,6 @@
                         <div class="stat-card">
                             <div class="stat-header">
                                 <div class="stat-icon">
-                                    <i class="fas fa-database"></i>
-                                </div>
-                                <span class="stat-trend positive">+25%</span>
-                            </div>
-                            <div class="stat-content">
-                                <h3>Notícias Nativas</h3>
-                                <div class="stat-number" id="stat-native-news">0</div>
-                                <p class="stat-desc">Notícias armazenadas no banco de dados</p>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon">
                                     <i class="fas fa-save"></i>
                                 </div>
                                 <span class="stat-trend positive">+8%</span>
@@ -1112,7 +1037,7 @@
                             <div class="stat-content">
                                 <h3>Notícias Guardadas</h3>
                                 <div class="stat-number" id="stat-saved-news">0</div>
-                                <p class="stat-desc">Notícias salvas automaticamente</p>
+                                <p class="stat-desc">Notícias salvas como nativas</p>
                             </div>
                         </div>
                         
@@ -1129,92 +1054,41 @@
                                 <p class="stat-desc">Fontes de notícias configuradas</p>
                             </div>
                         </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <span class="stat-trend positive">+15%</span>
+                            </div>
+                            <div class="stat-content">
+                                <h3>Categorias</h3>
+                                <div class="stat-number">7</div>
+                                <p class="stat-desc">Categorias de notícias disponíveis</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="native-news-section">
-                    <div class="native-news-header">
+                <div class="sources-section">
+                    <div class="section-header">
                         <h2 class="section-title">
-                            <i class="fas fa-database"></i> Estatísticas das Notícias Nativas
+                            <i class="fas fa-sync-alt"></i> Status das Fontes
                         </h2>
                         <div class="section-actions">
-                            <button class="action-btn primary" onclick="syncAllNativeNews()">
-                                <i class="fas fa-sync-alt"></i> Sincronizar Tudo
-                            </button>
-                            <button class="action-btn warning" onclick="cleanExpiredNativeNews()">
-                                <i class="fas fa-broom"></i> Limpar Vencidas
+                            <button class="action-btn primary" onclick="refreshAllSources()">
+                                <i class="fas fa-sync-alt"></i> Atualizar Tudo
                             </button>
                         </div>
                     </div>
                     
-                    <div class="native-stats">
-                        <div class="native-stat-item">
-                            <h4>Total de Visualizações</h4>
-                            <div class="number" id="total-views">0</div>
-                            <div class="trend">
-                                <i class="fas fa-arrow-up"></i> +15% esta semana
-                            </div>
-                        </div>
-                        <div class="native-stat-item">
-                            <h4>Total de Compartilhamentos</h4>
-                            <div class="number" id="total-shares">0</div>
-                            <div class="trend">
-                                <i class="fas fa-arrow-up"></i> +22% esta semana
-                            </div>
-                        </div>
-                        <div class="native-stat-item">
-                            <h4>Notícias Mais Visualizadas</h4>
-                            <div class="number" id="top-viewed">0</div>
-                            <div class="trend">
-                                <i class="fas fa-fire"></i> Em alta
-                            </div>
-                        </div>
-                        <div class="native-stat-item">
-                            <h4>Taxa de Crescimento</h4>
-                            <div class="number" id="growth-rate">0%</div>
-                            <div class="trend">
-                                <i class="fas fa-chart-line"></i> Mensal
-                            </div>
-                        </div>
+                    <div id="sources-status">
+                        <!-- Status das fontes será carregado aqui -->
                     </div>
                 </div>
             </div>
-
-            <!-- NOTÍCIAS NATIVAS -->
-            <div id="native-tab" class="tab-content">
-                <div class="native-news-section">
-                    <div class="section-header">
-                        <h2 class="section-title">
-                            <i class="fas fa-database"></i> Gerenciar Notícias Nativas
-                        </h2>
-                        <div class="section-actions">
-                            <button class="action-btn success" onclick="exportNativeNews()">
-                                <i class="fas fa-download"></i> Exportar
-                            </button>
-                            <button class="action-btn warning" onclick="optimizeNativeDB()">
-                                <i class="fas fa-compress-arrows-alt"></i> Otimizar
-                            </button>
-                            <button class="action-btn danger" onclick="clearNativeNews()">
-                                <i class="fas fa-trash"></i> Limpar Tudo
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="search-box">
-                        <input type="text" 
-                               id="search-native" 
-                               class="search-input" 
-                               placeholder="🔍 Buscar notícias nativas..."
-                               onkeyup="searchNativeNews()">
-                    </div>
-
-                    <div id="native-news-list" class="saved-list">
-                        <!-- Notícias nativas serão carregadas aqui -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- FONTES -->
+      <!-- FONTES -->
             <div id="sources-tab" class="tab-content">
                 <div class="sources-section">
                     <div class="section-header">
@@ -1259,7 +1133,7 @@
                             </div>
                             <div class="form-control">
                                 <label>Limite de Notícias</label>
-                                <input type="number" id="source-limit" min="10" max="100" value="20">
+                                <input type="number" id="source-limit" min="1" max="50" value="10">
                             </div>
                         </div>
                         
@@ -1279,7 +1153,8 @@
                             </button>
                         </div>
                     </div>
-           <!-- LISTA DE FONTES -->
+
+                    <!-- LISTA DE FONTES -->
                     <h3 style="color: var(--dark); margin: 40px 0 25px;">
                         <i class="fas fa-list"></i> Fontes Configuradas
                     </h3>
@@ -1300,9 +1175,6 @@
                         <div class="section-actions">
                             <button class="action-btn warning" onclick="exportSavedNews()">
                                 <i class="fas fa-download"></i> Exportar
-                            </button>
-                            <button class="action-btn danger" onclick="confirmClearExpired()">
-                                <i class="fas fa-broom"></i> Limpar Vencidas
                             </button>
                             <button class="action-btn danger" onclick="confirmClearSaved()">
                                 <i class="fas fa-trash"></i> Limpar Tudo
@@ -1336,48 +1208,15 @@
                             <h3><i class="fas fa-sync-alt"></i> Atualização</h3>
                             <div class="form-control">
                                 <label>Intervalo (minutos)</label>
-                                <input type="number" id="update-interval" min="1" max="60" value="5">
+                                <input type="number" id="update-interval" min="5" max="120" value="30">
                             </div>
                             <div class="form-control">
-                                <label>Notícias por Carregamento</label>
-                                <input type="number" id="per-load" min="10" max="100" value="15">
+                                <label>Notícias por Página</label>
+                                <input type="number" id="per-page" min="10" max="50" value="15">
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="auto-refresh" checked>
                                 <label for="auto-refresh">Atualização automática</label>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-database"></i> Notícias Nativas</h3>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="native-sync" checked>
-                                <label for="native-sync">Sincronização automática</label>
-                            </div>
-                            <div class="form-control">
-                                <label>Limite de Armazenamento</label>
-                                <input type="number" id="native-limit" min="100" max="5000" value="1000">
-                                <small style="color: #666;">Máximo de notícias nativas</small>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="native-backup" checked>
-                                <label for="native-backup">Backup automático</label>
-                            </div>
-                        </div>
-
-                        <div class="setting-group">
-                            <h3><i class="fas fa-save"></i> Guardar Automático</h3>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="auto-save" checked>
-                                <label for="auto-save">Guardar notícias automaticamente</label>
-                            </div>
-                            <div class="form-control">
-                                <label>Validade (meses)</label>
-                                <input type="number" id="expire-months" min="1" max="12" value="2">
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="cleanup-enabled" checked>
-                                <label for="cleanup-enabled">Limpeza automática</label>
                             </div>
                         </div>
 
@@ -1389,7 +1228,7 @@
                             </div>
                             <div class="form-control">
                                 <label>Tempo de Cache (horas)</label>
-                                <input type="number" id="cache-time" min="1" max="24" value="3">
+                                <input type="number" id="cache-time" min="1" max="24" value="6">
                             </div>
                             <button class="action-btn warning" onclick="clearCache()" style="margin-top: 20px;">
                                 <i class="fas fa-broom"></i> Limpar Cache
@@ -1402,6 +1241,10 @@
                                 <label>Senha Admin</label>
                                 <input type="password" id="admin-pass" value="0800" maxlength="4">
                                 <small style="color: #666;">Senha atual: 0800</small>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="require-login">
+                                <label for="require-login">Exigir login para guardar</label>
                             </div>
                         </div>
 
@@ -1508,9 +1351,8 @@
     <script>
     // SENHA DO ADMIN
     const ADMIN_PASSWORD = "0800";
-    const NATIVE_DB_KEY = 'cld_native_news_db';
-    
     let isAuthenticated = false;
+
     // ELEMENTOS DOM
     const loginScreen = document.getElementById('login-screen');
     const adminPanel = document.getElementById('admin-panel');
@@ -1538,7 +1380,6 @@
             
             // Carrega dados do painel
             loadDashboard();
-            loadNativeNews();
             loadSources();
             loadSavedNews();
             loadSettings();
@@ -1565,8 +1406,7 @@
             }, 10);
         }
     }
-
-    // LOGOUT
+ // LOGOUT
     function logout() {
         isAuthenticated = false;
         adminPanel.style.display = 'none';
@@ -1630,39 +1470,14 @@
 
     // DASHBOARD
     function loadDashboard() {
-        // Carrega notícias nativas
-        const nativeNews = getNativeNews();
+        // Estatísticas
         const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
         const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
         const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
         
-        // Calcula estatísticas das notícias nativas
-        let totalViews = 0;
-        let totalShares = 0;
-        let topViewed = 0;
-        
-        nativeNews.forEach(news => {
-            totalViews += news.viewCount || 0;
-            totalShares += news.shareCount || 0;
-            if (news.viewCount > topViewed) {
-                topViewed = news.viewCount;
-            }
-        });
-        
-        const growthRate = nativeNews.length > 0 ? 
-            Math.round((nativeNews.length / Math.max(allNews.length, 1)) * 100) : 0;
-        
-        // Atualiza estatísticas
         document.getElementById('stat-total-news').textContent = allNews.length;
-        document.getElementById('stat-native-news').textContent = nativeNews.length;
         document.getElementById('stat-saved-news').textContent = savedNews.length;
         document.getElementById('stat-active-sources').textContent = sources.filter(s => s.enabled).length;
-        
-        // Atualiza estatísticas nativas
-        document.getElementById('total-views').textContent = totalViews;
-        document.getElementById('total-shares').textContent = totalShares;
-        document.getElementById('top-viewed').textContent = topViewed;
-        document.getElementById('growth-rate').textContent = `${growthRate}%`;
         
         // Status das fontes
         updateSourcesStatus();
@@ -1707,155 +1522,84 @@
         container.innerHTML = html || '<p style="text-align: center; color: #666;">Nenhuma fonte configurada</p>';
     }
 
-    function syncAllNativeNews() {
-        showMessage('Sincronizando todas as notícias nativas...', 'info');
+    function refreshAllSources() {
+        showMessage('Atualizando todas as fontes...', 'info');
         
-        // Sincroniza notícias locais com o banco nativo
-        const localSavedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        const nativeNews = getNativeNews();
-        let syncedCount = 0;
-        
-        localSavedNews.forEach(news => {
-            if (!nativeNews.some(n => n.id === news.id)) {
-                addToNativeDB(news);
-                syncedCount++;
-            }
-        });
-        
-        if (syncedCount > 0) {
-            showMessage(`${syncedCount} notícias sincronizadas com sucesso!`, 'success');
+        // Simula atualização
+        setTimeout(() => {
+            showMessage('Fontes atualizadas com sucesso!', 'success');
             loadDashboard();
-            loadNativeNews();
-        } else {
-            showMessage('Nenhuma nova notícia para sincronizar.', 'info');
-        }
+        }, 2000);
     }
 
-    function cleanExpiredNativeNews() {
-        const nativeNews = getNativeNews();
-        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
-        const expireMonths = settings.expireMonths || 2;
-        
-        const now = new Date();
-        const expireDate = new Date(now.getTime() - (expireMonths * 30 * 24 * 60 * 60 * 1000));
-        
-        const filtered = nativeNews.filter(news => {
-            const savedDate = new Date(news.nativeCreated || news.date);
-            return savedDate >= expireDate;
-        });
-        
-        const removedCount = nativeNews.length - filtered.length;
-        
-        if (removedCount > 0) {
-            saveNativeDB({ version: 'v2', news: filtered });
-            showMessage(`${removedCount} notícias nativas vencidas removidas!`, 'success');
-            loadDashboard();
-            loadNativeNews();
-        } else {
-            showMessage('Nenhuma notícia nativa vencida para limpar.', 'info');
-        }
+    // GERENCIAR FONTES
+    function showAddSourceForm() {
+        document.getElementById('add-source-form').style.display = 'block';
+        document.getElementById('source-name').focus();
     }
 
-    // BANCO DE DADOS NATIVO
-    function getNativeNews() {
-        try {
-            const dbData = localStorage.getItem(NATIVE_DB_KEY);
-            if (dbData) {
-                const db = JSON.parse(dbData);
-                return db.news || [];
-            }
-        } catch (error) {
-            console.error('Erro ao carregar notícias nativas:', error);
-        }
-        return [];
+    function hideAddSourceForm() {
+        document.getElementById('add-source-form').style.display = 'none';
+        clearSourceForm();
     }
 
-    function saveNativeDB(db) {
-        try {
-            localStorage.setItem(NATIVE_DB_KEY, JSON.stringify(db));
-        } catch (error) {
-            console.error('Erro ao salvar banco de dados nativo:', error);
-            showMessage('Erro ao salvar banco de dados. Verifique o armazenamento.', 'error');
-        }
+    function clearSourceForm() {
+        document.getElementById('source-name').value = '';
+        document.getElementById('source-url').value = '';
+        document.getElementById('source-lang').value = 'pt';
+        document.getElementById('source-limit').value = '10';
+        document.getElementById('source-enabled').checked = true;
     }
 
-    function addToNativeDB(news) {
-        const nativeNews = getNativeNews();
+    function loadSources() {
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        const container = document.getElementById('sources-list');
         
-        // Verifica se já existe
-        const existingIndex = nativeNews.findIndex(n => n.id === news.id);
-        
-        if (existingIndex === -1) {
-            // Cria notícia nativa
-            const nativeNewsItem = {
-                ...news,
-                isNative: true,
-                nativeId: `native_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                nativeCreated: new Date().toISOString(),
-                nativeModified: new Date().toISOString(),
-                viewCount: 0,
-                shareCount: 0
-            };
-            
-            nativeNews.unshift(nativeNewsItem);
-            saveNativeDB({ version: 'v2', news: nativeNews });
-            return nativeNewsItem;
-        }
-        
-        return nativeNews[existingIndex];
-    }
-
-    // NOTÍCIAS NATIVAS
-    function loadNativeNews() {
-        const nativeNews = getNativeNews();
-        const container = document.getElementById('native-news-list');
-        
-        if (nativeNews.length === 0) {
+        if (sources.length === 0) {
             container.innerHTML = `
             <div style="text-align: center; padding: 50px; color: #666; background: #f8f9fa; border-radius: 15px;">
-                <i class="fas fa-database" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
-                <h3>Nenhuma notícia nativa</h3>
-                <p>As notícias nativas aparecerão aqui após serem salvas automaticamente</p>
+                <i class="fas fa-newspaper" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
+                <h3>Nenhuma fonte configurada</h3>
+                <p>Adicione sua primeira fonte de notícias</p>
+                <button class="action-btn success" onclick="showAddSourceForm()" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Adicionar Primeira Fonte
+                </button>
             </div>
             `;
             return;
         }
         
         let html = '';
-        nativeNews.forEach((news, index) => {
-            const createdDate = new Date(news.nativeCreated || news.date);
-            const dateStr = createdDate.toLocaleDateString('pt-PT');
-            const timeAgo = formatTimeAgo(createdDate);
-            
+        sources.forEach(source => {
             html += `
-            <div class="saved-item">
-                <div class="saved-item-header">
-                    <div class="saved-title">
-                        ${news.title}
-                        <span style="font-size: 12px; background: #4CAF50; color: white; padding: 2px 6px; border-radius: 3px; margin-left: 8px;">NATIVA</span>
+            <div class="source-item">
+                <div class="source-item-header">
+                    <div class="source-info">
+                        <h3><i class="fas fa-newspaper"></i> ${source.name}</h3>
+                        <p>${source.url}</p>
+                        <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 14px;">
+                            <span style="color: #666;">
+                                <i class="fas fa-language"></i> ${source.lang || 'pt'}
+                            </span>
+                            <span style="color: #666;">
+                                <i class="fas fa-filter"></i> ${source.limit || 10} notícias
+                            </span>
+                        </div>
                     </div>
-                    <button class="source-btn delete" onclick="deleteNativeNews(${index})">
-                        <i class="fas fa-trash"></i>
+                    <span class="source-status ${source.enabled ? 'status-active' : 'status-inactive'}">
+                        <i class="fas fa-${source.enabled ? 'check' : 'times'}-circle"></i>
+                        ${source.enabled ? 'Ativa' : 'Inativa'}
+                    </span>
+                </div>
+                <div class="source-actions">
+                    <button class="source-btn toggle" onclick="toggleSource('${source.name}')">
+                        <i class="fas fa-power-off"></i> ${source.enabled ? 'Desativar' : 'Ativar'}
                     </button>
-                </div>
-                <div class="saved-meta">
-                    <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${dateStr} (${timeAgo})</span>
-                    <span><i class="fas fa-tag"></i> ${news.categoryName || news.category}</span>
-                </div>
-                <div class="saved-meta">
-                    <span><i class="fas fa-eye"></i> ${news.viewCount || 0} visualizações</span>
-                    <span><i class="fas fa-share-alt"></i> ${news.shareCount || 0} compartilhamentos</span>
-                </div>
-                <div class="saved-actions">
-                    <button class="source-btn" onclick="viewNativeNews('${news.id}')">
-                        <i class="fas fa-eye"></i> Ver
-                    </button>
-                    <button class="source-btn edit" onclick="editNativeNews(${index})">
+                    <button class="source-btn edit" onclick="editSource('${source.name}')">
                         <i class="fas fa-edit"></i> Editar
                     </button>
-                    <button class="source-btn" onclick="copyNativeLink('${news.id}')">
-                        <i class="fas fa-link"></i> Copiar Link
+                    <button class="source-btn delete" onclick="deleteSource('${source.name}')">
+                        <i class="fas fa-trash"></i> Remover
                     </button>
                 </div>
             </div>
@@ -1865,32 +1609,167 @@
         container.innerHTML = html;
     }
 
-    function formatTimeAgo(date) {
-        const now = new Date();
-        const diffMs = now - date;
-        const diffMins = Math.floor(diffMs / (1000 * 60));
-        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    function addSource() {
+        const name = document.getElementById('source-name').value.trim();
+        const url = document.getElementById('source-url').value.trim();
+        const lang = document.getElementById('source-lang').value;
+        const limit = parseInt(document.getElementById('source-limit').value);
+        const enabled = document.getElementById('source-enabled').checked;
         
-        if (diffMins < 60) return `${diffMins} min atrás`;
-        if (diffHours < 24) return `${diffHours} h atrás`;
-        if (diffDays < 30) return `${diffDays} dias atrás`;
-        
-        const diffMonths = Math.floor(diffDays / 30);
-        return `${diffMonths} meses atrás`;
-    }
-
-    function searchNativeNews() {
-        const query = document.getElementById('search-native').value.toLowerCase();
-        const nativeNews = getNativeNews();
-        const container = document.getElementById('native-news-list');
-        
-        if (!query) {
-            loadNativeNews();
+        if (!name || !url) {
+            showMessage('Preencha todos os campos obrigatórios!', 'error');
             return;
         }
         
-        const filtered = nativeNews.filter(news => 
+        if (!url.includes('/wp-json/wp/v2/posts')) {
+            showMessage('URL deve ser uma API WordPress válida!', 'error');
+            return;
+        }
+        
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+   // Verifica se já existe
+        if (sources.some(s => s.url === url)) {
+            showMessage('Esta fonte já está configurada!', 'error');
+            return;
+        }
+        
+        sources.push({
+            name,
+            url,
+            lang,
+            limit,
+            enabled,
+            lastUpdate: new Date().toISOString()
+        });
+        
+        localStorage.setItem('news_sources', JSON.stringify(sources));
+        
+        hideAddSourceForm();
+        loadSources();
+        loadDashboard();
+        
+        showMessage(`Fonte "${name}" adicionada com sucesso!`, 'success');
+    }
+
+    function toggleSource(sourceName) {
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        const sourceIndex = sources.findIndex(s => s.name === sourceName);
+        
+        if (sourceIndex !== -1) {
+            sources[sourceIndex].enabled = !sources[sourceIndex].enabled;
+            localStorage.setItem('news_sources', JSON.stringify(sources));
+            
+            loadSources();
+            loadDashboard();
+            
+            showMessage(
+                `Fonte "${sourceName}" ${sources[sourceIndex].enabled ? 'ativada' : 'desativada'}!`,
+                sources[sourceIndex].enabled ? 'success' : 'warning'
+            );
+        }
+    }
+
+    function editSource(sourceName) {
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        const source = sources.find(s => s.name === sourceName);
+        
+        if (!source) return;
+        
+        // Preenche o formulário
+        document.getElementById('source-name').value = source.name;
+        document.getElementById('source-url').value = source.url;
+        document.getElementById('source-lang').value = source.lang || 'pt';
+        document.getElementById('source-limit').value = source.limit || 10;
+        document.getElementById('source-enabled').checked = source.enabled;
+        
+        // Remove da lista
+        sources.splice(sources.findIndex(s => s.name === sourceName), 1);
+        localStorage.setItem('news_sources', JSON.stringify(sources));
+        
+        // Mostra formulário
+        showAddSourceForm();
+        loadSources();
+        
+        showMessage(`Editando fonte "${sourceName}"`, 'info');
+    }
+
+    function deleteSource(sourceName) {
+        showModal(
+            'Remover Fonte',
+            `Tem certeza que deseja remover a fonte <strong>"${sourceName}"</strong>?`,
+            () => {
+                const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+                const filtered = sources.filter(s => s.name !== sourceName);
+                
+                localStorage.setItem('news_sources', JSON.stringify(filtered));
+                
+                loadSources();
+                loadDashboard();
+                
+                showMessage(`Fonte "${sourceName}" removida com sucesso!`, 'success');
+            }
+        );
+    }
+
+    // NOTÍCIAS GUARDADAS
+    function loadSavedNews() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const container = document.getElementById('saved-news-list');
+        
+        if (savedNews.length === 0) {
+            container.innerHTML = `
+            <div style="text-align: center; padding: 50px; color: #666; background: #f8f9fa; border-radius: 15px;">
+                <i class="fas fa-save" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px;"></i>
+                <h3>Nenhuma notícia guardada</h3>
+                <p>As notícias guardadas aparecerão aqui</p>
+            </div>
+            `;
+            return;
+        }
+        
+        let html = '';
+        savedNews.forEach((news, index) => {
+            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
+            
+            html += `
+            <div class="saved-item">
+                <div class="saved-item-header">
+                    <div class="saved-title">${news.title}</div>
+                    <button class="source-btn delete" onclick="deleteSavedNews(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="saved-meta">
+                    <span><i class="fas fa-newspaper"></i> ${news.source}</span>
+                    <span><i class="far fa-clock"></i> ${date}</span>
+                    <span><i class="fas fa-tag"></i> ${news.categoryName || news.category}</span>
+                </div>
+                <div class="saved-actions">
+                    <button class="source-btn" onclick="viewSavedNews('${news.id}')">
+                        <i class="fas fa-eye"></i> Ver
+                    </button>
+                    <button class="source-btn edit" onclick="editSavedNews(${index})">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                </div>
+            </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    function searchSavedNews() {
+        const query = document.getElementById('search-saved').value.toLowerCase();
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const container = document.getElementById('saved-news-list');
+        
+        if (!query) {
+            loadSavedNews();
+            return;
+        }
+        
+        const filtered = savedNews.filter(news => 
             news.title.toLowerCase().includes(query) || 
             news.source.toLowerCase().includes(query) ||
             (news.category && news.category.toLowerCase().includes(query))
@@ -1900,7 +1779,7 @@
             container.innerHTML = `
             <div style="text-align: center; padding: 50px; color: #666;">
                 <i class="fas fa-search" style="font-size: 48px; opacity: 0.3;"></i>
-                <p>Nenhuma notícia nativa encontrada</p>
+                <p>Nenhuma notícia encontrada</p>
             </div>
             `;
             return;
@@ -1908,20 +1787,19 @@
         
         let html = '';
         filtered.forEach((news, index) => {
-            const createdDate = new Date(news.nativeCreated || news.date);
-            const dateStr = createdDate.toLocaleDateString('pt-PT');
+            const date = new Date(news.savedDate || news.date).toLocaleDateString('pt-PT');
             
             html += `
             <div class="saved-item">
                 <div class="saved-item-header">
-                    <div class="saved-title">
-                        ${news.title}
-                        <span style="font-size: 12px; background: #4CAF50; color: white; padding: 2px 6px; border-radius: 3px; margin-left: 8px;">NATIVA</span>
-                    </div>
+                    <div class="saved-title">${news.title}</div>
+                    <button class="source-btn delete" onclick="deleteSavedNews(${savedNews.findIndex(n => n.id === news.id)})">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
                 <div class="saved-meta">
                     <span><i class="fas fa-newspaper"></i> ${news.source}</span>
-                    <span><i class="far fa-clock"></i> ${dateStr}</span>
+                    <span><i class="far fa-clock"></i> ${date}</span>
                 </div>
             </div>
             `;
@@ -1930,112 +1808,281 @@
         container.innerHTML = html;
     }
 
-    function viewNativeNews(id) {
-        window.open(`leitura.html?id=${id}&type=native`, '_blank');
+    function viewSavedNews(id) {
+        window.open(`leitura.html?id=${id}`, '_blank');
     }
 
-    function editNativeNews(index) {
-        const nativeNews = getNativeNews();
-        const news = nativeNews[index];
+    function editSavedNews(index) {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const news = savedNews[index];
         
         const newTitle = prompt('Editar título:', news.title);
         if (newTitle && newTitle.trim()) {
-            nativeNews[index].title = newTitle.trim();
-            nativeNews[index].nativeModified = new Date().toISOString();
-            saveNativeDB({ version: 'v2', news: nativeNews });
-            loadNativeNews();
+            savedNews[index].title = newTitle.trim();
+            localStorage.setItem('saved_news', JSON.stringify(savedNews));
+            loadSavedNews();
             showMessage('Título atualizado com sucesso!', 'success');
         }
     }
 
-    function deleteNativeNews(index) {
+    function deleteSavedNews(index) {
         showModal(
-            'Remover Notícia Nativa',
-            'Tem certeza que deseja remover esta notícia nativa? Ela não poderá mais ser acessada por ninguém.',
+            'Remover Notícia',
+            'Tem certeza que deseja remover esta notícia guardada?',
             () => {
-                const nativeNews = getNativeNews();
-                nativeNews.splice(index, 1);
-                saveNativeDB({ version: 'v2', news: nativeNews });
+                const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+                savedNews.splice(index, 1);
+                localStorage.setItem('saved_news', JSON.stringify(savedNews));
                 
-                loadNativeNews();
+                loadSavedNews();
                 loadDashboard();
                 
-                showMessage('Notícia nativa removida com sucesso!', 'success');
+                showMessage('Notícia removida com sucesso!', 'success');
             }
         );
     }
 
-    function copyNativeLink(id) {
-        const link = `${window.location.origin}/leitura.html?id=${id}&type=native`;
-        navigator.clipboard.writeText(link).then(() => {
-            showMessage('Link copiado para a área de transferência!', 'success');
-        }).catch(err => {
-            showMessage('Erro ao copiar link. Tente novamente.', 'error');
-        });
-    }
-
-    function exportNativeNews() {
-        const nativeNews = getNativeNews();
-        const dataStr = JSON.stringify(nativeNews, null, 2);
+    function exportSavedNews() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const dataStr = JSON.stringify(savedNews, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
         
-        const exportFileDefaultName = `noticias-nativas-${new Date().toISOString().split('T')[0]}.json`;
+        const exportFileDefaultName = `noticias-guardadas-${new Date().toISOString().split('T')[0]}.json`;
         
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
         linkElement.click();
         
-        showMessage('Notícias nativas exportadas com sucesso!', 'success');
+        showMessage('Notícias exportadas com sucesso!', 'success');
     }
 
-    function optimizeNativeDB() {
+    function confirmClearSaved() {
         showModal(
-            'Otimizar Banco de Dados Nativo',
-            'Esta ação irá remover notícias duplicadas, otimizar o armazenamento e limpar dados temporários.',
-            () => {
-                const nativeNews = getNativeNews();
-         // Remove duplicatas
-                const uniqueNews = nativeNews.filter((news, index, self) =>
-                    index === self.findIndex((n) => n.id === news.id)
-                );
-                
-                // Ordena por data de criação
-                uniqueNews.sort((a, b) => 
-                    new Date(b.nativeCreated || b.date) - new Date(a.nativeCreated || a.date)
-                );
-                
-                saveNativeDB({ version: 'v2', news: uniqueNews });
-                
-                showMessage('Banco de dados nativo otimizado com sucesso!', 'success');
-                loadNativeNews();
-                loadDashboard();
-            }
-        );
-    }
-
-    function clearNativeNews() {
-        showModal(
-            'Limpar Todas as Notícias Nativas',
-            '<p style="color: #f44336; font-weight: bold;">ATENÇÃO EXTREMA!</p>' +
-            '<p>Todas as notícias nativas serão permanentemente removidas.</p>' +
+            'Limpar Todas as Notícias',
+            '<p style="color: #f44336; font-weight: bold;">ATENÇÃO!</p>' +
+            '<p>Todas as notícias guardadas serão permanentemente removidas.</p>' +
             '<p>Esta ação não pode ser desfeita!</p>',
             () => {
-                saveNativeDB({ version: 'v2', news: [] });
-                loadNativeNews();
+                localStorage.removeItem('saved_news');
+                loadSavedNews();
                 loadDashboard();
-                showMessage('Todas as notícias nativas foram removidas!', 'success');
+                showMessage('Todas as notícias guardadas foram removidas!', 'success');
             }
         );
     }
 
-    // As funções restantes (gerenciar fontes, notícias guardadas, configurações, ferramentas)
-    // permanecem as mesmas do código anterior, apenas atualizando as referências para incluir
-    // o sistema de notícias nativas
-    
-    // ... (restante do código do admin permanece igual, apenas com as atualizações acima)
+    // CONFIGURAÇÕES
+    function loadSettings() {
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        
+        // Preenche os campos
+        document.getElementById('update-interval').value = settings.updateInterval || 30;
+        document.getElementById('per-page').value = settings.perPage || 15;
+        document.getElementById('auto-refresh').checked = settings.autoRefresh !== false;
+        document.getElementById('cache-enabled').checked = settings.cacheEnabled !== false;
+        document.getElementById('cache-time').value = settings.cacheTime || 6;
+        document.getElementById('admin-pass').value = settings.adminPassword || '0800';
+        document.getElementById('require-login').checked = settings.requireLogin || false;
+        document.getElementById('theme').value = settings.theme || 'light';
+        document.getElementById('primary-color').value = settings.primaryColor || '#1a73e8';
+    }
 
-    // ANIMAÇÃO DE SHAKE
+    function saveSettings() {
+        const settings = {
+            updateInterval: parseInt(document.getElementById('update-interval').value) || 30,
+            perPage: parseInt(document.getElementById('per-page').value) || 15,
+            autoRefresh: document.getElementById('auto-refresh').checked,
+            cacheEnabled: document.getElementById('cache-enabled').checked,
+            cacheTime: parseInt(document.getElementById('cache-time').value) || 6,
+            adminPassword: document.getElementById('admin-password').value || '0800',
+            requireLogin: document.getElementById('require-login').checked,
+            theme: document.getElementById('theme').value,
+            primaryColor: document.getElementById('primary-color').value,
+            lastModified: new Date().toISOString()
+        };
+        
+        localStorage.setItem('news_settings', JSON.stringify(settings));
+        
+        showMessage('Configurações salvas com sucesso!', 'success');
+    }
+
+    function clearCache() {
+        // Remove todos os caches de notícias
+        Object.keys(localStorage).forEach(key => {
+            if (key.includes('news_cache') || key.includes('all_news')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        showMessage('Cache limpo com sucesso!', 'success');
+    }
+
+    // FERRAMENTAS
+    function exportAllData() {
+        const data = {
+            sources: JSON.parse(localStorage.getItem('news_sources') || '[]'),
+            saved: JSON.parse(localStorage.getItem('saved_news') || '[]'),
+            settings: JSON.parse(localStorage.getItem('news_settings') || '{}'),
+            cache: JSON.parse(localStorage.getItem('all_news_cache') || '[]'),
+            exportDate: new Date().toISOString(),
+            version: '1.0.0'
+        };
+        
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportName = `backup-noticias-cld-${new Date().toISOString().split('T')[0]}.json`;
+        
+        const link = document.createElement('a');
+        link.setAttribute('href', dataUri);
+        link.setAttribute('download', exportName);
+        link.click();
+        
+        showMessage('Backup completo exportado com sucesso!', 'success');
+    }
+
+    function importAllData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    
+                    if (!data.version) {
+                        throw new Error('Arquivo inválido');
+                    }
+                    
+                    showModal(
+                        'Importar Backup',
+                        `<p>Tem certeza que deseja importar este backup?</p>
+                         <p><strong>Data do backup:</strong> ${new Date(data.exportDate).toLocaleString()}</p>
+                         <p><strong>Fontes:</strong> ${data.sources?.length || 0}</p>
+                         <p><strong>Notícias guardadas:</strong> ${data.saved?.length || 0}</p>`,
+                        () => {
+                            if (data.sources) localStorage.setItem('news_sources', JSON.stringify(data.sources));
+                            if (data.saved) localStorage.setItem('saved_news', JSON.stringify(data.saved));
+                            if (data.settings) localStorage.setItem('news_settings', JSON.stringify(data.settings));
+                            if (data.cache) localStorage.setItem('all_news_cache', JSON.stringify(data.cache));
+                            
+                            // Recarrega tudo
+                            loadDashboard();
+                            loadSources();
+                            loadSavedNews();
+                            loadSettings();
+                            
+                            showMessage('Backup importado com sucesso!', 'success');
+                        }
+                    );
+                } catch (error) {
+                    showMessage('Erro ao importar backup. Arquivo inválido!', 'error');
+                }
+            };
+            
+            reader.readAsText(file);
+        };
+        
+        input.click();
+    }
+
+    function optimizeDatabase() {
+        showModal(
+            'Otimizar Base de Dados',
+            'Esta ação irá remover notícias duplicadas e otimizar o armazenamento.',
+            () => {
+                // Remove duplicatas das notícias salvas
+                const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+                const uniqueSaved = savedNews.filter((news, index, self) =>
+                    index === self.findIndex((n) => n.id === news.id)
+                );
+                localStorage.setItem('saved_news', JSON.stringify(uniqueSaved));
+                
+                // Limpa cache antigo
+                const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('news_')) {
+                        try {
+                            const timestamp = localStorage.getItem(`${key}_timestamp`);
+                            if (timestamp && parseInt(timestamp) < oneDayAgo) {
+                                localStorage.removeItem(key);
+                                localStorage.removeItem(`${key}_timestamp`);
+                            }
+                        } catch (e) {
+                            // Ignora erros
+                        }
+                    }
+                });
+                
+                showMessage('Base de dados otimizada com sucesso!', 'success');
+                loadDashboard();
+                loadSavedNews();
+            }
+        );
+    }
+
+    function showSystemInfo() {
+        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
+        const allNews = JSON.parse(localStorage.getItem('all_news_cache') || '[]');
+        
+        const info = `
+        <div style="text-align: left; line-height: 1.8;">
+            <p><strong>Versão do Sistema:</strong> 1.0.0</p>
+            <p><strong>Total de Fontes:</strong> ${sources.length}</p>
+            <p><strong>Fontes Ativas:</strong> ${sources.filter(s => s.enabled).length}</p>
+            <p><strong>Notícias Guardadas:</strong> ${savedNews.length}</p>
+            <p><strong>Notícias em Cache:</strong> ${allNews.length}</p>
+            <p><strong>Armazenamento Usado:</strong> ${(JSON.stringify(localStorage).length / 1024).toFixed(2)} KB</p>
+            <p><strong>Última Atualização:</strong> ${new Date().toLocaleString()}</p>
+            <hr>
+            <p><small>Notícias CLD - Sistema de Agregação</small></p>
+        </div>
+        `;
+        
+        showModal('Informações do Sistema', info, null);
+    }
+
+    function resetSystem() {
+        showModal(
+            'Resetar Sistema Completo',
+            `<div style="color: #f44336; text-align: center;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                <h3 style="color: #f44336;">ATENÇÃO EXTREMA!</h3>
+                <p>Todas as configurações e dados serão permanentemente removidos.</p>
+                <p>Incluindo:</p>
+                <ul style="text-align: left; margin: 15px 0;">
+                    <li>Todas as fontes configuradas</li>
+                    <li>Todas as notícias guardadas</li>
+                    <li>Todas as configurações</li>
+                    <li>Todos os caches</li>
+                </ul>
+                <p><strong>Esta ação não pode ser desfeita!</strong></p>
+                <p>Digite <code>CONFIRMAR</code> abaixo para prosseguir:</p>
+                <input type="text" id="reset-confirm" style="width: 100%; padding: 10px; margin: 15px 0; border: 2px solid #f44336; border-radius: 5px; text-align: center;" placeholder="Digite CONFIRMAR">
+            </div>`,
+            () => {
+                const confirmInput = document.getElementById('reset-confirm');
+                if (confirmInput && confirmInput.value === 'CONFIRMAR') {
+                    // Limpa tudo
+                    localStorage.clear();
+                    
+                    // Mostra mensagem e recarrega
+                    showMessage('Sistema completamente resetado!', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showMessage('Confirmação incorreta! Operação cancelada.', 'error');
+                }
+            }
+        );
+    }
+ // ANIMAÇÃO DE SHAKE
     const style = document.createElement('style');
     style.textContent = `
         @keyframes shake {
@@ -2057,25 +2104,13 @@
             loginScreen.style.display = 'none';
             adminPanel.style.display = 'block';
             loadDashboard();
-            loadNativeNews();
             loadSources();
             loadSavedNews();
             loadSettings();
         } else {
             localStorage.removeItem('admin_last_login');
         }
-        
-        // Executa limpeza automática se configurado
-        autoCleanup();
     });
-
-    function autoCleanup() {
-        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
-        if (settings.cleanupEnabled !== false) {
-            cleanExpiredNews();
-            cleanExpiredNativeNews();
-        }
-    }
 
     // SALVA TIMESTAMP DO LOGIN
     function saveLoginTimestamp() {
