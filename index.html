@@ -267,6 +267,29 @@
         font-size: 18px;
     }
 
+    /* CATEGORY BADGES */
+    .category-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 500;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        transition: all 0.2s;
+    }
+
+    .category-badge:hover {
+        background: var(--bg-tertiary);
+    }
+
+    .category-badge.active {
+        background: var(--primary-color);
+        color: white;
+    }
+
     /* MAIN CONTENT */
     .main-content {
         flex: 1;
@@ -355,22 +378,28 @@
     }
 
     .news-card.saved::after {
-        content: '✓ SALVA';
+        content: '';
         position: absolute;
         top: 12px;
         right: 12px;
+        width: 8px;
+        height: 8px;
         background: var(--accent-color);
-        color: white;
-        font-size: 10px;
-        font-weight: 600;
-        padding: 3px 8px;
-        border-radius: 10px;
-        z-index: 2;
+        border-radius: 50%;
     }
 
-    .news-card.expiring::after {
-        content: 'EXPIRA EM BREVE';
-        background: #fbbc05;
+    .news-card.native::before {
+        content: 'NATIVA';
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--accent-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: bold;
+        z-index: 1;
     }
 
     .card-image {
@@ -709,24 +738,6 @@
         color: var(--text-primary);
     }
 
-    /* SAVED NEWS BADGE */
-    .saved-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: #e6f4ea;
-        color: #137333;
-        border-radius: 16px;
-        font-size: 12px;
-        font-weight: 500;
-        margin-left: 10px;
-    }
-
-    .saved-badge i {
-        font-size: 10px;
-    }
-
     /* CONTACT INFO */
     .contact-section {
         background: var(--bg-secondary);
@@ -872,7 +883,7 @@
     /* DARK MODE SUPPORT */
     @media (prefers-color-scheme: dark) {
         :root {
-            --primary-color: #8ab4f8;
+                 --primary-color: #8ab4f8;
             --primary-dark: #5e97f6;
             --secondary-color: #669df6;
             --accent-color: #81c995;
@@ -887,14 +898,9 @@
             --card-hover-shadow: 0 1px 3px 0 rgba(0,0,0,0.3), 0 4px 8px 3px rgba(0,0,0,0.15);
         }
         
-   .sidebar-link.active {
+        .sidebar-link.active {
             background: #3c4043;
             color: var(--primary-color);
-        }
-        
-        .saved-badge {
-            background: #1e3a2a;
-            color: #81c995;
         }
     }
 
@@ -1036,20 +1042,25 @@
                                 <span>Tecnologia</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link" onclick="filterByCategory('saved')">
-                                <i class="fas fa-save"></i>
-                                <span>Notícias Salvas</span>
-                                <span class="saved-badge" id="saved-count-badge">0</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
- <!-- SOURCES -->
+                
+                <!-- SOURCES -->
                 <div class="sidebar-section">
                     <h3 class="sidebar-title">Fontes</h3>
                     <div id="sources-list">
                         <!-- Fontes serão carregadas dinamicamente -->
+                    </div>
+                </div>
+                
+                <!-- NATIVE NEWS -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Notícias Nativas</h3>
+                    <div id="native-news-stats">
+                        <div style="padding: 8px 16px; color: var(--text-secondary); font-size: 13px;">
+                            <i class="fas fa-database"></i> 
+                            <span id="native-count">0</span> notícias armazenadas
+                        </div>
                     </div>
                 </div>
                 
@@ -1073,8 +1084,7 @@
                 </div>
             </div>
         </nav>
-
-        <!-- MAIN CONTENT -->
+     <!-- MAIN CONTENT -->
         <main class="main-content" id="main-content">
             <!-- CONTENT HEADER -->
             <div class="content-header">
@@ -1090,9 +1100,9 @@
                         <i class="fas fa-sync-alt"></i>
                         <span>Atualizar</span>
                     </button>
-                    <button class="refresh-btn" onclick="showSavedNews()">
-                        <i class="fas fa-save"></i>
-                        <span>Ver Salvas</span>
+                    <button class="refresh-btn" onclick="syncNativeNews()">
+                        <i class="fas fa-database"></i>
+                        <span>Sincronizar</span>
                     </button>
                 </div>
             </div>
@@ -1105,15 +1115,15 @@
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-save"></i>
-                    <span>Salvas: <span class="stat-number" id="saved-news">0</span></span>
+                    <span>Guardadas: <span class="stat-number" id="saved-news">0</span></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-database"></i>
+                    <span>Nativas: <span class="stat-number" id="native-news-count">0</span></span>
                 </div>
                 <div class="stat-item">
                     <i class="fas fa-clock"></i>
                     <span>Atualização: <span class="stat-number">5 min</span></span>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-share-alt"></i>
-                    <span>Compatilháveis: <span class="stat-number" id="shareable-news">0</span></span>
                 </div>
             </div>
             
@@ -1177,7 +1187,14 @@
                         <i class="fas fa-info-circle"></i>
                         <div>
                             <strong>Sistema:</strong>
-                            Notícias salvas são permanentes e partilháveis
+                            Auto-salvamento ativo • Expiração 2 meses
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-share-alt"></i>
+                        <div>
+                            <strong>Compartilhamento:</strong>
+                            Links nativos disponíveis
                         </div>
                     </div>
                 </div>
@@ -1193,28 +1210,9 @@
         <button class="action-button secondary" onclick="refreshNews()" title="Atualizar notícias">
             <i class="fas fa-sync-alt"></i>
         </button>
-    </div>
-
-    <!-- SHARE MODAL -->
-    <div id="share-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
-        <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; position: relative;">
-            <button onclick="closeShareModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">×</button>
-            <h3 style="margin-bottom: 20px; color: #202124;">Compartilhar Notícia</h3>
-            <div id="share-url-container" style="margin-bottom: 20px;">
-                <input type="text" id="share-url" readonly style="width: 100%; padding: 12px; border: 1px solid #dadce0; border-radius: 8px; font-size: 14px;">
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button onclick="copyShareUrl()" style="padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    <i class="fas fa-copy"></i> Copiar Link
-                </button>
-                <button onclick="shareViaWhatsApp()" style="padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </button>
-                <button onclick="shareViaFacebook()" style="padding: 10px 20px; background: #4267B2; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    <i class="fab fa-facebook"></i> Facebook
-                </button>
-            </div>
-        </div>
+        <button class="action-button" onclick="syncNativeNews()" title="Sincronizar notícias nativas">
+            <i class="fas fa-database"></i>
+        </button>
     </div>
 
     <!-- NOTIFICATION TOAST -->
@@ -1227,12 +1225,13 @@
         updateInterval: 5, // minutos
         perLoad: 15,
         autoSave: true,
-        expireMonths: 2
+        expireMonths: 2,
+        nativeNewsSync: true
     };
 
-    // CHAVE ÚNICA PARA NOTÍCIAS SALVAS
-    const SAVED_NEWS_KEY = 'cld_saved_news_shared';
-    const SAVED_NEWS_INDEX_KEY = 'cld_saved_news_index';
+    // BANCO DE DADOS DE NOTÍCIAS NATIVAS (compartilhado)
+    const NATIVE_DB_KEY = 'cld_native_news_db';
+    const NATIVE_NEWS_VERSION = 'v2';
 
     // FONTES PADRÃO
     const DEFAULT_SOURCES = [
@@ -1277,7 +1276,7 @@
             priority: 5
         }
     ];
- // VARIÁVEIS GLOBAIS
+    // VARIÁVEIS GLOBAIS
     let allNews = [];
     let filteredNews = [];
     let currentCategory = 'todos';
@@ -1291,7 +1290,7 @@
     let lastUpdateTime = null;
     let newsCache = new Map();
     let updateInterval = null;
-    let savedNewsIndex = new Map();
+    let nativeNewsDB = { version: NATIVE_NEWS_VERSION, news: [] };
 
     // ELEMENTOS DOM
     const newsGrid = document.getElementById('news-grid');
@@ -1300,8 +1299,9 @@
     const noResults = document.getElementById('no-results');
     const newsCount = document.getElementById('news-count');
     const totalNews = document.getElementById('total-news');
-    const savedNewsCount = document.getElementById('saved-news');
-    const shareableNews = document.getElementById('shareable-news');
+    const savedNews = document.getElementById('saved-news');
+    const nativeNewsCount = document.getElementById('native-news-count');
+    const nativeCount = document.getElementById('native-count');
     const contentTitle = document.getElementById('content-title');
     const contentSubtitle = document.getElementById('content-subtitle');
     const lastUpdate = document.getElementById('last-update');
@@ -1309,7 +1309,6 @@
     const sidebar = document.getElementById('sidebar');
     const featuredSection = document.getElementById('featured-section');
     const sourcesList = document.getElementById('sources-list');
-    const savedCountBadge = document.getElementById('saved-count-badge');
 
     // CATEGORIAS
     const CATEGORIES = {
@@ -1359,11 +1358,6 @@
             icon: 'fas fa-laptop',
             color: '#607D8B',
             keywords: ['tecnologia', 'tecnológico', 'internet', 'digital', 'aplicativo', 'software', 'startup', 'inovação', 'celular', 'computador', 'rede']
-        },
-        'saved': { 
-            name: 'Notícias Salvas', 
-            icon: 'fas fa-save',
-            color: '#34a853'
         }
     };
 
@@ -1374,7 +1368,6 @@
         setupEventListeners();
         startAutoRefresh();
         createSkeletonCards();
-        loadSavedNewsIndex();
     });
 
     function initializeSystem() {
@@ -1384,6 +1377,10 @@
         SYSTEM_CONFIG.perLoad = settings.perLoad || 15;
         SYSTEM_CONFIG.autoSave = settings.autoSave !== false;
         SYSTEM_CONFIG.expireMonths = settings.expireMonths || 2;
+        SYSTEM_CONFIG.nativeNewsSync = settings.nativeNewsSync !== false;
+        
+        // Carrega banco de notícias nativas
+        loadNativeNewsDB();
         
         // Carrega fontes ou usa padrão
         let sources = JSON.parse(localStorage.getItem('news_sources') || '[]');
@@ -1395,10 +1392,126 @@
         // Atualiza interface
         updateSourcesList(sources);
         updateLastUpdateTime();
-        updateSavedCount();
+        updateNativeStats();
         
         // Limpeza automática
         cleanExpiredNews();
+    }
+
+    // BANCO DE DADOS DE NOTÍCIAS NATIVAS
+    function loadNativeNewsDB() {
+        try {
+            const dbData = localStorage.getItem(NATIVE_DB_KEY);
+            if (dbData) {
+                const parsed = JSON.parse(dbData);
+                if (parsed.version === NATIVE_NEWS_VERSION) {
+                    nativeNewsDB = parsed;
+                } else {
+                    // Migração de versão
+                    nativeNewsDB = { version: NATIVE_NEWS_VERSION, news: [] };
+                    saveNativeNewsDB();
+                }
+            } else {
+                nativeNewsDB = { version: NATIVE_NEWS_VERSION, news: [] };
+                saveNativeNewsDB();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar banco de notícias nativas:', error);
+            nativeNewsDB = { version: NATIVE_NEWS_VERSION, news: [] };
+        }
+    }
+
+    function saveNativeNewsDB() {
+        try {
+            localStorage.setItem(NATIVE_DB_KEY, JSON.stringify(nativeNewsDB));
+            updateNativeStats();
+        } catch (error) {
+            console.error('Erro ao salvar banco de notícias nativas:', error);
+            showNotification('Erro ao salvar banco de dados. Verifique o armazenamento.', 'error');
+        }
+    }
+
+    function addToNativeDB(news) {
+        // Verifica se já existe
+        const existingIndex = nativeNewsDB.news.findIndex(n => n.id === news.id);
+        
+        if (existingIndex === -1) {
+            // Cria notícia nativa
+            const nativeNews = {
+                ...news,
+                isNative: true,
+                nativeId: `native_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                nativeCreated: new Date().toISOString(),
+                nativeModified: new Date().toISOString(),
+                viewCount: 0,
+                shareCount: 0
+            };
+            
+            nativeNewsDB.news.unshift(nativeNews); // Adiciona no início
+            saveNativeNewsDB();
+            return nativeNews;
+        } else {
+            // Atualiza notícia existente
+            nativeNewsDB.news[existingIndex] = {
+                ...nativeNewsDB.news[existingIndex],
+                ...news,
+                nativeModified: new Date().toISOString()
+            };
+            saveNativeNewsDB();
+            return nativeNewsDB.news[existingIndex];
+        }
+    }
+
+    function getNativeNews() {
+        return nativeNewsDB.news;
+    }
+
+    function getNativeNewsById(id) {
+        return nativeNewsDB.news.find(news => news.id === id || news.nativeId === id);
+    }
+
+    function incrementViewCount(id) {
+        const news = getNativeNewsById(id);
+        if (news) {
+            news.viewCount = (news.viewCount || 0) + 1;
+            saveNativeNewsDB();
+        }
+    }
+
+    function incrementShareCount(id) {
+        const news = getNativeNewsById(id);
+        if (news) {
+            news.shareCount = (news.shareCount || 0) + 1;
+            saveNativeNewsDB();
+        }
+    }
+
+    function updateNativeStats() {
+        const nativeNews = getNativeNews();
+        nativeNewsCount.textContent = nativeNews.length;
+        nativeCount.textContent = nativeNews.length;
+    }
+
+    function syncNativeNews() {
+        showNotification('Sincronizando notícias nativas...', 'info');
+        
+        // Verifica se há notícias locais para sincronizar
+        const localSavedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        let syncedCount = 0;
+        
+        localSavedNews.forEach(news => {
+            if (!nativeNewsDB.news.some(n => n.id === news.id)) {
+                addToNativeDB(news);
+                syncedCount++;
+            }
+        });
+        
+        if (syncedCount > 0) {
+            showNotification(`${syncedCount} notícias sincronizadas com sucesso!`, 'success');
+            loadInitialNews(); // Recarrega as notícias
+        } else {
+            showNotification('Nenhuma nova notícia para sincronizar.', 'info');
+        }
     }
 
     function createSkeletonCards() {
@@ -1421,17 +1534,6 @@
             `;
             loadingSkeletons.appendChild(skeleton);
         }
-    }
-
-    function loadSavedNewsIndex() {
-        const indexData = localStorage.getItem(SAVED_NEWS_INDEX_KEY);
-        if (indexData) {
-            savedNewsIndex = new Map(JSON.parse(indexData));
-        }
-    }
-
-    function saveSavedNewsIndex() {
-        localStorage.setItem(SAVED_NEWS_INDEX_KEY, JSON.stringify([...savedNewsIndex]));
     }
 
     function updateSourcesList(sources) {
@@ -1514,23 +1616,6 @@
         }
     }
 
-    function showSavedNews() {
-        currentCategory = 'saved';
-        
-        // Atualiza links ativos
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.classList.remove('active');
-        });
-        document.querySelector('.sidebar-link[onclick*="filterByCategory(\'saved\')"]').classList.add('active');
-        
-        // Atualiza título
-        contentTitle.textContent = 'Notícias Salvas';
-        
-        // Filtra e renderiza
-        applyFilters();
-        renderNews();
-    }
-
     function searchNews() {
         applyFilters();
         renderNews();
@@ -1553,7 +1638,6 @@
         hasMoreNews = true;
         loadingSources.clear();
         loadedSources.clear();
-        newsCache.clear();
         
         // Mostra skeletons
         loadingSkeletons.style.display = 'grid';
@@ -1581,16 +1665,19 @@
         isLoading = true;
         
         try {
+            // Carrega notícias nativas primeiro (compartilhadas)
+            await loadNativeNews();
+            
+            // Carrega notícias salvas localmente
+            await loadLocalSavedNews();
+            
             // Carrega de fontes externas (em paralelo)
             await loadExternalNews();
-            
-            // Carrega notícias salvas do sistema centralizado
-            await loadSavedNewsFromSystem();
             
             // Ordena por data (mais recente primeiro)
             allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            // Remove duplicatas
+            // Remove duplicatas mantendo nativas primeiro
             allNews = allNews.filter((news, index, self) =>
                 index === self.findIndex((n) => n.id === news.id)
             );
@@ -1600,7 +1687,7 @@
             updateStats();
             
             if (isInitialLoad) {
-                showNotification(`Carregadas ${allNews.length} notícias`, 'success');
+                showNotification(`Carregadas ${allNews.length} notícias (${nativeNewsDB.news.length} nativas)`, 'success');
                 isInitialLoad = false;
             }
             
@@ -1619,113 +1706,32 @@
         }
     }
 
-    async function loadSavedNewsFromSystem() {
-        try {
-            const savedNewsData = getSavedNews();
-            
-            savedNewsData.forEach(news => {
-                if (!newsCache.has(news.id)) {
-                    allNews.push({
-                        ...news,
-                        saved: true,
-                        sourceType: 'saved',
-                        shareable: true,
-                        permalink: generatePermalink(news.id)
-                    });
-                    newsCache.set(news.id, news);
-                    
-                    // Atualiza índice
-                    savedNewsIndex.set(news.id, {
-                        title: news.title,
-                        savedDate: news.savedDate || news.date,
-                        category: news.category
-                    });
-                }
-            });
-            
-            saveSavedNewsIndex();
-            updateSavedCount();
-            
-        } catch (error) {
-            console.error('Erro ao carregar notícias salvas:', error);
-        }
-    }
-
-    function getSavedNews() {
-        try {
-            const savedNewsData = localStorage.getItem(SAVED_NEWS_KEY);
-            if (!savedNewsData) return [];
-            
-            const parsed = JSON.parse(savedNewsData);
-            return Array.isArray(parsed) ? parsed : [];
-            
-        } catch (error) {
-            console.error('Erro ao ler notícias salvas:', error);
-            return [];
-        }
-    }
-
-    function saveNewsToSystem(newsItem) {
-        try {
-            const savedNews = getSavedNews();
-            
-            // Verifica se já existe
-            if (!savedNews.some(n => n.id === newsItem.id)) {
-                // Adiciona metadados de salvamento
-                const newsToSave = {
-                    ...newsItem,
-                    savedDate: new Date().toISOString(),
-                    savedBy: 'system',
-                    expiresAt: getExpirationDate(),
-                    permalink: generatePermalink(newsItem.id)
-                };
-                
-                savedNews.push(newsToSave);
-                localStorage.setItem(SAVED_NEWS_KEY, JSON.stringify(savedNews));
-                
-                // Atualiza índice
-                savedNewsIndex.set(newsItem.id, {
-                    title: newsItem.title,
-                    savedDate: newsToSave.savedDate,
-                    category: newsItem.category
+    async function loadNativeNews() {
+        nativeNewsDB.news.forEach(news => {
+            if (!newsCache.has(news.id)) {
+                allNews.push({
+                    ...news,
+                    isNative: true,
+                    sourceType: 'native'
                 });
-                saveSavedNewsIndex();
-                
-                updateSavedCount();
-                showNotification('Notícia salva no sistema!', 'success');
-                
-                return true;
+                newsCache.set(news.id, news);
             }
-            
-            return false;
-            
-        } catch (error) {
-            console.error('Erro ao salvar notícia:', error);
-            showNotification('Erro ao salvar notícia.', 'error');
-            return false;
-        }
+        });
     }
 
-    function generatePermalink(id) {
-        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
-        return `${baseUrl}leitura.html?id=${encodeURIComponent(id)}&source=saved`;
-    }
-
-    function getExpirationDate() {
-        const expireMonths = SYSTEM_CONFIG.expireMonths;
-        const date = new Date();
-        date.setMonth(date.getMonth() + expireMonths);
-        return date.toISOString();
-    }
-
-    function isNewsExpiring(news) {
-        if (!news.expiresAt) return false;
+    async function loadLocalSavedNews() {
+        const savedNewsData = JSON.parse(localStorage.getItem('saved_news') || '[]');
         
-        const expireDate = new Date(news.expiresAt);
-        const now = new Date();
-        const diffDays = (expireDate - now) / (1000 * 60 * 60 * 24);
-        
-        return diffDays <= 7; // Expira em 7 dias ou menos
+        savedNewsData.forEach(news => {
+            if (!newsCache.has(news.id)) {
+                allNews.push({
+                    ...news,
+                    saved: true,
+                    sourceType: 'saved'
+                });
+                newsCache.set(news.id, news);
+            }
+        });
     }
 
     async function loadExternalNews() {
@@ -1805,9 +1811,6 @@
                 article.content?.rendered || ''
             );
             
-            // Verifica se está salva no sistema
-            const isSaved = savedNewsIndex.has(id);
-            
             const newsItem = {
                 id: id,
                 title: article.title?.rendered || 'Sem título',
@@ -1822,9 +1825,7 @@
                 category: category,
                 categoryName: CATEGORIES[category]?.name || category,
                 original: true,
-                sourceType: 'external',
-                saved: isSaved,
-                shareable: isSaved
+                sourceType: 'external'
             };
             
             newsCache.set(id, newsItem);
@@ -1834,15 +1835,14 @@
         // Adiciona ao array geral
         allNews.push(...processedArticles);
         
- // Ordena novamente
+        // Ordena novamente
         allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         // Atualiza filtros e renderiza
         applyFilters();
         renderNews();
         updateStats();
-        
-        // Atualiza tempo
+       // Atualiza tempo
         lastUpdateTime = new Date();
         updateLastUpdateTime();
     }
@@ -1853,7 +1853,7 @@
         let selectedCategory = 'sociedade';
         
         Object.keys(CATEGORIES).forEach(cat => {
-            if (cat === 'todos' || cat === 'saved') return;
+            if (cat === 'todos') return;
             
             let score = 0;
             CATEGORIES[cat].keywords.forEach(keyword => {
@@ -1864,7 +1864,7 @@
             
             if (score > maxScore) {
                 maxScore = score;
-                selectedCategory = car;
+                selectedCategory = cat;
             }
         });
         
@@ -1877,9 +1877,7 @@
         
         filteredNews = allNews.filter(news => {
             // Filtro por categoria
-            if (currentCategory === 'saved') {
-                if (!news.saved) return false;
-            } else if (currentCategory !== 'todos' && news.category !== currentCategory) {
+            if (currentCategory !== 'todos' && news.category !== currentCategory) {
                 return false;
             }
             
@@ -1943,9 +1941,10 @@
         featuredSection.innerHTML = `
             <h2 class="featured-title">
                 <i class="fas fa-star"></i> Destaques
+                ${mainNews.isNative ? '<span style="font-size: 12px; background: #4CAF50; color: white; padding: 2px 8px; border-radius: 4px; margin-left: 10px;">NATIVA</span>' : ''}
             </h2>
             <div class="featured-grid">
-                <a href="${getNewsLink(mainNews)}" class="featured-main fade-in">
+                <a href="leitura.html?id=${mainNews.id}&type=${mainNews.isNative ? 'native' : 'external'}" class="featured-main fade-in">
                     <img src="${mainNews.image}" alt="${mainNews.title}" class="featured-main-image"
                          onerror="this.src='https://via.placeholder.com/800x300/1a73e8/ffffff?text=NOTÍCIA'">
                     <div class="featured-main-content">
@@ -1956,7 +1955,7 @@
                             <div class="card-source">
                                 <i class="fas fa-newspaper"></i>
                                 ${mainNews.source}
-                                ${mainNews.saved ? '<span class="saved-badge"><i class="fas fa-check"></i> SALVA</span>' : ''}
+                                ${mainNews.isNative ? ' (Nativa)' : ''}
                             </div>
                             <div class="card-time">
                                 <i class="far fa-clock"></i>
@@ -1967,12 +1966,14 @@
                 </a>
                 <div class="featured-secondary">
                     ${secondaryNews.map(news => `
-                        <a href="${getNewsLink(news)}" class="featured-secondary-item fade-in">
-                            <h4 class="featured-secondary-title">${news.title}</h4>
+                        <a href="leitura.html?id=${news.id}&type=${news.isNative ? 'native' : 'external'}" class="featured-secondary-item fade-in">
+                            <h4 class="featured-secondary-title">
+                                ${news.title}
+                                ${news.isNative ? ' <span style="font-size: 10px; background: #4CAF50; color: white; padding: 1px 4px; border-radius: 3px;">N</span>' : ''}
+                            </h4>
                             <div class="card-source">
                                 <i class="fas fa-newspaper"></i>
                                 ${news.source} • ${formatTimeAgo(new Date(news.date))}
-                                ${news.saved ? '<span class="saved-badge"><i class="fas fa-check"></i></span>' : ''}
                             </div>
                         </a>
                     `).join('')}
@@ -1981,18 +1982,13 @@
         `;
     }
 
-    function getNewsLink(news) {
-        if (news.saved && news.permalink) {
-            return news.permalink;
-        }
-        return `leitura.html?id=${news.id}`;
-    }
-
     function renderNewsGrid(newsList) {
         const visibleNews = newsList.slice(0, currentPage * SYSTEM_CONFIG.perLoad);
         
         newsGrid.innerHTML = visibleNews.map(news => `
-            <a href="${getNewsLink(news)}" class="news-card ${news.saved ? 'saved' : ''} ${isNewsExpiring(news) ? 'expiring' : ''} fade-in">
+            <a href="leitura.html?id=${news.id}&type=${news.isNative ? 'native' : 'external'}" 
+               class="news-card ${news.isNative ? 'native' : ''} ${news.saved ? 'saved' : ''} fade-in">
+                ${news.isNative ? '<div style="position: absolute; top: 12px; left: 12px; background: #4CAF50; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; z-index: 1;">NATIVA</div>' : ''}
                 <img src="${news.image}" alt="${news.title}" class="card-image"
                      onerror="this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=${encodeURIComponent(news.source.substring(0, 2))}'">
                 <div class="card-content">
@@ -2003,7 +1999,6 @@
                         <div class="card-source">
                             <i class="fas fa-newspaper"></i>
                             ${news.source}
-                            ${news.shareable ? '<i class="fas fa-link" style="margin-left: 5px; color: #1a73e8;"></i>' : ''}
                         </div>
                         <div class="card-time">
                             <i class="far fa-clock"></i>
@@ -2018,7 +2013,6 @@
         hasMoreNews = newsList.length > visibleNews.length;
         infiniteLoader.style.display = hasMoreNews ? 'block' : 'none';
     }
-
     // FUNÇÕES UTILITÁRIAS
     function formatTimeAgo(date) {
         const now = new Date();
@@ -2039,16 +2033,10 @@
 
     function updateStats() {
         const savedCount = allNews.filter(n => n.saved).length;
-        const shareableCount = allNews.filter(n => n.shareable).length;
-        
+        const nativeCount = allNews.filter(n => n.isNative).length;
         totalNews.textContent = allNews.length;
-        savedNewsCount.textContent = savedCount;
-        shareableNews.textContent = shareableCount;
-    }
-
-    function updateSavedCount() {
-        const savedNews = getSavedNews();
-        savedCountBadge.textContent = savedNews.length;
+        savedNews.textContent = savedCount;
+        nativeNewsCount.textContent = nativeCount;
     }
 
     function updateLastUpdateTime() {
@@ -2056,48 +2044,6 @@
             const timeStr = formatTimeAgo(lastUpdateTime);
             lastUpdate.textContent = ` • Atualizado há ${timeStr}`;
         }
-    }
-
-    // FUNÇÕES DE COMPARTILHAMENTO
-    function showShareModal(newsId) {
-        const news = allNews.find(n => n.id === newsId) || 
-                    getSavedNews().find(n => n.id === newsId);
-        
-        if (!news) return;
-        
-        const shareUrl = news.permalink || generatePermalink(newsId);
-        document.getElementById('share-url').value = shareUrl;
-        document.getElementById('share-modal').style.display = 'flex';
-    }
-
-    function closeShareModal() {
-        document.getElementById('share-modal').style.display = 'none';
-    }
-
-    function copyShareUrl() {
-        const urlInput = document.getElementById('share-url');
-        urlInput.select();
-        urlInput.setSelectionRange(0, 99999);
-        
-        navigator.clipboard.writeText(urlInput.value)
-            .then(() => {
-                showNotification('Link copiado para a área de transferência!', 'success');
-            })
-            .catch(err => {
-                console.error('Erro ao copiar:', err);
-                showNotification('Erro ao copiar link.', 'error');
-            });
-    }
-
-    function shareViaWhatsApp() {
-        const url = document.getElementById('share-url').value;
-        const text = encodeURIComponent('Confira esta notícia: ');
-        window.open(`https://wa.me/?text=${text}${encodeURIComponent(url)}`, '_blank');
-    }
-
-    function shareViaFacebook() {
-        const url = document.getElementById('share-url').value;
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
     }
 
     // SCROLL INFINITO
@@ -2108,11 +2054,11 @@
                 loadMoreNews();
             }
         });
-  // Atalhos de teclado
+        
+        // Atalhos de teclado
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && window.innerWidth <= 992) {
                 sidebar.classList.remove('active');
-                closeShareModal();
             }
             
             if (e.ctrlKey && e.key === 'k') {
@@ -2129,6 +2075,11 @@
             if (e.ctrlKey && e.key === 'a') {
                 e.preventDefault();
                 accessAdmin();
+            }
+            
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                syncNativeNews();
             }
         });
         
@@ -2150,9 +2101,10 @@
         
         newCards.forEach(news => {
             const card = document.createElement('a');
-            card.href = getNewsLink(news);
-            card.className = `news-card ${news.saved ? 'saved' : ''} ${isNewsExpiring(news) ? 'expiring' : ''} fade-in`;
+            card.href = `leitura.html?id=${news.id}&type=${news.isNative ? 'native' : 'external'}`;
+            card.className = `news-card ${news.isNative ? 'native' : ''} ${news.saved ? 'saved' : ''} fade-in`;
             card.innerHTML = `
+                ${news.isNative ? '<div style="position: absolute; top: 12px; left: 12px; background: #4CAF50; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; z-index: 1;">NATIVA</div>' : ''}
                 <img src="${news.image}" alt="${news.title}" class="card-image"
                      onerror="this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=${encodeURIComponent(news.source.substring(0, 2))}'">
                 <div class="card-content">
@@ -2163,7 +2115,6 @@
                         <div class="card-source">
                             <i class="fas fa-newspaper"></i>
                             ${news.source}
-                            ${news.shareable ? '<i class="fas fa-link" style="margin-left: 5px; color: #1a73e8;"></i>' : ''}
                         </div>
                         <div class="card-time">
                             <i class="far fa-clock"></i>
@@ -2197,36 +2148,21 @@
 
     // LIMPEZA DE NOTÍCIAS VENCIDAS
     function cleanExpiredNews() {
-        try {
-            const savedNews = getSavedNews();
-            const now = new Date();
-            
-            const filtered = savedNews.filter(news => {
-                if (!news.expiresAt) return true;
-                const expireDate = new Date(news.expiresAt);
-                return expireDate > now;
-            });
-            
-            if (filtered.length !== savedNews.length) {
-                localStorage.setItem(SAVED_NEWS_KEY, JSON.stringify(filtered));
-                
-                // Atualiza índice
-                savedNewsIndex.clear();
-                filtered.forEach(news => {
-                    savedNewsIndex.set(news.id, {
-                        title: news.title,
-                        savedDate: news.savedDate,
-                        category: news.category
-                    });
-                });
-                saveSavedNewsIndex();
-                
-                updateSavedCount();
-                console.log(`Limpeza automática: ${savedNews.length - filtered.length} notícias vencidas removidas.`);
-            }
-            
-        } catch (error) {
-            console.error('Erro na limpeza automática:', error);
+        const savedNewsData = JSON.parse(localStorage.getItem('saved_news') || '[]');
+        const settings = JSON.parse(localStorage.getItem('news_settings') || '{}');
+        const expireMonths = settings.expireMonths || 2;
+        
+        const now = new Date();
+        const expireDate = new Date(now.getTime() - (expireMonths * 30 * 24 * 60 * 60 * 1000));
+        
+        const filtered = savedNewsData.filter(news => {
+            const savedDate = new Date(news.savedDate || news.date);
+            return savedDate >= expireDate;
+        });
+        
+        if (filtered.length !== savedNewsData.length) {
+            localStorage.setItem('saved_news', JSON.stringify(filtered));
+            console.log(`Limpeza automática: ${savedNewsData.length - filtered.length} notícias vencidas removidas.`);
         }
     }
 
@@ -2290,19 +2226,14 @@
         `;
         document.head.appendChild(style);
     }
-
-    // EXPORTAR FUNÇÕES PARA LEITURA.HTML
-    window.saveNewsToSystem = saveNewsToSystem;
-    window.showShareModal = showShareModal;
-
-    // VERIFICA CONEXÃO
+   // VERIFICA CONEXÃO
     window.addEventListener('online', () => {
         showNotification('Conexão restaurada. Atualizando notícias...', 'success');
         refreshNews();
     });
 
     window.addEventListener('offline', () => {
-        showNotification('Você está offline. Mostrando notícias em cache.', 'warning');
+        showNotification('Você está offline. Mostrando notícias nativas e em cache.', 'warning');
     });
 
     // ATUALIZAÇÃO EM TEMPO REAL
