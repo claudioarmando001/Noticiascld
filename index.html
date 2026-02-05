@@ -3,1183 +3,1848 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Notícias CLD - Agregador Moçambicano</title>
+    <title>NewsHub MOZ - Agregador Inteligente</title>
     <meta name="description" content="Agregador de notícias de Moçambique em tempo real">
-    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1a73e8">
     
-    <!-- Estilos -->
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content="NewsHub MOZ - Notícias em Tempo Real">
+    <meta property="og:description" content="Todas as notícias de Moçambique em um só lugar">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
     <style>
+    :root {
+        --primary-color: #1a73e8;
+        --primary-dark: #0d47a1;
+        --secondary-color: #4285f4;
+        --accent-color: #34a853;
+        --warning-color: #fbbc05;
+        --danger-color: #ea4335;
+        --dark-color: #202124;
+        --dark-gray: #5f6368;
+        --medium-gray: #80868b;
+        --light-gray: #dadce0;
+        --background-gray: #f8f9fa;
+        --white: #ffffff;
+        --card-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        --card-shadow-hover: 0 4px 12px rgba(32, 33, 36, 0.15);
+        --header-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    }
+
     * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        margin: 0;
-        color: #333;
-        line-height: 1.6;
-        min-height: 100vh;
+        font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+        background-color: var(--background-gray);
+        color: var(--dark-color);
+        line-height: 1.5;
+        font-weight: 400;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
-    header {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        font-size: 22px;
-        font-weight: 800;
-        position: sticky;
+    /* HEADER */
+    .main-header {
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        box-shadow: var(--header-shadow);
         z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        height: 64px;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
     }
 
-    .header-content {
+    .header-container {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1400px;
         margin: 0 auto;
-        padding: 0 20px;
     }
 
     .logo {
-        font-size: 28px;
-        font-weight: 800;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
+        text-decoration: none;
     }
 
-    .logo i {
-        color: #FFD700;
-        font-size: 32px;
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .logo-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dark-color);
+        letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+        color: var(--primary-color);
+        font-weight: 800;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
     }
 
     .header-btn {
-        background: rgba(255, 255, 255, 0.9);
-        color: #1a73e8;
+        background: none;
         border: none;
-        padding: 10px 20px;
-        border-radius: 10px;
+        padding: 10px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark-gray);
         cursor: pointer;
-        font-size: 16px;
-        font-weight: 700;
-        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
     }
 
     .header-btn:hover {
-        background: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background-color: rgba(26, 115, 232, 0.04);
+        color: var(--primary-color);
     }
 
-    #menu-btn { background: #4CAF50; color: white; }
-    #admin-btn { background: #FF5722; color: white; }
+    .header-btn.primary {
+        background-color: var(--primary-color);
+        color: var(--white);
+        padding: 10px 24px;
+    }
 
-    /* SIDEBAR */
-    #sidebar-overlay {
+    .header-btn.primary:hover {
+        background-color: var(--primary-dark);
+        box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+    }
+
+    /* NAVIGATION */
+    .main-nav {
         position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,.7);
-        display: none;
-        z-index: 9998;
-        backdrop-filter: blur(3px);
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-bottom: 1px solid var(--light-gray);
+        z-index: 999;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    #sidebar {
-        position: fixed;
-        top: 0;
-        left: -320px;
-        width: 320px;
-        height: 100vh;
-        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-        box-shadow: 5px 0 25px rgba(0,0,0,.2);
-        padding: 25px;
-        box-sizing: border-box;
-        transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 9999;
-        overflow-y: auto;
-        border-right: 5px solid #1a73e8;
+    .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        gap: 8px;
     }
 
-    #sidebar.open { left: 0; }
+    .nav-item {
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark-gray);
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        position: relative;
+    }
 
-    #sidebar h2 {
-        color: #1a73e8;
-        margin-top: 0;
-        font-size: 24px;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #e8f0fe;
-        padding-bottom: 10px;
+    .nav-item:hover {
+        color: var(--primary-color);
+        background-color: rgba(26, 115, 232, 0.04);
+    }
+
+    .nav-item.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    /* SEARCH BAR */
+    .search-section {
+        margin-top: 128px;
+        padding: 0 24px 24px;
+        background: linear-gradient(to right, #f8f9fa, #ffffff);
+    }
+
+    .search-container {
+        max-width: 720px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .search-box {
+        position: relative;
+        background: var(--white);
+        border-radius: 24px;
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--light-gray);
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+
+    .search-box:focus-within {
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--medium-gray);
+        font-size: 18px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 18px 24px 18px 56px;
+        border: none;
+        background: transparent;
+        font-size: 16px;
+        color: var(--dark-color);
+        outline: none;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .search-input::placeholder {
+        color: var(--medium-gray);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+    }
+
+    /* FEATURED SECTION */
+    .featured-section {
+        margin-bottom: 40px;
+    }
+
+    .section-header {
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--light-gray);
     }
 
-    #sidebar h2 i {
-        color: #FF9800;
-    }
-
-    #close-sidebar {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        cursor: pointer;
+    .section-title {
         font-size: 24px;
-        color: #f44336;
-        background: white;
-        width: 40px;
-        height: 40px;
+        font-weight: 700;
+        color: var(--dark-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title i {
+        color: var(--primary-color);
+    }
+
+    .section-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .action-btn {
+        padding: 8px 16px;
+        border: 1px solid var(--light-gray);
+        background: var(--white);
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--dark-gray);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+        background-color: var(--background-gray);
+        border-color: var(--medium-gray);
+    }
+
+    /* NEWS GRID */
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    /* CARD STYLES */
+    .news-card {
+        background: var(--white);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid transparent;
+    }
+
+    .news-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--card-shadow-hover);
+        border-color: var(--light-gray);
+    }
+
+    .news-card.featured {
+        grid-column: span 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .news-image {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .news-card:not(.featured) .news-image {
+        height: 180px;
+    }
+
+    .news-card.featured .news-image {
+        height: 100%;
+        min-height: 320px;
+    }
+
+    .news-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .news-card:hover .news-image img {
+        transform: scale(1.05);
+    }
+
+    .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+
+    .category-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--dark-color);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+    }
+
+    .save-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    }
-
-    #close-sidebar:hover {
-        background: #f44336;
-        color: white;
-        transform: rotate(90deg);
-    }
-
-    /* CATEGORIAS */
-    .categories {
-        margin: 20px 0 30px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .category-btn {
-        background: white;
-        border: 2px solid #e8f0fe;
-        color: #1a73e8;
-        padding: 8px 16px;
-        border-radius: 25px;
         cursor: pointer;
-        font-size: 14px;
-        font-weight: 600;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        z-index: 2;
+        transition: all 0.2s;
+        color: var(--dark-gray);
     }
 
-    .category-btn i {
-        font-size: 16px;
+    .save-btn:hover {
+        background: var(--white);
+        color: var(--primary-color);
+        transform: scale(1.1);
     }
 
-    .category-btn:hover,
-    .category-btn.active {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: white;
-        border-color: #1a73e8;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+    .save-btn.saved {
+        background: var(--accent-color);
+        color: var(--white);
     }
 
-    .category-count {
-        background: white;
-        color: #1a73e8;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 12px;
-        font-weight: 700;
-        margin-left: 5px;
-    }
-
-    .category-btn.active .category-count {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-    }
-
-    /* BUSCA */
-    .search-container {
-        max-width: 1000px;
-        margin: 30px auto;
-        padding: 0 20px;
-    }
-
-    #search-input {
-        width: 100%;
-        padding: 18px 25px;
-        border-radius: 15px;
-        border: 2px solid #ddd;
-        font-size: 18px;
-        background: white;
-        color: #333;
-        transition: all 0.3s;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    #search-input:focus {
-        outline: none;
-        border-color: #1a73e8;
-        box-shadow: 0 5px 20px rgba(26, 115, 232, 0.2);
-        transform: translateY(-2px);
-    }
-
-    #search-input::placeholder {
-        color: #999;
-    }
-
-    /* LISTA DE NOTÍCIAS */
-    #news-container {
-        max-width: 1000px;
-        margin: 0 auto;
+    .news-content {
         padding: 20px;
-    }
-
-    .news-counter {
-        text-align: center;
-        color: #666;
-        margin-bottom: 25px;
-        font-size: 16px;
-        background: white;
-        padding: 12px;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-    }
-
-    .news-counter span {
-        color: #1a73e8;
-        font-weight: 700;
-        font-size: 20px;
-    }
-
-    .card {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-        display: flex;
-        gap: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-        text-decoration: none;
-        color: inherit;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 5px;
-        height: 100%;
-        background: linear-gradient(180deg, #1a73e8 0%, #0d47a1 100%);
-    }
-
-    .card:hover { 
-        transform: translateY(-5px) scale(1.01); 
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        border-color: #1a73e8;
-    }
-
-    .card.saved {
-        border-color: #4CAF50;
-        background: linear-gradient(90deg, #ffffff 0%, #f1f8e9 100%);
-    }
-
-    .card.saved::before {
-        background: linear-gradient(180deg, #4CAF50 0%, #2E7D32 100%);
-    }
-
-    @keyframes fadeInUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(30px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-
-    .card {
-        animation: fadeInUp 0.5s ease-out;
-    }
-
-    .card-content {
         flex: 1;
-        min-width: 0;
+        display: flex;
+        flex-direction: column;
     }
-    
-    .card-title { 
-        font-size: 20px;
-        font-weight: 700;
-        color: #1a237e;
-        margin-bottom: 10px;
+
+    .news-title {
+        font-size: 18px;
+        font-weight: 600;
         line-height: 1.4;
-    }
-    
-    .card-meta {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 15px;
-    }
-
-    .source-tag {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: white;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .card-date {
-        color: #666;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .card-excerpt {
-        color: #555;
-        font-size: 15px;
-        line-height: 1.6;
-        margin-bottom: 15px;
+        color: var(--dark-color);
+        margin-bottom: 12px;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    .card-tags {
+    .news-card.featured .news-title {
+        font-size: 22px;
+        -webkit-line-clamp: 2;
+    }
+
+    .news-excerpt {
+        font-size: 14px;
+        color: var(--dark-gray);
+        line-height: 1.5;
+        margin-bottom: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+    }
+
+    .news-meta {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--light-gray);
+    }
+
+    .source-info {
+        display: flex;
+        align-items: center;
         gap: 8px;
-        flex-wrap: wrap;
     }
 
-    .card img {
-        width: 150px;
-        height: 120px;
-        object-fit: cover;
+    .source-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .source-name {
+        font-size: 13px;
+        color: var(--dark-gray);
+        font-weight: 500;
+    }
+
+    .news-time {
+        font-size: 13px;
+        color: var(--medium-gray);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* TRENDING SECTION */
+    .trending-section {
+        margin-bottom: 48px;
+    }
+
+    .trending-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
+    .trending-item {
+        background: var(--white);
+        padding: 16px;
         border-radius: 12px;
-        flex-shrink: 0;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        transition: transform 0.3s;
+        box-shadow: var(--card-shadow);
+        transition: all 0.2s;
     }
 
-    .card:hover img {
-        transform: scale(1.05);
+    .trending-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--card-shadow-hover);
     }
 
-    /* CATEGORY TAGS */
-    .category-tag {
-        padding: 6px 12px;
-        border-radius: 20px;
+    .trending-number {
         font-size: 12px;
         font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
+        color: var(--primary-color);
+        margin-bottom: 8px;
     }
 
-    .sociedade-tag { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: white; }
-    .politica-tag { background: linear-gradient(135deg, #f44336 0%, #c62828 100%); color: white; }
-    .economia-tag { background: linear-gradient(135deg, #FF9800 0%, #EF6C00 100%); color: white; }
-    .esportes-tag { background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%); color: white; }
-    .cultura-tag { background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%); color: white; }
-    .saude-tag { background: linear-gradient(135deg, #00BCD4 0%, #00838F 100%); color: white; }
-    .tech-tag { background: linear-gradient(135deg, #607D8B 0%, #455A64 100%); color: white; }
-
-    /* SAVED BADGE */
-    .saved-badge {
-        background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-        color: white;
-        padding: 4px 10px;
-        border-radius: 15px;
-        font-size: 11px;
-        font-weight: 700;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        margin-left: 10px;
+    .trending-title {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin-bottom: 8px;
     }
 
-    /* LOADER */
-    #infinite-loader {
+    .trending-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--medium-gray);
+    }
+
+    /* LOADING STATES */
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .skeleton-card {
+        height: 320px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+
+    .skeleton-title {
+        height: 24px;
+        width: 80%;
+        margin-bottom: 12px;
+        border-radius: 4px;
+    }
+
+    .skeleton-text {
+        height: 16px;
+        width: 100%;
+        margin-bottom: 8px;
+        border-radius: 4px;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
         text-align: center;
-        padding: 30px;
-        color: #666;
-        font-size: 16px;
-        display: none;
+        padding: 64px 24px;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
     }
 
-    .loading-spinner {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        border: 4px solid #e8e8e8;
-        border-top: 4px solid #1a73e8;
+    .empty-icon {
+        font-size: 64px;
+        color: var(--light-gray);
+        margin-bottom: 24px;
+    }
+
+    .empty-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--dark-gray);
+        margin-bottom: 12px;
+    }
+
+    .empty-text {
+        color: var(--medium-gray);
+        max-width: 400px;
+        margin: 0 auto 24px;
+        line-height: 1.5;
+    }
+
+    /* REAL-TIME INDICATOR */
+    .real-time-indicator {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--white);
+        border-radius: 20px;
+        padding: 10px 16px;
+        box-shadow: var(--card-shadow-hover);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--dark-gray);
+        z-index: 100;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent-color);
         border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 15px;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    /* NO NEWS MESSAGE */
-    .no-news {
-        text-align: center;
-        padding: 60px 20px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        margin: 20px;
-    }
-
-    .no-news i {
-        font-size: 60px;
-        color: #ccc;
-        margin-bottom: 20px;
-    }
-
-    .no-news h3 {
-        color: #666;
-        margin-bottom: 15px;
-    }
-
-    .no-news p {
-        color: #999;
-        margin-bottom: 25px;
-    }
-
-    .refresh-btn {
-        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 700;
-        transition: all 0.3s;
-    }
-
-    .refresh-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.3);
-    }
-
-    /* RESPONSIVIDADE */
-    @media (max-width: 768px) {
-        .header-content {
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .card {
-            flex-direction: column;
-        }
-        
-        .card img {
-            width: 100%;
-            height: 180px;
-        }
-        
-        #sidebar {
-            width: 280px;
-        }
-    }
-
-    /* ANIMAÇÕES */
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-
-    .pulse {
         animation: pulse 2s infinite;
     }
 
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    /* SCROLL TO TOP */
+    .scroll-top {
+        position: fixed;
+        bottom: 80px;
+        right: 24px;
+        width: 48px;
+        height: 48px;
+        background: var(--white);
+        border: none;
+        border-radius: 50%;
+        box-shadow: var(--card-shadow-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 100;
+        transition: all 0.3s;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .scroll-top.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+        background: var(--primary-color);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
     /* FOOTER */
-    footer {
-        text-align: center;
-        padding: 30px;
-        color: #666;
+    .main-footer {
+        background: var(--dark-color);
+        color: var(--white);
+        padding: 48px 24px 24px;
+        margin-top: 64px;
+    }
+
+    .footer-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .footer-section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: var(--light-gray);
+    }
+
+    .footer-links {
+        list-style: none;
+    }
+
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: var(--medium-gray);
+        text-decoration: none;
         font-size: 14px;
-        background: white;
+        transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+        color: var(--white);
+    }
+
+    .copyright {
+        text-align: center;
+        padding-top: 24px;
         margin-top: 40px;
-        border-top: 2px solid #e8f0fe;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--medium-gray);
+        font-size: 13px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+        .news-grid {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+        
+        .news-card.featured {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-header {
+            padding: 0 16px;
+            height: 56px;
+        }
+        
+        .header-container {
+            flex-wrap: wrap;
+        }
+        
+        .logo-text {
+            font-size: 18px;
+        }
+        
+        .main-nav {
+            top: 56px;
+        }
+        
+        .nav-container {
+            padding: 0 16px;
+        }
+        
+        .search-section {
+            margin-top: 112px;
+            padding: 0 16px 20px;
+        }
+        
+        .main-content {
+            padding: 0 16px 32px;
+        }
+        
+        .news-card.featured {
+            grid-column: span 1;
+        }
+        
+        .featured-section .news-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-actions .header-btn span {
+            display: none;
+        }
+        
+        .news-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .section-actions {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+    }
+
+    /* DARK MODE SUPPORT */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --dark-color: #e8eaed;
+            --dark-gray: #9aa0a6;
+            --medium-gray: #bdc1c6;
+            --light-gray: #3c4043;
+            --background-gray: #202124;
+            --white: #292a2d;
+        }
+        
+        .main-header,
+        .main-nav {
+            background: #202124;
+            border-bottom-color: #3c4043;
+        }
+        
+        .news-card,
+        .trending-item,
+        .search-box {
+            background: #292a2d;
+            border-color: #3c4043;
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, #2d2e31 25%, #3c4043 50%, #2d2e31 75%);
+        }
     }
     </style>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-newspaper"></i>
-                <span>Notícias CLD</span>
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <button class="header-btn" id="menu-btn" onclick="openSidebar()">
-                    <i class="fas fa-bars"></i> Categorias
+    <!-- HEADER -->
+        <header class="main-header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <div class="logo-text">News<span>Hub</span> MOZ</div>
+            </a>
+            
+            <div class="header-actions">
+                <button class="header-btn" onclick="showCategories()">
+                    <i class="fas fa-th"></i>
+                    <span>Categorias</span>
                 </button>
-                <button class="header-btn" id="admin-btn" onclick="accessAdmin()">
-                    <i class="fas fa-cog"></i> Admin
+                <button class="header-btn" onclick="openAdminPanel()">
+                    <i class="fas fa-cog"></i>
+                    <span>Admin</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- SIDEBAR -->
-    <div id="sidebar-overlay"></div>
-    <div id="sidebar">
-        <span id="close-sidebar" onclick="closeSidebar()">✖</span>
-        <h2><i class="fas fa-filter"></i> Filtros</h2>
-        <div class="categories">
-            <button class="category-btn active" onclick="filterByCategory('todos')">
-                <i class="fas fa-globe"></i> Todos <span class="category-count" id="count-todos">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('sociedade')">
-                <i class="fas fa-users"></i> Sociedade <span class="category-count" id="count-sociedade">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('política')">
-                <i class="fas fa-landmark"></i> Política <span class="category-count" id="count-política">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('economia')">
-                <i class="fas fa-chart-line"></i> Economia <span class="category-count" id="count-economia">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('esportes')">
-                <i class="fas fa-futbol"></i> Esportes <span class="category-count" id="count-esportes">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('cultura')">
-                <i class="fas fa-paint-brush"></i> Cultura <span class="category-count" id="count-cultura">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('saúde')">
-                <i class="fas fa-heartbeat"></i> Saúde <span class="category-count" id="count-saúde">0</span>
-            </button>
-            <button class="category-btn" onclick="filterByCategory('tecnologia')">
-                <i class="fas fa-laptop"></i> Tecnologia <span class="category-count" id="count-tecnologia">0</span>
-            </button>
+    <!-- NAVIGATION -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-item active" onclick="filterByCategory('all')">
+                <i class="fas fa-globe"></i> Todos
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('politics')">
+                <i class="fas fa-landmark"></i> Política
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('economy')">
+                <i class="fas fa-chart-line"></i> Economia
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('sports')">
+                <i class="fas fa-futbol"></i> Esportes
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('society')">
+                <i class="fas fa-users"></i> Sociedade
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('health')">
+                <i class="fas fa-heartbeat"></i> Saúde
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('tech')">
+                <i class="fas fa-microchip"></i> Tecnologia
+            </a>
+            <a href="#" class="nav-item" onclick="filterByCategory('culture')">
+                <i class="fas fa-paint-brush"></i> Cultura
+            </a>
+            <a href="#" class="nav-item" onclick="showSavedNews()">
+                <i class="fas fa-star"></i> Guardadas
+            </a>
         </div>
-    </div>
+    </nav>
 
-    <!-- BUSCA -->
-    <div class="search-container">
-        <input id="search-input" placeholder="🔍 Buscar notícias por título, fonte ou conteúdo..." onkeyup="searchNews()">
-    </div>
+    <!-- SEARCH -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-box">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <input type="text" 
+                       class="search-input" 
+                       placeholder="Pesquisar notícias..." 
+                       oninput="searchNews(this.value)">
+            </div>
+        </div>
+    </section>
 
-    <!-- CONTADOR -->
-    <div class="news-counter">
-        <i class="fas fa-newspaper"></i> Exibindo <span id="news-count">0</span> notícias
-    </div>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- FEATURED NEWS -->
+        <section class="featured-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i> Destaques
+                </h2>
+                <div class="section-actions">
+                    <button class="action-btn" onclick="refreshNews()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="action-btn" onclick="sortByTime('newest')">
+                        <i class="fas fa-sort-amount-down"></i> Mais Recentes
+                    </button>
+                </div>
+            </div>
+            
+            <div class="news-grid" id="featured-news">
+                <!-- Notícias em destaque serão carregadas aqui -->
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </section>
 
-    <!-- LISTA DE NOTÍCIAS -->
-    <div id="news-container">
-        <!-- Notícias aparecerão aqui -->
-    </div>
+        <!-- TRENDING NEWS -->
+        <section class="trending-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i> Em Alta
+                </h2>
+                <button class="action-btn" onclick="showMoreTrending()">
+                    <i class="fas fa-ellipsis-h"></i> Ver Mais
+                </button>
+            </div>
+            
+            <div class="trending-list" id="trending-news">
+                <!-- Notícias em alta serão carregadas aqui -->
+                <div class="trending-item skeleton">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-text" style="width: 60%;"></div>
+                </div>
+                <div class="trending-item skeleton">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-text" style="width: 60%;"></div>
+                </div>
+                <div class="trending-item skeleton">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-text"></div>
+                    <div class="skeleton-text" style="width: 60%;"></div>
+                </div>
+            </div>
+        </section>
 
-    <!-- LOADER INFINITO -->
-    <div id="infinite-loader">
-        <div class="loading-spinner"></div>
-        <p>Carregando mais notícias...</p>
-    </div>
-
-    <!-- MENSAGEM SEM NOTÍCIAS -->
-    <div id="no-news-message" class="no-news" style="display: none;">
-        <i class="fas fa-newspaper"></i>
-        <h3>Nenhuma notícia encontrada</h3>
-        <p>Tente alterar os filtros ou atualizar a página</p>
-        <button class="refresh-btn" onclick="loadAllNews()">
+        <!-- ALL NEWS -->
+        <section class="all-news-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-newspaper"></i> Todas as Notícias
+                </h2>
+                <div class="section-actions">
+                    <button class="action-btn" onclick="toggleViewMode()">
+                        <i class="fas fa-th"></i> Grid
+                    </button>
+                    <button class="action-btn" onclick="exportNews()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="news-grid" id="all-news">
+                <!-- Todas as notícias serão carregadas aqui -->
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+                <div class="skeleton skeleton-card"></div>
+            </div>
+        </section>
+    </main>
+   <!-- EMPTY STATE -->
+    <div id="empty-state" class="empty-state" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-newspaper"></i>
+        </div>
+        <h3 class="empty-title">Nenhuma notícia encontrada</h3>
+        <p class="empty-text">Tente alterar os filtros de busca ou atualizar a página</p>
+        <button class="header-btn primary" onclick="refreshNews()">
             <i class="fas fa-sync-alt"></i> Atualizar Notícias
         </button>
     </div>
 
-    <footer>
-        <p>© 2024 Notícias CLD - Agregador de Notícias Moçambicanas</p>
-        <p>Contato: claudioarmando001@gmail.com | Tel: +258 869 667 677</p>
+    <!-- REAL-TIME INDICATOR -->
+    <div id="real-time-indicator" class="real-time-indicator" style="display: none;">
+        <div class="live-dot"></div>
+        <span>Atualizando notícias...</span>
+    </div>
+
+    <!-- SCROLL TO TOP -->
+    <button class="scroll-top" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>NewsHub MOZ</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showAbout()">Sobre</a></li>
+                    <li><a href="#" onclick="showContact()">Contato</a></li>
+                    <li><a href="#" onclick="showPrivacy()">Privacidade</a></li>
+                    <li><a href="#" onclick="showTerms()">Termos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Categorias</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="filterByCategory('politics')">Política</a></li>
+                    <li><a href="#" onclick="filterByCategory('economy')">Economia</a></li>
+                    <li><a href="#" onclick="filterByCategory('sports')">Esportes</a></li>
+                    <li><a href="#" onclick="filterByCategory('society')">Sociedade</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Fontes</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openSource('opais')">O País</a></li>
+                    <li><a href="#" onclick="openSource('noticias')">Notícias</a></li>
+                    <li><a href="#" onclick="openSource('canal')">Canal Moz</a></li>
+                    <li><a href="#" onclick="openSource('savana')">Savana</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Recursos</h3>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="openAdminPanel()">Painel Admin</a></li>
+                    <li><a href="#" onclick="exportNews()">Exportar</a></li>
+                    <li><a href="#" onclick="showSavedNews()">Guardadas</a></li>
+                    <li><a href="#" onclick="showSettings()">Configurações</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2024 NewsHub MOZ - Agregador Inteligente de Notícias Moçambicanas</p>
+            <p>claudioarmando001@gmail.com | +258 869 667 677</p>
+        </div>
     </footer>
 
     <script>
-    // CONFIGURAÇÃO DAS FONTES
+    // CONFIGURAÇÃO DO SISTEMA
+    const APP_CONFIG = {
+        name: 'NewsHub MOZ',
+        version: '2.0.0',
+        storageKey: 'newshub_moz_data',
+        adminPassword: '0800',
+        updateInterval: 30000, // 30 segundos
+        maxNewsAge: 24 * 60 * 60 * 1000, // 24 horas
+        featuredCount: 3,
+        trendingCount: 5
+    };
+
+    // FONTES DE NOTÍCIAS (APIs reais)
     const NEWS_SOURCES = [
         {
-            name: "O País Moçambique",
-            url: "https://www.opais.co.mz/wp-json/wp/v2/posts",
+            id: 'opais',
+            name: 'O País Moçambique',
+            api: 'https://www.opais.co.mz/wp-json/wp/v2/posts',
             enabled: true,
-            lang: "pt"
+            category: 'news',
+            priority: 1,
+            lastFetch: 0,
+            color: '#1a73e8'
         },
         {
-            name: "Jornal Notícias",
-            url: "https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts",
+            id: 'noticias',
+            name: 'Jornal Notícias',
+            api: 'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts',
             enabled: true,
-            lang: "pt"
+            category: 'news',
+            priority: 1,
+            lastFetch: 0,
+            color: '#4285f4'
         },
         {
-            name: "Canal de Moçambique",
-            url: "https://canal.co.mz/wp-json/wp/v2/posts",
+            id: 'canal',
+            name: 'Canal de Moçambique',
+            api: 'https://canal.co.mz/wp-json/wp/v2/posts',
             enabled: true,
-            lang: "pt"
+            category: 'news',
+            priority: 1,
+            lastFetch: 0,
+            color: '#34a853'
         },
         {
-            name: "Savana",
-            url: "https://savana.co.mz/wp-json/wp/v2/posts",
+            id: 'savana',
+            name: 'Savana Digital',
+            api: 'https://savana.co.mz/wp-json/wp/v2/posts',
             enabled: true,
-            lang: "pt"
+            category: 'news',
+            priority: 1,
+            lastFetch: 0,
+            color: '#fbbc05'
         },
         {
-            name: "Jornal MZ",
-            url: "https://jornalmz.com/wp-json/wp/v2/posts",
+            id: 'miramar',
+            name: 'Miramar',
+            api: 'https://miramar.co.mz/wp-json/wp/v2/posts',
             enabled: true,
-            lang: "pt"
+            category: 'news',
+            priority: 2,
+            lastFetch: 0,
+            color: '#ea4335'
         }
     ];
 
-    // VARIÁVEIS GLOBAIS
-    let allNews = [];
-    let filteredNews = [];
-    let currentCategory = 'todos';
-    let isLoading = false;
-    let isInitialLoad = true;
-    const newsCache = new Map();
-    const seenNews = new Set();
-
-    // ELEMENTOS DOM
-    const container = document.getElementById('news-container');
-    const loader = document.getElementById('infinite-loader');
-    const noNewsMessage = document.getElementById('no-news-message');
-    const newsCountEl = document.getElementById('news-count');
-    const categoryCounts = {
-        'todos': document.getElementById('count-todos'),
-        'sociedade': document.getElementById('count-sociedade'),
-        'política': document.getElementById('count-política'),
-        'economia': document.getElementById('count-economia'),
-        'esportes': document.getElementById('count-esportes'),
-        'cultura': document.getElementById('count-cultura'),
-        'saúde': document.getElementById('count-saúde'),
-        'tecnologia': document.getElementById('count-tecnologia')
-    };
-
-    // CONFIGURAÇÃO DAS CATEGORIAS
-    const CATEGORIES = {
-        'todos': { 
-            name: 'Todos', 
-            icon: 'fas fa-globe',
-            color: '#1a73e8'
-        },
-        'sociedade': { 
-            name: 'Sociedade', 
-            icon: 'fas fa-users',
-            color: '#4CAF50',
-            keywords: ['sociedade', 'social', 'comunidade', 'educação', 'escola', 'universidade', 'aluno', 'professor', 'família', 'habitação', 'bairro']
-        },
-        'política': { 
-            name: 'Política', 
-            icon: 'fas fa-landmark',
-            color: '#f44336',
-            keywords: ['política', 'político', 'governo', 'presidente', 'ministro', 'eleições', 'partido', 'parlamento', 'assembleia']
-        },
-        'economia': { 
-            name: 'Economia', 
-            icon: 'fas fa-chart-line',
-            color: '#FF9800',
-            keywords: ['economia', 'econômico', 'negócio', 'empresa', 'investimento', 'banco', 'finanças', 'mercado', 'bolsa']
-        },
-        'esportes': { 
-            name: 'Esportes', 
-            icon: 'fas fa-futbol',
-            color: '#2196F3',
-            keywords: ['esporte', 'futebol', 'jogo', 'atleta', 'campeonato', 'liga', 'competição', 'seleção', 'estádio']
-        },
-        'cultura': { 
-            name: 'Cultura', 
-            icon: 'fas fa-paint-brush',
-            color: '#9C27B0',
-            keywords: ['cultura', 'cultural', 'arte', 'música', 'teatro', 'cinema', 'literatura', 'poesia', 'tradição']
-        },
-        'saúde': { 
-                  name: 'Saúde', 
-            icon: 'fas fa-heartbeat',
-            color: '#00BCD4',
-            keywords: ['saúde', 'hospital', 'médico', 'enfermeiro', 'doença', 'vacina', 'tratamento', 'clínica', 'epidemia']
-        },
-        'tecnologia': { 
-            name: 'Tecnologia', 
-            icon: 'fas fa-laptop',
-            color: '#607D8B',
-            keywords: ['tecnologia', 'tecnológico', 'internet', 'digital', 'aplicativo', 'software', 'startup', 'inovação']
-        }
-    };
-
-    // FUNÇÕES DA INTERFACE
-    function openSidebar() {
-        document.getElementById('sidebar').classList.add('open');
-        document.getElementById('sidebar-overlay').style.display = 'block';
-        updateCategoryCounts();
-    }
-
-    function closeSidebar() {
-        document.getElementById('sidebar').classList.remove('open');
-        document.getElementById('sidebar-overlay').style.display = 'none';
-    }
-
-    document.getElementById('sidebar-overlay').addEventListener('click', closeSidebar);
-
-    function accessAdmin() {
-        const password = prompt('🔐 Digite a senha de acesso ao painel administrativo:');
-        if (password === '0800') {
-            window.location.href = 'adm.html';
-        } else if (password !== null) {
-            alert('❌ Senha incorreta!');
-        }
-    }
-
-    // FILTRAR POR CATEGORIA
-    function filterByCategory(category) {
-        currentCategory = category;
-        
-        // Atualiza botões ativos
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-        
-        applyFilters();
-        renderNews();
-        
-        // Fecha sidebar em mobile
-        if (window.innerWidth <= 768) {
-            closeSidebar();
-        }
-    }
-
-    // BUSCAR NOTÍCIAS
-    function searchNews() {
-        applyFilters();
-        renderNews();
-    }
-
-    function applyFilters() {
-        const searchText = document.getElementById('search-input').value.toLowerCase().trim();
-        
-        filteredNews = allNews.filter(news => {
-            // Filtro por categoria
-            if (currentCategory !== 'todos' && news.category !== currentCategory) {
+    // SISTEMA DE ARMAZENAMENTO
+    const NewsStorage = {
+        // Salva dados no localStorage com compressão
+        set(key, data) {
+            try {
+                const compressed = JSON.stringify(data);
+                localStorage.setItem(key, compressed);
+                return true;
+            } catch (e) {
+                console.error('Erro ao salvar:', e);
                 return false;
             }
+        },
+
+        // Carrega dados do localStorage
+        get(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                console.error('Erro ao carregar:', e);
+                return null;
+            }
+        },
+
+        // Remove dados antigos (mais de 24h)
+        cleanup() {
+            const news = this.get('all_news') || [];
+            const now = Date.now();
+            const freshNews = news.filter(item => 
+                now - new Date(item.timestamp).getTime() < APP_CONFIG.maxNewsAge
+            );
+            this.set('all_news', freshNews);
+        },
+      // Salva uma notícia como nativa
+        saveNativeNews(article) {
+            const nativeNews = this.get('native_news') || [];
+            article.id = `native_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            article.isNative = true;
+            article.timestamp = new Date().toISOString();
+            article.savedAt = article.timestamp;
             
-            // Filtro por busca
-            if (searchText) {
-                const searchInTitle = news.title.toLowerCase().includes(searchText);
-                const searchInSource = news.source.toLowerCase().includes(searchText);
-                const searchInExcerpt = news.excerpt.toLowerCase().includes(searchText);
+            nativeNews.unshift(article);
+            this.set('native_news', nativeNews.slice(0, 100)); // Limita a 100 notícias
+            
+            // Atualiza o cache geral
+            this.updateNewsCache(article);
+            
+            return article;
+        },
+
+        // Atualiza cache de notícias
+        updateNewsCache(article) {
+            const allNews = this.get('all_news') || [];
+            
+            // Remove se já existir
+            const existingIndex = allNews.findIndex(n => 
+                n.title === article.title && n.source === article.source
+            );
+            
+            if (existingIndex !== -1) {
+                allNews.splice(existingIndex, 1);
+            }
+            
+            allNews.unshift(article);
+            this.set('all_news', allNews.slice(0, 200)); // Limita a 200 notícias
+        },
+
+        // Busca notícias salvas
+        getSavedNews() {
+            return this.get('native_news') || [];
+        },
+
+        // Remove notícia salva
+        removeSavedNews(id) {
+            const nativeNews = this.get('native_news') || [];
+            const filtered = nativeNews.filter(n => n.id !== id);
+            this.set('native_news', filtered);
+            return filtered;
+        }
+    };
+
+    // PROCESSADOR DE NOTÍCIAS
+    const NewsProcessor = {
+        // Converte artigo da API para formato interno
+        parseArticle(apiArticle, source) {
+            try {
+                return {
+                    id: `${source.id}_${apiArticle.id}`,
+                    title: this.cleanText(apiArticle.title?.rendered || 'Sem título'),
+                    excerpt: this.cleanText(apiArticle.excerpt?.rendered || '').substring(0, 200) + '...',
+                    content: apiArticle.content?.rendered || '',
+                    image: this.getFeaturedImage(apiArticle),
+                    source: source.name,
+                    sourceId: source.id,
+                    date: apiArticle.date || new Date().toISOString(),
+                    timestamp: new Date(apiArticle.date || Date.now()).getTime(),
+                    link: apiArticle.link || '#',
+                    category: this.detectCategory(apiArticle),
+                    views: 0,
+                    engagement: 0,
+                    isNative: false,
+                    featured: false
+                };
+            } catch (e) {
+                console.error('Erro ao parsear artigo:', e);
+                return null;
+            }
+        },
+
+        // Limpa texto HTML
+        cleanText(html) {
+            return html
+                .replace(/<[^>]*>/g, '')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&#[0-9]+;/g, '')
+                .trim();
+        },
+
+        // Obtém imagem destacada
+        getFeaturedImage(article) {
+            if (article._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
+                return article._embedded['wp:featuredmedia'][0].source_url;
+            }
+            if (article.jetpack_featured_media_url) {
+                return article.jetpack_featured_media_url;
+            }
+            
+            // Imagem padrão baseada na categoria
+            const category = this.detectCategory(article);
+            const colors = {
+                politics: '3f51b5',
+                economy: '4caf50',
+                sports: 'ff9800',
+                society: '2196f3',
+                health: 'e91e63',
+                tech: '607d8b',
+                culture: '9c27b0'
+            };
+            
+            return `https://via.placeholder.com/600x400/${colors[category] || '1a73e8'}/ffffff?text=${encodeURIComponent(category.substring(0, 2).toUpperCase())}`;
+        },
+
+        // Detecta categoria automaticamente
+        detectCategory(article) {
+            const text = (article.title?.rendered + ' ' + article.content?.rendered).toLowerCase();
+            
+            const categories = {
+                politics: ['política', 'governo', 'presidente', 'ministro', 'eleições', 'parlamento'],
+                economy: ['economia', 'negócios', 'empresa', 'investimento', 'mercado', 'dinheiro'],
+                sports: ['esporte', 'futebol', 'jogo', 'competição', 'atleta', 'campeonato'],
+                society: ['sociedade', 'social', 'comunidade', 'educação', 'família', 'jovens'],
+                health: ['saúde', 'médico', 'hospital', 'doença', 'vacina', 'tratamento'],
+                tech: ['tecnologia', 'digital', 'internet', 'app', 'software', 'startup'],
+                culture: ['cultura', 'arte', 'música', 'teatro', 'literatura', 'cinema']
+            };
+            
+            for (const [category, keywords] of Object.entries(categories)) {
+                if (keywords.some(keyword => text.includes(keyword))) {
+                    return category;
+                }
+            }
+            
+            return 'society';
+        },
+
+        // Processa múltiplos artigos em paralelo
+        async processBatch(articles, source) {
+            return articles
+                .map(article => this.parseArticle(article, source))
+                .filter(article => article !== null);
+        }
+    };
+
+    // FETCHER DE NOTÍCIAS
+    const NewsFetcher = {
+        // Busca notícias de uma fonte específica
+        async fetchFromSource(source) {
+            try {
+                const now = Date.now();
+                const cacheKey = `cache_${source.id}_${Math.floor(now / 60000)}`; // Cache por minuto
+             // Verifica cache
+                const cached = NewsStorage.get(cacheKey);
+                if (cached && now - source.lastFetch < 30000) { // 30 segundos
+                    return cached;
+                }
                 
-                return searchInTitle || searchInSource || searchInExcerpt;
+                // Busca da API com timeout
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(`${source.api}?_embed&per_page=10&timestamp=${now}`, {
+                    signal: controller.signal,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                clearTimeout(timeout);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const articles = await response.json();
+                const processed = await NewsProcessor.processBatch(articles, source);
+                
+                // Atualiza cache
+                source.lastFetch = now;
+                NewsStorage.set(cacheKey, processed);
+                
+                // Atualiza storage geral
+                processed.forEach(article => NewsStorage.updateNewsCache(article));
+                
+                return processed;
+                
+            } catch (error) {
+                console.error(`Erro ao buscar de ${source.name}:`, error);
+                return [];
             }
-            
-            return true;
-        });
-        
-        // Atualiza contador
-        newsCountEl.textContent = filteredNews.length;
-    }
+        },
 
-    // ATUALIZAR CONTAGEM DE CATEGORIAS
-    function updateCategoryCounts() {
-        const counts = {
-            'todos': allNews.length,
-            'sociedade': 0,
-            'política': 0,
-            'economia': 0,
-            'esportes': 0,
-            'cultura': 0,
-            'saúde': 0,
-            'tecnologia': 0
-        };
-        
-        allNews.forEach(news => {
-            if (news.category && counts[news.category] !== undefined) {
-                counts[news.category]++;
-            }
-        });
-        
-        // Atualiza contadores na UI
-        Object.keys(counts).forEach(category => {
-            if (categoryCounts[category]) {
-                categoryCounts[category].textContent = counts[category];
-            }
-        });
-    }
-
-    // DETERMINAR CATEGORIA DA NOTÍCIA
-    function determineCategory(title, content) {
-        const text = (title + ' ' + content).toLowerCase();
-        let maxScore = 0;
-        let selectedCategory = 'sociedade';
-        
-        Object.keys(CATEGORIES).forEach(cat => {
-            if (cat === 'todos') return;
+        // Busca de todas as fontes em paralelo
+        async fetchAllSources() {
+            const enabledSources = NEWS_SOURCES.filter(s => s.enabled);
             
-            let score = 0;
-            CATEGORIES[cat].keywords.forEach(keyword => {
-                if (text.includes(keyword)) {
-                    score++;
+            // Usa Promise.allSettled para não parar se uma falhar
+            const results = await Promise.allSettled(
+                enabledSources.map(source => this.fetchFromSource(source))
+            );
+            
+            // Combina todos os resultados
+            let allArticles = [];
+            results.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    allArticles = allArticles.concat(result.value);
+                } else {
+                    console.warn(`Fonte ${enabledSources[index].name} falhou:`, result.reason);
                 }
             });
             
-            if (score > maxScore) {
-                maxScore = score;
-                selectedCategory = cat;
+            // Ordena por data (mais recente primeiro)
+            allArticles.sort((a, b) => b.timestamp - a.timestamp);
+            
+            return allArticles;
+        },
+
+        // Busca notícias em tempo real
+        async fetchRealTime() {
+            showRealTimeIndicator();
+            
+            try {
+                const newArticles = await this.fetchAllSources();
+                const nativeNews = NewsStorage.get('native_news') || [];
+                
+                // Combina com notícias nativas
+                const allNews = [...nativeNews, ...newArticles];
+                
+                // Remove duplicatas
+                const uniqueNews = this.removeDuplicates(allNews);
+                
+                // Atualiza visualização
+                updateNewsDisplay(uniqueNews);
+                
+                // Esconde indicador
+                setTimeout(hideRealTimeIndicator, 2000);
+                
+            } catch (error) {
+                console.error('Erro no fetch em tempo real:', error);
+                hideRealTimeIndicator();
             }
-        });
-        
-        return selectedCategory;
-    }
-
-    // FORMATAR DATA
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const now = new Date();
-        const diff = Math.floor((now - date) / (1000 * 60)); // diferença em minutos
-        
-        if (diff < 60) {
-            return `${diff} min atrás`;
-        } else if (diff < 1440) {
-            return `${Math.floor(diff / 60)} h atrás`;
-        } else {
-            return date.toLocaleDateString('pt-PT', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            });
         }
-    }
+    };
 
-    // RENDERIZAR NOTÍCIAS
-    function renderNews() {
-        container.innerHTML = '';
+    // SISTEMA DE EXIBIÇÃO
+    const NewsDisplay = {
+        currentView: 'grid',
+        currentCategory: 'all',
+        currentSearch: '',
         
-        if (filteredNews.length === 0) {
-            noNewsMessage.style.display = 'block';
-            container.style.display = 'none';
-            return;
-        }
-        
-        noNewsMessage.style.display = 'none';
-        container.style.display = 'block';
-        
-        filteredNews.forEach((news, index) => {
-            setTimeout(() => {
-                const card = createNewsCard(news);
-                container.appendChild(card);
-            }, index * 50); // Efeito cascata
-        });
-    }
-
-    function createNewsCard(news) {
-        const saved = isNewsSaved(news.id);
-        const card = document.createElement('a');
-        card.className = `card ${saved ? 'saved' : ''}`;
-        card.href = `leitura.html?id=${news.id}`;
-        
-        const savedBadge = saved ? 
-            `<span class="saved-badge"><i class="fas fa-star"></i> Guardada</span>` : '';
-        
-        const categoryClass = news.category ? news.category.toLowerCase().replace('é', 'e') + '-tag' : 'sociedade-tag';
-        const categoryName = news.categoryName || CATEGORIES[news.category]?.name || 'Sociedade';
-        
-        card.innerHTML = `
-            <div class="card-content">
-                <div class="card-title">
-                    ${news.title} ${savedBadge}
+        // Cria card de notícia
+        createNewsCard(article, isFeatured = false) {
+            const isSaved = article.isNative || false;
+            const timeAgo = this.getTimeAgo(article.timestamp);
+            const categoryName = this.getCategoryName(article.category);
+            
+            return `
+            <div class="news-card ${isFeatured ? 'featured' : ''}" data-id="${article.id}" data-category="${article.category}">
+                <div class="news-image">
+                    <img src="${article.image}" alt="${article.title}" loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=${encodeURIComponent(article.source.substring(0, 2))}'">
+                    <div class="image-overlay"></div>
+                    <span class="category-badge">${categoryName}</span>
+                    <button class="save-btn ${isSaved ? 'saved' : ''}" onclick="toggleSaveNews('${article.id}', event)">
+                        <i class="fas fa-${isSaved ? 'bookmark' : 'bookmark'}"></i>
+                    </button>
                 </div>
-                <div class="card-meta">
-                    <span class="source-tag">
-                        <i class="fas fa-newspaper"></i> ${news.source}
-                    </span>
-                    <span class="category-tag ${categoryClass}">
-                        <i class="${CATEGORIES[news.category]?.icon || 'fas fa-tag'}"></i> ${categoryName}
-                    </span>
-                    <span class="card-date">
-                        <i class="far fa-clock"></i> ${formatDate(news.date)}
-                    </span>
-                </div>
-                ${news.excerpt ? `<div class="card-excerpt">${news.excerpt}</div>` : ''}
-                <div class="card-tags">
-                    ${news.tags ? news.tags.map(tag => 
-                        `<span class="category-tag" style="background: #e0e0e0; color: #666;">${tag}</span>`
-                    ).join('') : ''}
+                
+                <div class="news-content">
+                    <h3 class="news-title">
+                        <a href="article.html?id=${article.id}" style="color: inherit; text-decoration: none;">${article.title}</a>
+                    </h3>
+                    <p class="news-excerpt">${article.excerpt}</p>
+                    
+                    <div class="news-meta">
+                        <div class="source-info">
+                            <div class="source-icon" style="background: ${this.getSourceColor(article.sourceId)}">
+                                ${article.source.substring(0, 2)}
+                            </div>
+                            <span class="source-name">${article.source}</span>
+                        </div>
+                        <div class="news-time">
+                            <i class="far fa-clock"></i>
+                            <span>${timeAgo}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <img src="${news.image}" alt="${news.title}" 
-                 onerror="this.src='https://via.placeholder.com/150x120/1a73e8/ffffff?text=${encodeURIComponent(news.source.substring(0, 2))}'">
-        `;
+            `;
+        },
+              // Cria item de trending
+        createTrendingItem(article, index) {
+            const timeAgo = this.getTimeAgo(article.timestamp);
+            
+            return `
+            <div class="trending-item" data-id="${article.id}">
+                <div class="trending-number">#${index + 1}</div>
+                <h4 class="trending-title">
+                    <a href="article.html?id=${article.id}" style="color: inherit; text-decoration: none;">${article.title}</a>
+                </h4>
+                <div class="trending-meta">
+                    <span>${article.source}</span>
+                    <span>${timeAgo}</span>
+                </div>
+            </div>
+            `;
+        },
         
-        return card;
-    }
+        // Formata tempo relativo
+        getTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Agora mesmo';
+            if (minutes < 60) return `${minutes} min`;
+            if (hours < 24) return `${hours} h`;
+            if (days < 7) return `${days} d`;
+            return new Date(timestamp).toLocaleDateString('pt-PT');
+        },
+        
+        // Obtém nome da categoria
+        getCategoryName(category) {
+            const names = {
+                politics: 'Política',
+                economy: 'Economia',
+                sports: 'Esportes',
+                society: 'Sociedade',
+                health: 'Saúde',
+                tech: 'Tecnologia',
+                culture: 'Cultura'
+            };
+            return names[category] || 'Notícia';
+        },
+        
+        // Obtém cor da fonte
+        getSourceColor(sourceId) {
+            const source = NEWS_SOURCES.find(s => s.id === sourceId);
+            return source ? source.color : '#1a73e8';
+        }
+    };
 
-    // VERIFICAR SE NOTÍCIA ESTÁ SALVA
-    function isNewsSaved(id) {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
-        return savedNews.some(news => news.id === id);
-    }
- // CARREGAR NOTÍCIAS
-    async function loadAllNews() {
-        if (isLoading) return;
+    // FUNÇÕES GLOBAIS
+    let allNews = [];
+    let currentNews = [];
+    
+    // Inicializa o sistema
+    async function init() {
+        // Limpa dados antigos
+        NewsStorage.cleanup();
         
-        isLoading = true;
-        loader.style.display = 'block';
-        container.innerHTML = '';
+        // Carrega notícias salvas
+        const savedNews = NewsStorage.getSavedNews();
+        
+        // Busca notícias em tempo real
+        await loadNews();
+        
+        // Configura atualização automática
+        setupAutoRefresh();
+        
+        // Configura scroll infinito
+        setupInfiniteScroll();
+        
+        // Configura observador de visibilidade
+        setupVisibilityObserver();
+    }
+    
+    // Carrega notícias
+    async function loadNews() {
+        showLoadingState();
         
         try {
-            // Carrega notícias salvas primeiro
-            await loadSavedNews();
+            // Busca de fontes externas
+            const externalNews = await NewsFetcher.fetchAllSources();
             
-            // Carrega de fontes externas
-            await loadExternalNews();
+            // Notícias nativas
+            const nativeNews = NewsStorage.getSavedNews();
             
-            // Ordena por data (mais recente primeiro)
-            allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // Combina e remove duplicatas
+            allNews = removeDuplicates([...nativeNews, ...externalNews]);
             
-            // Remove duplicatas
-            allNews = allNews.filter((news, index, self) =>
-                index === self.findIndex((n) => n.id === news.id)
-            );
+            // Ordena por data
+            allNews.sort((a, b) => b.timestamp - a.timestamp);
             
-            // Limite de 100 notícias
-            allNews = allNews.slice(0, 100);
-            
-            applyFilters();
-            renderNews();
-            updateCategoryCounts();
-            
-            if (isInitialLoad) {
-                showNotification(`Carregadas ${allNews.length} notícias`);
-                isInitialLoad = false;
-            }
+            // Atualiza exibição
+            updateNewsDisplay(allNews);
             
         } catch (error) {
             console.error('Erro ao carregar notícias:', error);
-            showNotification('Erro ao carregar notícias. Tente novamente.', 'error');
-        } finally {
-            isLoading = false;
-            loader.style.display = 'none';
+            showErrorState();
+        }
+        
+        hideLoadingState();
+    }
+    
+    // Atualiza exibição das notícias
+    function updateNewsDisplay(newsList) {
+        currentNews = newsList;
+        
+        // Se não houver notícias
+        if (newsList.length === 0) {
+            document.getElementById('empty-state').style.display = 'block';
+            document.getElementById('featured-news').innerHTML = '';
+            document.getElementById('trending-news').innerHTML = '';
+            document.getElementById('all-news').innerHTML = '';
+            return;
+        }
+        
+        document.getElementById('empty-state').style.display = 'none';
+        
+        // Notícias em destaque (mais recentes)
+        const featuredNews = newsList.slice(0, APP_CONFIG.featuredCount);
+        const featuredHTML = featuredNews.map((article, index) => 
+            NewsDisplay.createNewsCard(article, true)
+        ).join('');
+        document.getElementById('featured-news').innerHTML = featuredHTML;
+        
+        // Notícias em alta (mais visualizadas/engajadas)
+        const trendingNews = [...newsList]
+            .sort((a, b) => (b.views || 0) - (a.views || 0))
+            .slice(0, APP_CONFIG.trendingCount);
+        const trendingHTML = trendingNews.map((article, index) => 
+            NewsDisplay.createTrendingItem(article, index)
+        ).join('');
+        document.getElementById('trending-news').innerHTML = trendingHTML;
+        
+        // Todas as notícias (restantes)
+        const remainingNews = newsList.slice(APP_CONFIG.featuredCount);
+        const allNewsHTML = remainingNews.map(article => 
+            NewsDisplay.createNewsCard(article, false)
+        ).join('');
+        document.getElementById('all-news').innerHTML = allNewsHTML;
+    }
+    
+    // Filtra por categoria
+    function filterByCategory(category) {
+        NewsDisplay.currentCategory = category;
+        
+        // Atualiza navegação
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Filtra notícias
+        let filtered = allNews;
+        if (category !== 'all') {
+            filtered = allNews.filter(article => article.category === category);
+        }
+        
+        updateNewsDisplay(filtered);
+        scrollToTop();
+    }
+    
+    // Busca notícias
+    function searchNews(query) {
+        NewsDisplay.currentSearch = query.toLowerCase().trim();
+        
+        if (!query) {
+            updateNewsDisplay(allNews);
+            return;
+        }
+        
+        const filtered = allNews.filter(article =>
+            article.title.toLowerCase().includes(query) ||
+            article.excerpt.toLowerCase().includes(query) ||
+            article.source.toLowerCase().includes(query)
+        );
+        
+        updateNewsDisplay(filtered);
+    }
+        // Salva/remove notícia
+    function toggleSaveNews(articleId, event) {
+        event.stopPropagation();
+        
+        const article = allNews.find(n => n.id === articleId);
+        if (!article) return;
+        
+        const btn = event.target.closest('.save-btn');
+        
+        if (article.isNative) {
+            // Remove notícia nativa
+            const updatedNews = NewsStorage.removeSavedNews(articleId);
+            allNews = allNews.filter(n => n.id !== articleId);
+            updateNewsDisplay(currentNews.filter(n => n.id !== articleId));
+            
+            showNotification('Notícia removida', 'success');
+        } else {
+            // Salva como nativa
+            const savedArticle = NewsStorage.saveNativeNews(article);
+            allNews.unshift(savedArticle);
+            
+            // Atualiza botão
+            btn.classList.add('saved');
+            btn.innerHTML = '<i class="fas fa-bookmark"></i>';
+            
+            showNotification('Notícia guardada como nativa', 'success');
         }
     }
-
-    async function loadSavedNews() {
-        const savedNews = JSON.parse(localStorage.getItem('saved_news') || '[]');
+    
+    // Mostra notícias guardadas
+    function showSavedNews() {
+        const savedNews = NewsStorage.getSavedNews();
+        updateNewsDisplay(savedNews);
         
-        savedNews.forEach(news => {
-            if (!seenNews.has(news.id)) {
-                allNews.push({
-                    ...news,
-                    saved: true
-                });
-                seenNews.add(news.id);
-            }
+        // Atualiza navegação
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        showNotification(`Mostrando ${savedNews.length} notícias guardadas`, 'info');
+    }
+    
+    // Painel admin
+    function openAdminPanel() {
+        const password = prompt('Digite a senha de administrador:');
+        if (password === APP_CONFIG.adminPassword) {
+            window.location.href = 'admin.html';
+        } else if (password) {
+            showNotification('Senha incorreta', 'error');
+        }
+    }
+    
+    // Atualiza notícias
+    function refreshNews() {
+        NewsFetcher.fetchRealTime();
+    }
+    
+    // Remove duplicatas
+    function removeDuplicates(newsList) {
+        const seen = new Set();
+        return newsList.filter(article => {
+            const key = article.title + article.source;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
         });
     }
-
-    async function loadExternalNews() {
-        const promises = NEWS_SOURCES
-            .filter(source => source.enabled)
-            .map(async (source) => {
-                try {
-                    const cacheKey = `news_${source.name}_${new Date().toISOString().split('T')[0]}`;
-                    const cached = localStorage.getItem(cacheKey);
-                    
-                    if (cached) {
-                        return JSON.parse(cached);
-                    }
-                    
-                    const response = await fetch(
-                        `${source.url}?_embed&per_page=10&page=1&timestamp=${Date.now()}`
-                    );
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-                    
-                    const articles = await response.json();
-                    
-                    const processedArticles = articles.map(article => {
-                        const id = `ext_${article.id}_${source.name.replace(/\s+/g, '_')}`;
-                        
-                        if (seenNews.has(id)) return null;
-                        
-                        seenNews.add(id);
-                        
-                        const category = determineCategory(
-                            article.title?.rendered || '',
-                            article.content?.rendered || ''
-                        );
-                        
-                        return {
-                            id: id,
-                            title: article.title?.rendered || 'Sem título',
-                            excerpt: article.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 150) + '...' || '',
-                            content: article.content?.rendered || '',
-                            image: article._embedded?.['wp:featuredmedia']?.[0]?.source_url || 
-                                   article.jetpack_featured_media_url ||
-                                   `https://via.placeholder.com/600x400/1a73e8/ffffff?text=${encodeURIComponent(source.name.substring(0, 2))}`,
-                            source: source.name,
-                            date: article.date || article.modified || new Date().toISOString(),
-                            link: article.link || '#',
-                            category: category,
-                            categoryName: CATEGORIES[category]?.name || category,
-                            original: true
-                        };
-                    }).filter(article => article !== null);
-                    
-                    // Cache por 1 hora
-                    localStorage.setItem(cacheKey, JSON.stringify(processedArticles));
-                    localStorage.setItem(`${cacheKey}_timestamp`, Date.now());
-                    
-                    return processedArticles;
-                    
-                } catch (error) {
-                    console.error(`Erro ao carregar ${source.name}:`, error);
-                    return [];
-                }
-            });
-        
-        const results = await Promise.allSettled(promises);
-        
-        results.forEach(result => {
-            if (result.status === 'fulfilled' && result.value) {
-                allNews.push(...result.value);
-            }
-        });
+    
+    // Estados de carregamento
+    function showLoadingState() {
+        document.body.style.opacity = '0.8';
+        document.body.style.pointerEvents = 'none';
     }
-
-    // NOTIFICAÇÃO
-    function showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'error' ? '#f44336' : '#4CAF50'};
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: slideIn 0.3s ease-out;
-            max-width: 300px;
-        `;
-        
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
-                <span>${message}</span>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease-out';
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 300);
-        }, 3000);
+    
+    function hideLoadingState() {
+        document.body.style.opacity = '1';
+        document.body.style.pointerEvents = 'auto';
     }
-
-    // ADICIONAR ESTILOS DE ANIMAÇÃO
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // SCROLL INFINITO
-    let page = 1;
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 && 
-            !isLoading && 
-            allNews.length < 200) {
-            page++;
-            loadAllNews();
-        }
-    });
-
-    // ATALHOS DE TECLADO
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeSidebar();
-        }
-        
-        if (e.ctrlKey && e.key === 'k') {
-            e.preventDefault();
-            document.getElementById('search-input').focus();
-        }
-        
-        if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
-            e.preventDefault();
-            loadAllNews();
-        }
-        
-        if (e.ctrlKey && e.key === 'a') {
-            e.preventDefault();
-            accessAdmin();
-        }
-    });
-
-    // FOCUS NO CAMPO DE BUSCA
-    document.getElementById('search-input').addEventListener('focus', function() {
-        this.select();
-    });
-
-    // INICIALIZAÇÃO
-    document.addEventListener('DOMContentLoaded', () => {
-        loadAllNews();
-        
-        // Atualiza a cada 5 minutos se a página estiver visível
+    
+    function showErrorState() {
+        // Implementar tratamento de erro visual
+    }
+    
+    // Notificações
+    function showNotification(message, type = 'info') {
+        // Implementar sistema de notificações toast
+        console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+    
+    // Indicador em tempo real
+    function showRealTimeIndicator() {
+        const indicator = document.getElementById('real-time-indicator');
+        indicator.style.display = 'flex';
+    }
+    
+    function hideRealTimeIndicator() {
+        const indicator = document.getElementById('real-time-indicator');
+        indicator.style.display = 'none';
+    }
+    
+    // Configurações
+    function setupAutoRefresh() {
         setInterval(() => {
-            if (document.visibilityState === 'visible' && !isLoading) {
-                loadAllNews();
+            if (document.visibilityState === 'visible') {
+                NewsFetcher.fetchRealTime();
             }
-        }, 300000);
+        }, APP_CONFIG.updateInterval);
+    }
+    
+    function setupInfiniteScroll() {
+        let loading = false;
+        
+        window.addEventListener('scroll', () => {
+            if (loading) return;
+            
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 500) {
+                loading = true;
+                // Carregar mais notícias aqui
+                setTimeout(() => {
+                    loading = false;
+                }, 1000);
+            }
+        });
+    }
+    
+    function setupVisibilityObserver() {
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                NewsFetcher.fetchRealTime();
+            }
+        });
+    }
+    
+    // Scroll para topo
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Configura botão de scroll
+    window.addEventListener('scroll', () => {
+        const scrollBtn = document.querySelector('.scroll-top');
+        if (window.scrollY > 500) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
     });
-
-    // VERIFICA CONEXÃO
-    window.addEventListener('online', () => {
-        showNotification('Conexão restaurada. Atualizando notícias...');
-        loadAllNews();
-    });
-
-    window.addEventListener('offline', () => {
-        showNotification('Você está offline. Mostrando notícias em cache.', 'error');
-    });
+    
+    // Exporta notícias
+    function exportNews() {
+        const data = {
+            news: allNews,
+            exportedAt: new Date().toISOString(),
+            count: allNews.length
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `newshub-export-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        
+        showNotification('Notícias exportadas com sucesso', 'success');
+    }
+    
+    // Funções auxiliares da UI
+    function showCategories() {
+        // Implementar modal de categorias
+    }
+    
+    function toggleViewMode() {
+        // Implementar alternância entre grid e lista
+    }
+    
+    function sortByTime(order) {
+        // Implementar ordenação
+    }
+    
+    function showMoreTrending() {
+        // Implementar carregar mais trending
+    }
+    
+    // Funções do footer
+    function showAbout() {
+        alert('NewsHub MOZ - Agregador Inteligente de Notícias Moçambicanas\nVersão 2.0.0');
+    }
+    
+    function showContact() {
+        alert('Contato: claudioarmando001@gmail.com\nTelefone: +258 869 667 677');
+    }
+    
+    function showPrivacy() {
+        alert('Política de Privacidade\n\nNão coletamos dados pessoais.');
+    }
+    
+    function showTerms() {
+        alert('Termos de Uso\n\nAs notícias são agregadas de fontes públicas.');
+    }
+    
+    function openSource(sourceId) {
+        const source = NEWS_SOURCES.find(s => s.id === sourceId);
+        if (source) {
+            window.open(source.api.replace('/wp-json/wp/v2/posts', ''), '_blank');
+        }
+    }
+    
+    function showSettings() {
+        // Implementar configurações
+    }
+    
+    // Inicializa quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
