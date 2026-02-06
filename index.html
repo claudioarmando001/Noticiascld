@@ -102,6 +102,7 @@
         display: flex;
         align-items: center;
         gap: var(--spacing-sm);
+        cursor: pointer;
     }
 
     .logo-icon {
@@ -298,6 +299,8 @@
         transform: translateY(20px);
         animation: fadeInUp 0.6s forwards;
         position: relative;
+        cursor: pointer;
+        display: block;
     }
 
     @keyframes fadeInUp {
@@ -367,6 +370,7 @@
         transition: all 0.3s ease;
         backdrop-filter: blur(4px);
         z-index: 2;
+        cursor: pointer;
     }
 
     .save-btn:hover {
@@ -753,7 +757,7 @@
     <!-- HEADER -->
     <header class="main-header">
         <div class="container header-container">
-            <div class="logo">
+            <div class="logo" onclick="scrollToTop()">
                 <div class="logo-icon">
                     <i class="fas fa-newspaper"></i>
                 </div>
@@ -769,24 +773,30 @@
     </header>
 
     <!-- NAVEGAÇÃO -->
-    <nav class="main-nav">
+        <nav class="main-nav">
         <div class="container nav-container">
             <button class="nav-item active" onclick="filterNews('all')">
                 <i class="fas fa-globe"></i> Todas
             </button>
-            <button class="nav-item" onclick="filterNews('politics')">
-                <i class="fas fa-landmark"></i> Política
-            </button>
-            <button class="nav-item" onclick="filterNews('economy')">
-                <i class="fas fa-chart-line"></i> Economia
-            </button>
-            <button class="nav-item" onclick="filterNews('sports')">
-                <i class="fas fa-futbol"></i> Esportes
-            </button>
-            <button class="nav-item" onclick="filterNews('society')">
+            <button class="nav-item" onclick="filterNews('sociedade')">
                 <i class="fas fa-users"></i> Sociedade
             </button>
-            <button class="nav-item" onclick="filterNews('tech')">
+            <button class="nav-item" onclick="filterNews('politica')">
+                <i class="fas fa-landmark"></i> Política
+            </button>
+            <button class="nav-item" onclick="filterNews('economia')">
+                <i class="fas fa-chart-line"></i> Economia
+            </button>
+            <button class="nav-item" onclick="filterNews('esportes')">
+                <i class="fas fa-futbol"></i> Esportes
+            </button>
+            <button class="nav-item" onclick="filterNews('cultura')">
+                <i class="fas fa-paint-brush"></i> Cultura
+            </button>
+            <button class="nav-item" onclick="filterNews('saude')">
+                <i class="fas fa-heartbeat"></i> Saúde
+            </button>
+            <button class="nav-item" onclick="filterNews('tecnologia')">
                 <i class="fas fa-microchip"></i> Tecnologia
             </button>
             <button class="nav-item" onclick="showSavedNews()">
@@ -796,7 +806,7 @@
     </nav>
 
     <!-- BUSCA -->
-       <section class="search-section">
+    <section class="search-section">
         <div class="container search-container">
             <div class="search-box">
                 <div class="search-icon">
@@ -910,10 +920,13 @@
                 <div class="footer-section">
                     <h3>Categorias</h3>
                     <ul class="footer-links">
-                        <li><a href="#" onclick="filterNews('politics')">Política</a></li>
-                        <li><a href="#" onclick="filterNews('economy')">Economia</a></li>
-                        <li><a href="#" onclick="filterNews('sports')">Esportes</a></li>
-                        <li><a href="#" onclick="filterNews('society')">Sociedade</a></li>
+                        <li><a href="#" onclick="filterNews('sociedade')">Sociedade</a></li>
+                        <li><a href="#" onclick="filterNews('politica')">Política</a></li>
+                        <li><a href="#" onclick="filterNews('economia')">Economia</a></li>
+                        <li><a href="#" onclick="filterNews('esportes')">Esportes</a></li>
+                        <li><a href="#" onclick="filterNews('cultura')">Cultura</a></li>
+                        <li><a href="#" onclick="filterNews('saude')">Saúde</a></li>
+                        <li><a href="#" onclick="filterNews('tecnologia')">Tecnologia</a></li>
                     </ul>
                 </div>
                 
@@ -944,7 +957,7 @@
             </div>
         </div>
     </footer>
-   <!-- BOTÕES FLUTUANTES -->
+    <!-- BOTÕES FLUTUANTES -->
     <div class="floating-buttons">
         <button class="floating-btn" onclick="scrollToTop()" title="Voltar ao topo">
             <i class="fas fa-arrow-up"></i>
@@ -958,44 +971,81 @@
     // ===== CONFIGURAÇÃO =====
     const CONFIG = {
         appName: 'Notícias CLD',
-        storageKey: 'cld_news_v2',
+        storageKey: 'cld_news_v3',
         sources: [
-            {
+            { 
                 id: 'opais',
-                name: 'O País Moçambique',
+                name: 'O País', 
                 url: 'https://opais.co.mz/wp-json/wp/v2/posts',
-                color: '#1a73e8',
                 enabled: true,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
+                batchSize: 10
             },
             {
                 id: 'noticias',
                 name: 'Jornal Notícias',
                 url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts',
-                color: '#34a853',
-                enabled: true
+                enabled: true,
+                batchSize: 10
             },
-            {
+            { 
                 id: 'canal',
-                name: 'Canal de Moçambique',
+                name: 'Canal de Moçambique', 
                 url: 'https://canal.co.mz/wp-json/wp/v2/posts',
-                color: '#fbbc05',
-                enabled: true
+                enabled: true,
+                batchSize: 8
+            },
+            { 
+                id: 'savana',
+                name: 'Savana', 
+                url: 'https://savana.co.mz/wp-json/wp/v2/posts',
+                enabled: true,
+                batchSize: 8
             },
             {
-                id: 'savana',
-                name: 'Savana Digital',
-                url: 'https://savana.co.mz/wp-json/wp/v2/posts',
-                color: '#ea4335',
-                enabled: true
+                id: 'integrity',
+                name: 'Integrity Magazine',
+                url: 'https://integritymagazine.co.mz/wp-json/wp/v2/posts',
+                enabled: true,
+                batchSize: 6
+            },
+            {
+                id: 'times',
+                name: 'Time de Todos',
+                url: 'https://timesdetodos.com/wp-json/wp/v2/posts',
+                enabled: true,
+                batchSize: 6
+            },
+            {
+                id: 'club',
+                name: 'Club of Mozambique',
+                url: 'https://clubofmozambique.com/wp-json/wp/v2/posts',
+                enabled: true,
+                batchSize: 6
+            },
+            {
+                id: 'zitamar',
+                name: 'Zitamar News',
+                url: 'https://zitamar.com/wp-json/wp/v2/posts',
+                enabled: true,
+                batchSize: 5
             }
         ],
-        batchSize: 12,
         maxRetries: 3,
-        debounceDelay: 300
+        debounceDelay: 300,
+        scrollThreshold: 300,
+        cacheTTL: 30 * 60 * 1000 // 30 minutos
+    };
+
+    // ===== CATEGORIAS =====
+    const CATEGORIES = {
+        'all': { name: 'Todas', icon: 'globe' },
+        'sociedade': { name: 'Sociedade', icon: 'users', color: '#2e7d32' },
+        'politica': { name: 'Política', icon: 'landmark', color: '#c62828' },
+        'economia': { name: 'Economia', icon: 'chart-line', color: '#ef6c00' },
+        'esportes': { name: 'Esportes', icon: 'futbol', color: '#1565c0' },
+        'cultura': { name: 'Cultura', icon: 'paint-brush', color: '#7b1fa2' },
+        'saude': { name: 'Saúde', icon: 'heartbeat', color: '#00796b' },
+        'tecnologia': { name: 'Tecnologia', icon: 'microchip', color: '#37474f' }
     };
 
     // ===== VARIÁVEIS GLOBAIS =====
@@ -1007,9 +1057,9 @@
     let currentFilter = 'all';
     let currentSearch = '';
     let newsCache = new Map();
-    let retryCount = 0;
-    let isInitialLoad = true;
+    let sourcePages = new Map();
     let searchTimeout = null;
+    let isInitialLoad = true;
 
     // ===== ELEMENTOS DOM =====
     const newsGrid = document.getElementById('news-grid');
@@ -1031,17 +1081,17 @@
         // Primeiro carrega do cache
         await loadFromCache();
         
-        // Inicia carregamento das notícias
-        setTimeout(() => loadMoreNews(), 500);
-        
         // Configura scroll infinito
         setupInfiniteScroll();
         
         // Configura debounce para busca
         setupSearchDebounce();
         
-        // Configura service worker para cache
-        setupServiceWorker();
+        // Inicia carregamento das notícias
+        setTimeout(() => loadMoreNews(), 500);
+        
+        // Configura atalhos de teclado
+        setupKeyboardShortcuts();
     }
 
     function showSkeletonLoaders() {
@@ -1057,22 +1107,35 @@
         skeletonLoaders.innerHTML = '';
     }
 
-    // ===== FUNÇÕES DE ARMAZENAMENTO =====
+    // ===== ARMAZENAMENTO =====
     function saveToStorage(key, data) {
         try {
-            localStorage.setItem(key, JSON.stringify(data));
+            const dataWithTTL = {
+                data: data,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(key, JSON.stringify(dataWithTTL));
             return true;
         } catch (e) {
             console.error('Erro ao salvar:', e);
-            showNotification('Erro ao salvar dados', 'error');
             return false;
         }
     }
 
     function loadFromStorage(key) {
         try {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
+            const stored = localStorage.getItem(key);
+            if (!stored) return null;
+            
+            const { data, timestamp } = JSON.parse(stored);
+            
+            // Verifica se o cache expirou
+            if (Date.now() - timestamp > CONFIG.cacheTTL) {
+                localStorage.removeItem(key);
+                return null;
+            }
+            
+            return data;
         } catch (e) {
             console.error('Erro ao carregar:', e);
             return null;
@@ -1088,8 +1151,7 @@
             showNotification(`Carregadas ${cachedNews.length} notícias do cache`);
         }
     }
-
-    // ===== SISTEMA DE BUSCA MELHORADO =====
+    // ===== BUSCA RÁPIDA =====
     function setupSearchDebounce() {
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
@@ -1110,16 +1172,20 @@
             return;
         }
         
-        // Filtra as notícias
+        // Busca em tempo real usando índice de palavras
         const results = allNews.filter(news => {
             const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
+            
+            // Busca por palavras individuais
+            const words = searchTerm.split(' ').filter(w => w.length > 2);
+            if (words.length > 0) {
+                return words.some(word => searchText.includes(word));
+            }
+            
             return searchText.includes(searchTerm);
         });
         
-        // Atualiza estatísticas
         updateSearchStats(results.length, searchTerm);
-        
-        // Atualiza exibição
         displayedNews = results;
         updateNewsDisplay();
     }
@@ -1133,7 +1199,7 @@
         searchStats.classList.add('visible');
     }
 
-    // ===== CARREGAMENTO DE NOTÍCIAS =====
+    // ===== CARREGAMENTO RÁPIDO DE NOTÍCIAS =====
     async function loadMoreNews() {
         if (isLoading || !hasMore) return;
         
@@ -1142,8 +1208,8 @@
         hideSkeletonLoaders();
         
         try {
-            // Carrega notícias uma fonte de cada vez
-            const newsBatch = await fetchNewsSequentially();
+            // Carrega de múltiplas fontes em paralelo
+            const newsBatch = await fetchMultipleSources();
             
             if (newsBatch.length === 0) {
                 hasMore = false;
@@ -1154,185 +1220,162 @@
                 
                 showNotification('Todas as notícias foram carregadas');
             } else {
-                // Processa notícias uma de cada vez
-                await processNewsSequentially(newsBatch);
+                // Processa e exibe imediatamente
+                await processAndDisplayNews(newsBatch);
                 
                 if (isInitialLoad) {
                     isInitialLoad = false;
+                    showNotification(`${allNews.length} notícias carregadas`, 'success');
                 }
-                
-                currentPage++;
             }
             
         } catch (error) {
             console.error('Erro ao carregar notícias:', error);
             showNotification('Erro ao carregar notícias. Tentando novamente...', 'error');
-            
-            if (retryCount < CONFIG.maxRetries) {
-                retryCount++;
-                setTimeout(loadMoreNews, 2000);
-            } else {
-                hasMore = false;
-                if (allNews.length === 0) {
-                    emptyState.style.display = 'block';
-                }
-            }
         } finally {
             isLoading = false;
             loader.style.display = 'none';
             
-            // Salva no cache após carregamento
-            saveToStorage('cld_news_cache', allNews.slice(0, 50)); // Guarda apenas as 50 mais recentes
+            // Salva no cache
+            saveToStorage('cld_news_cache', allNews.slice(0, 100));
         }
     }
 
-    async function fetchNewsSequentially() {
-        let allFetchedNews = [];
+    async function fetchMultipleSources() {
+        const promises = CONFIG.sources
+            .filter(source => source.enabled)
+            .map(source => fetchSourceNews(source));
         
-        for (const source of CONFIG.sources) {
-            if (!source.enabled) continue;
-            
-            try {
-                const sourceNews = await fetchSourceNews(source);
-                if (sourceNews && sourceNews.length > 0) {
-                    allFetchedNews = allFetchedNews.concat(sourceNews);
-                    
-                    // Exibe cada notícia conforme é processada
-                    for (const news of sourceNews) {
-                        await createNewsCard(news);
-                        await new Promise(resolve => setTimeout(resolve, 100)); // Pequeno delay para animação
-                    }
-                }
-            } catch (error) {
-                console.error(`Erro na fonte ${source.name}:`, error);
-                continue;
+        const results = await Promise.allSettled(promises);
+        const allNews = [];
+        
+        for (const result of results) {
+            if (result.status === 'fulfilled' && result.value.length > 0) {
+                allNews.push(...result.value);
             }
         }
-         // Remove duplicatas
-        return removeDuplicates(allFetchedNews);
+        
+        // Remove duplicatas e ordena por data
+        return removeDuplicates(allNews).sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
     async function fetchSourceNews(source) {
-        const cacheKey = `${source.id}_page${currentPage}`;
+        const cacheKey = `${source.id}_page${sourcePages.get(source.id) || 1}`;
         
-        // Verifica cache primeiro
         if (newsCache.has(cacheKey)) {
             return newsCache.get(cacheKey);
         }
         
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const page = sourcePages.get(source.id) || 1;
+            const url = `${source.url}?per_page=${source.batchSize}&page=${page}&_embed`;
             
-            const response = await fetch(`${source.url}?per_page=${CONFIG.batchSize}&page=${currentPage}&_embed`, {
-                signal: controller.signal,
-                headers: source.headers || {
-                    'Accept': 'application/json'
+            const response = await fetch(url, {
+                signal: AbortSignal.timeout(10000),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             });
             
-            clearTimeout(timeoutId);
-            
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                if (response.status === 400) {
+                    sourcePages.set(source.id, 0); // Marca como concluído
+                }
+                return [];
             }
             
             const data = await response.json();
             
-            if (!data || data.length === 0) {
+            if (data.length === 0) {
+                sourcePages.set(source.id, 0);
                 return [];
             }
             
-            const processedNews = processNewsData(data, source);
+            // Incrementa página para próxima requisição
+            sourcePages.set(source.id, page + 1);
             
-            // Salva no cache
-            newsCache.set(cacheKey, processedNews);
+            const processed = processNewsData(data, source);
+            newsCache.set(cacheKey, processed);
             
-            return processedNews;
+            return processed;
             
         } catch (error) {
-            console.error(`Erro ao buscar de ${source.name}:`, error);
+            console.error(`Erro na fonte ${source.name}:`, error);
             return [];
         }
     }
 
     function processNewsData(data, source) {
-        const newsItems = [];
-        
-        for (const item of data) {
+        return data.map(item => {
             try {
                 const content = item.content?.rendered || item.content || '';
-                const cleanContent = content.replace(/<[^>]*>/g, '');
-                
-                const newsId = `${source.id}_${item.id}_${Date.now()}`;
+                const cleanContent = content.replace(/<[^>]*>/g, '').substring(0, 500);
                 
                 const newsItem = {
-                    id: newsId,
+                    id: `${source.id}_${item.id}_${Date.now()}`,
                     title: cleanText(item.title?.rendered || item.title || 'Sem título'),
-                    excerpt: cleanText(item.excerpt?.rendered || item.excerpt || cleanContent.substring(0, 200)),
+                    excerpt: cleanText(item.excerpt?.rendered || item.excerpt || cleanContent).substring(0, 200),
                     content: cleanContent,
                     image: getFeaturedImage(item),
                     source: source.name,
                     sourceId: source.id,
-                    date: item.date || item.published || new Date().toISOString(),
-                    link: item.link || item.url || '#',
+                    date: item.date || new Date().toISOString(),
+                    link: item.link || `https://${source.id}.co.mz`,
                     category: detectCategory(item.title?.rendered || item.title, content),
                     addedAt: new Date().toISOString(),
-                    isSaved: checkIfSaved(newsId),
-                    views: Math.floor(Math.random() * 1000) // Simulação para demonstração
+                    isSaved: checkIfSaved(`${source.id}_${item.id}`),
+                    hash: (item.title?.rendered + item.link).replace(/\W/g, ""),
+                    views: Math.floor(Math.random() * 1000)
                 };
-                
-                // Filtra itens sem título
+      // Filtra itens inválidos
                 if (newsItem.title !== 'Sem título' && newsItem.title.trim().length > 10) {
-                    newsItems.push(newsItem);
+                    return newsItem;
                 }
             } catch (error) {
                 console.error('Erro ao processar item:', error);
-                continue;
             }
-        }
-        
-        return newsItems;
+            return null;
+        }).filter(item => item !== null);
     }
 
     function getFeaturedImage(item) {
-        // Tenta várias fontes possíveis de imagem
         const imageSources = [
             item._embedded?.['wp:featuredmedia']?.[0]?.source_url,
             item._embedded?.featuredmedia?.[0]?.source_url,
             item.jetpack_featured_media_url,
-            item.thumbnail,
             item.featured_image
         ];
         
         for (const src of imageSources) {
-            if (src && typeof src === 'string' && src.startsWith('http')) {
+            if (src && src.startsWith('http')) {
                 return src;
             }
         }
         
         // Imagem de fallback baseada na categoria
-        const categoryColors = {
-            politics: '3f51b5',
-            economy: '4caf50',
-            sports: 'ff9800',
-            society: '2196f3',
-            tech: '607d8b',
-            default: '1a73e8'
-        };
-        
-        return `https://via.placeholder.com/600x400/${categoryColors.default}/ffffff?text=Notícia`;
+        return `https://via.placeholder.com/600x400/${getCategoryColor(item)}/ffffff?text=${encodeURIComponent('Notícia')}`;
+    }
+
+    function getCategoryColor(item) {
+        const text = ((item.title?.rendered || '') + (item.content || '')).toLowerCase();
+        if (/politica|governo/i.test(text)) return 'c62828';
+        if (/economia|negocio/i.test(text)) return 'ef6c00';
+        if (/esporte|futebol/i.test(text)) return '1565c0';
+        return '1a73e8';
     }
 
     function detectCategory(title, content) {
         const text = ((title || '') + ' ' + (content || '')).toLowerCase();
         
         const categories = {
-            politics: [/politica/i, /governo/i, /presidente/i, /ministro/i, /eleicoes/i, /parlamento/i],
-            economy: [/economia/i, /negocio/i, /empresa/i, /investimento/i, /mercado/i, /banco/i],
-            sports: [/esporte/i, /futebol/i, /jogo/i, /atleta/i, /competicao/i, /campeonato/i],
-            society: [/sociedade/i, /social/i, /comunidade/i, /educacao/i, /familia/i, /jovem/i, /mulher/i],
-            tech: [/tecnologia/i, /digital/i, /internet/i, /aplicativo/i, /software/i, /startup/i, /inovacao/i]
+            'sociedade': [/sociedade/i, /social/i, /comunidade/i, /educação/i, /escola/i],
+            'politica': [/politica/i, /governo/i, /presidente/i, /ministro/i, /eleições/i],
+            'economia': [/economia/i, /negocio/i, /empresa/i, /investimento/i, /banco/i],
+            'esportes': [/esporte/i, /futebol/i, /jogo/i, /atleta/i, /campeonato/i],
+            'cultura': [/cultura/i, /arte/i, /música/i, /teatro/i, /cinema/i],
+            'saude': [/saúde/i, /hospital/i, /médico/i, /enfermeiro/i, /doença/i],
+            'tecnologia': [/tecnologia/i, /digital/i, /internet/i, /aplicativo/i, /software/i]
         };
         
         for (const [category, patterns] of Object.entries(categories)) {
@@ -1341,65 +1384,63 @@
             }
         }
         
-        return 'society';
+        return 'sociedade';
     }
 
     function cleanText(text) {
         if (!text) return '';
-        
         return text
             .replace(/<[^>]*>/g, '')
             .replace(/&nbsp;/g, ' ')
             .replace(/&#[0-9]+;/g, '')
             .replace(/\s+/g, ' ')
-            .trim()
-            .substring(0, 300);
+            .trim();
     }
 
     function removeDuplicates(newsArray) {
+        const seen = new Set();
         const seenTitles = new Set();
+        
         return newsArray.filter(news => {
-            const normalizedTitle = news.title.toLowerCase().trim();
-            if (seenTitles.has(normalizedTitle) || news.title.length < 10) {
+            if (seen.has(news.id) || seenTitles.has(news.title.toLowerCase())) {
                 return false;
             }
-            seenTitles.add(normalizedTitle);
+            seen.add(news.id);
+            seenTitles.add(news.title.toLowerCase());
             return true;
         });
     }
 
-    // ===== PROCESSAMENTO SEQUENCIAL =====
-    async function processNewsSequentially(newsBatch) {
+    // ===== PROCESSAMENTO E EXIBIÇÃO RÁPIDA =====
+    async function processAndDisplayNews(newsBatch) {
+        const fragment = document.createDocumentFragment();
+        
         for (const news of newsBatch) {
-            // Verifica se já existe
             if (allNews.some(n => n.id === news.id)) continue;
             
-            // Adiciona à lista geral
             allNews.push(news);
             
-            // Adiciona à lista de exibição se passar pelos filtros atuais
             if (passesCurrentFilters(news)) {
                 displayedNews.push(news);
-                await createNewsCard(news);
+                const card = createNewsCardElement(news);
+                fragment.appendChild(card);
             }
-            
-            // Pequeno delay para animação suave
-            await new Promise(resolve => setTimeout(resolve, 50));
         }
         
-        // Atualiza estatísticas se houver busca
+        // Adiciona todos os cards de uma vez (melhor performance)
+        newsGrid.appendChild(fragment);
+        
+        // Atualiza estatísticas de busca
         if (currentSearch) {
             updateSearchStats(displayedNews.length, currentSearch);
         }
     }
 
     function passesCurrentFilters(news) {
-        // Filtro por categoria
         if (currentFilter !== 'all' && news.category !== currentFilter) {
             return false;
         }
         
-        // Filtro por busca
         if (currentSearch) {
             const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
             return searchText.includes(currentSearch.toLowerCase());
@@ -1407,20 +1448,23 @@
         
         return true;
     }
- // ===== CRIAÇÃO DE CARDS =====
-    async function createNewsCard(news) {
-        // Remove o skeleton loader se existir
-        if (skeletonLoaders.children.length > 0) {
-            skeletonLoaders.firstChild?.remove();
-        }
-        
+
+    // ===== CRIAÇÃO DE CARDS =====
+    function createNewsCardElement(news) {
         const card = document.createElement('article');
         card.className = 'news-card';
         card.setAttribute('data-id', news.id);
         card.setAttribute('data-category', news.category);
         
+        // Torna todo o card clicável
+        card.onclick = (e) => {
+            // Impede clique nos botões internos
+            if (e.target.closest('.save-btn')) return;
+            openArticle(news.id);
+        };
+        
         const timeAgo = getTimeAgo(news.date);
-        const sourceColor = CONFIG.sources.find(s => s.id === news.sourceId)?.color || '#1a73e8';
+        const categoryInfo = CATEGORIES[news.category] || CATEGORIES.sociedade;
         
         card.innerHTML = `
             <div class="card-image">
@@ -1428,23 +1472,21 @@
                      alt="${news.title}"
                      loading="lazy"
                      onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=Notícia'">
-                <span class="category-badge">${getCategoryName(news.category)}</span>
+                <span class="category-badge" style="background: ${categoryInfo.color || '#1a73e8'}; color: white;">
+                    ${categoryInfo.name}
+                </span>
                 <button class="save-btn ${news.isSaved ? 'saved' : ''}" 
-                        onclick="toggleSave('${news.id}', this)"
+                        onclick="toggleSave('${news.id}', this); event.stopPropagation();"
                         title="${news.isSaved ? 'Remover das guardadas' : 'Guardar notícia'}">
                     <i class="fas fa-bookmark"></i>
                 </button>
             </div>
             <div class="card-content">
-                <h3 class="card-title">
-                    <a href="article.html?id=${news.id}" onclick="openArticle('${news.id}', event)">
-                        ${news.title}
-                    </a>
-                </h3>
+                <h3 class="card-title">${news.title}</h3>
                 <p class="card-excerpt">${news.excerpt}</p>
                 <div class="card-meta">
                     <div class="source-info">
-                        <div class="source-icon" style="background: ${sourceColor}">
+                        <div class="source-icon" style="background: ${getSourceColor(news.sourceId)}">
                             ${news.source.substring(0, 2).toUpperCase()}
                         </div>
                         <span class="source-name">${news.source}</span>
@@ -1452,19 +1494,29 @@
                     <div class="card-time">
                         <i class="far fa-clock"></i>
                         <span>${timeAgo}</span>
-                        ${news.views ? `<span style="margin-left: 8px;"><i class="far fa-eye"></i> ${formatViews(news.views)}</span>` : ''}
+                        <span style="margin-left: 8px;">
+                            <i class="far fa-eye"></i> ${formatViews(news.views)}
+                        </span>
                     </div>
                 </div>
             </div>
         `;
         
-        newsGrid.appendChild(card);
-        
-        // Animação de entrada
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 10);
+        return card;
+    }
+
+    function getSourceColor(sourceId) {
+        const colors = {
+            'opais': '#1a73e8',
+            'noticias': '#34a853',
+            'canal': '#fbbc05',
+            'savana': '#ea4335',
+            'integrity': '#9c27b0',
+            'times': '#00acc1',
+            'club': '#5c6bc0',
+            'zitamar': '#8d6e63'
+        };
+        return colors[sourceId] || '#1a73e8';
     }
 
     function getTimeAgo(dateString) {
@@ -1489,18 +1541,6 @@
         if (views >= 1000) return `${(views / 1000).toFixed(1)}k`;
         return views.toString();
     }
-
-    function getCategoryName(category) {
-        const names = {
-            politics: 'Política',
-            economy: 'Economia',
-            sports: 'Esportes',
-            society: 'Sociedade',
-            tech: 'Tecnologia'
-        };
-        return names[category] || 'Notícia';
-    }
-
     // ===== FILTROS =====
     function filterNews(category) {
         currentFilter = category;
@@ -1515,13 +1555,13 @@
         event.target.classList.add('active');
         
         // Aplica filtros
-        displayedNews = allNews.filter(news => 
-            currentFilter === 'all' || news.category === currentFilter
-        );
+        if (category === 'all') {
+            displayedNews = [...allNews];
+        } else {
+            displayedNews = allNews.filter(news => news.category === category);
+        }
         
         updateNewsDisplay();
-        
-        // Scroll para topo
         scrollToTop();
     }
 
@@ -1538,10 +1578,11 @@
             emptyState.style.display = 'none';
             newsGrid.innerHTML = '';
             
-            // Adiciona apenas as notícias que passam nos filtros
+            const fragment = document.createDocumentFragment();
             displayedNews.forEach(news => {
-                createNewsCard(news);
+                fragment.appendChild(createNewsCardElement(news));
             });
+            newsGrid.appendChild(fragment);
         }
     }
 
@@ -1553,35 +1594,27 @@
 
     function toggleSave(newsId, button) {
         const savedNews = loadFromStorage('cld_saved') || [];
-        const news = allNews.find(n => n.id === newsId);
-        
-        if (!news) {
-            news = displayedNews.find(n => n.id === newsId);
-        }
+        const news = allNews.find(n => n.id === newsId) || displayedNews.find(n => n.id === newsId);
         
         if (!news) return;
         
         const isSaved = savedNews.some(n => n.id === newsId);
         
         if (isSaved) {
-            // Remove
             const index = savedNews.findIndex(n => n.id === newsId);
             savedNews.splice(index, 1);
             button.classList.remove('saved');
-            button.innerHTML = '<i class="fas fa-bookmark"></i>';
-            showNotification('Notícia removida das guardadas');
+            showNotification('Notícia removida das guardadas', 'info');
         } else {
-            // Adiciona (sem data de expiração)
             news.savedAt = new Date().toISOString();
             savedNews.unshift(news);
             button.classList.add('saved');
-            button.innerHTML = '<i class="fas fa-bookmark"></i>';
-            showNotification('Notícia guardada');
+            showNotification('Notícia guardada', 'success');
         }
         
         saveToStorage('cld_saved', savedNews);
         
-        // Atualiza o status na lista geral
+        // Atualiza status na lista geral
         const newsIndex = allNews.findIndex(n => n.id === newsId);
         if (newsIndex !== -1) {
             allNews[newsIndex].isSaved = !isSaved;
@@ -1591,12 +1624,10 @@
     function showSavedNews() {
         const savedNews = loadFromStorage('cld_saved') || [];
         
-        // Atualiza navegação
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // Atualiza filtros
         currentFilter = 'saved';
         currentSearch = '';
         searchInput.value = '';
@@ -1613,10 +1644,38 @@
         }
     }
 
+    // ===== NAVEGAÇÃO DE ARTIGOS =====
+    function openArticle(newsId) {
+        const news = allNews.find(n => n.id === newsId) || displayedNews.find(n => n.id === newsId);
+        if (!news) {
+            showNotification('Notícia não encontrada', 'error');
+            return;
+        }
+        
+        // Adiciona ao histórico
+        addToHistory(news);
+        
+        // Abre em nova aba
+        window.open(`article.html?id=${encodeURIComponent(newsId)}`, '_blank');
+    }
+
+    function addToHistory(news) {
+        const history = loadFromStorage('cld_history') || [];
+        
+        const existingIndex = history.findIndex(n => n.id === news.id);
+        if (existingIndex !== -1) {
+            history.splice(existingIndex, 1);
+        }
+        
+        news.lastViewed = new Date().toISOString();
+        history.unshift(news);
+        saveToStorage('cld_history', history.slice(0, 100));
+    }
+
     // ===== SCROLL INFINITO =====
     function setupInfiniteScroll() {
         window.addEventListener('scroll', () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - CONFIG.scrollThreshold) {
                 if (!isLoading && hasMore) {
                     loadMoreNews();
                 }
@@ -1624,43 +1683,8 @@
         });
     }
 
-    // ===== NAVEGAÇÃO DE ARTIGOS =====
-    function openArticle(newsId, event) {
-        if (event) event.preventDefault();
-        
-        const news = allNews.find(n => n.id === newsId) || displayedNews.find(n => n.id === newsId);
-        if (!news) {
-            showNotification('Notícia não encontrada', 'error');
-            return;
-        }
-        
-        // Salva no histórico
-        saveToHistory(news);
-        
-        // Abre em nova aba
-        window.open(`article.html?id=${encodeURIComponent(newsId)}`, '_blank');
-    }
-
-    function saveToHistory(news) {
-        const history = loadFromStorage('cld_history') || [];
-        
-        // Remove se já existir
-        const existingIndex = history.findIndex(n => n.id === news.id);
-        if (existingIndex !== -1) {
-            history.splice(existingIndex, 1);
-        }
-        
-        // Adiciona no início
-        news.lastViewed = new Date().toISOString();
-        history.unshift(news);
-        
-        // Limita histórico a 100 itens
-        saveToStorage('cld_history', history.slice(0, 100));
-    }
-
     // ===== NOTIFICAÇÕES =====
     function showNotification(message, type = 'info') {
-        // Remove notificação existente
         const existing = document.querySelector('.notification');
         if (existing) existing.remove();
         
@@ -1670,14 +1694,9 @@
         const icon = type === 'error' ? 'exclamation-triangle' : 
                     type === 'success' ? 'check-circle' : 'info-circle';
         
-        notification.innerHTML = `
-            <i class="fas fa-${icon}"></i>
-            <span>${message}</span>
-        `;
-        
+        notification.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
         document.body.appendChild(notification);
         
-        // Estilos inline para evitar conflitos
         notification.style.cssText = `
             position: fixed;
             top: 20px;
@@ -1695,19 +1714,13 @@
             gap: 12px;
             font-size: 14px;
         `;
-                // Adiciona estilos de animação se não existirem
+        
         if (!document.getElementById('notification-styles')) {
             const style = document.createElement('style');
             style.id = 'notification-styles';
             style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
+                @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+                @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
             `;
             document.head.appendChild(style);
         }
@@ -1717,31 +1730,18 @@
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
-
-    // ===== SERVICE WORKER =====
-    function setupServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(() => console.log('Service Worker registrado'))
-                    .catch(error => console.log('Service Worker falhou:', error));
-            });
-        }
-    }
-
     // ===== FUNÇÕES UTILITÁRIAS =====
     async function refreshNews() {
-        // Mostra estado de carregamento
         refreshBtn.classList.add('loading');
         
         // Limpa cache
         newsCache.clear();
+        sourcePages.clear();
         localStorage.removeItem('cld_news_cache');
         
         // Reseta estado
         allNews = [];
         displayedNews = [];
-        currentPage = 1;
         hasMore = true;
         isInitialLoad = true;
         newsGrid.innerHTML = '';
@@ -1750,10 +1750,8 @@
         searchStats.classList.remove('visible');
         emptyState.style.display = 'none';
         
-        // Mostra skeleton loaders
         showSkeletonLoaders();
         
-        // Recarrega notícias
         setTimeout(async () => {
             await loadMoreNews();
             refreshBtn.classList.remove('loading');
@@ -1782,9 +1780,7 @@
         localStorage.clear();
         newsCache.clear();
         showNotification('Cache limpo com sucesso', 'success');
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+        setTimeout(() => location.reload(), 1000);
     }
 
     function scrollToTop() {
@@ -1795,35 +1791,33 @@
         document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // ===== FUNÇÕES DO FOOTER =====
     function showAbout() {
-        showNotification('Notícias CLD - Agregador de notícias moçambicanas. Desenvolvido para trazer as principais notícias do país em tempo real.');
+        showNotification('Notícias CLD - Agregador independente de notícias moçambicanas em tempo real.');
     }
 
     function showPrivacy() {
-        showNotification('Política de Privacidade: Não coletamos dados pessoais. As notícias são agregadas de fontes públicas.');
+        showNotification('Política de Privacidade: Não coletamos dados pessoais. Todas as notícias são agregadas de fontes públicas.');
     }
 
     // ===== ATALHOS DE TECLADO =====
-    document.addEventListener('keydown', (e) => {
-        // Ctrl + F para focar na busca
-        if (e.ctrlKey && e.key === 'f') {
-            e.preventDefault();
-            searchInput.focus();
-        }
-        
-        // Ctrl + R para atualizar
-        if (e.ctrlKey && e.key === 'r') {
-            e.preventDefault();
-            refreshNews();
-        }
-        
-        // Esc para limpar busca
-        if (e.key === 'Escape' && searchInput.value) {
-            searchInput.value = '';
-            searchNews('');
-        }
-    });
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshNews();
+            }
+            
+            if (e.key === 'Escape' && searchInput.value) {
+                searchInput.value = '';
+                searchNews('');
+            }
+        });
+    }
 
     // ===== DETECÇÃO DE CONEXÃO =====
     window.addEventListener('online', () => {
