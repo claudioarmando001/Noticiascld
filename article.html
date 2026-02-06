@@ -247,7 +247,6 @@
         font-size: 14px;
         font-style: italic;
     }
-
     /* ===== CONTEÚDO DO ARTIGO ===== */
     .article-content {
         background: var(--background-primary);
@@ -378,15 +377,14 @@
     }
 
     .share-buttons {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: var(--spacing-sm);
-        flex-wrap: wrap;
+        margin-bottom: var(--spacing-md);
     }
 
     .social-btn {
-        flex: 1;
-        min-width: 120px;
-        padding: 12px 20px;
+        padding: 12px 16px;
         border: none;
         border-radius: var(--radius-sm);
         font-size: 14px;
@@ -399,71 +397,107 @@
         transition: all 0.3s ease;
         color: white;
         text-decoration: none;
+        text-align: center;
     }
 
     .social-btn.facebook { background: #1877f2; }
     .social-btn.twitter { background: #1da1f2; }
     .social-btn.whatsapp { background: #25d366; }
     .social-btn.linkedin { background: #0077b5; }
+    .social-btn.copy { 
+        background: var(--primary-color);
+        grid-column: 1 / -1;
+    }
 
     .social-btn:hover {
         opacity: 0.9;
         transform: translateY(-2px);
     }
 
-    /* ===== NOTÍCIAS RELACIONADAS ===== */
-    .related-articles {
+    /* ===== MINI AGREGADOR ===== */
+    .mini-aggregator {
+        background: var(--background-primary);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-xl);
         margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-md);
     }
 
-    .related-title {
+    .aggregator-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .aggregator-title {
         font-size: 24px;
         font-weight: 700;
-        margin-bottom: var(--spacing-lg);
         color: var(--text-primary);
         display: flex;
         align-items: center;
         gap: 12px;
     }
 
-    .related-grid {
+    .refresh-aggregator-btn {
+        padding: 8px 16px;
+        background: var(--background-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .refresh-aggregator-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .aggregator-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: var(--spacing-lg);
     }
 
     @media (max-width: 768px) {
-        .related-grid {
+        .aggregator-grid {
             grid-template-columns: 1fr;
         }
     }
 
-    .related-card {
-        background: var(--background-primary);
+    .aggregator-card {
+        background: var(--background-secondary);
         border-radius: var(--radius-md);
         overflow: hidden;
-        box-shadow: var(--shadow-md);
         transition: all 0.3s ease;
         text-decoration: none;
         color: inherit;
+        border: 1px solid var(--border-color);
     }
 
-    .related-card:hover {
+    .aggregator-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        border-color: var(--primary-color);
     }
 
-    .related-image {
+    .aggregator-image {
         width: 100%;
         height: 160px;
         object-fit: cover;
     }
 
-    .related-content {
+    .aggregator-content {
         padding: var(--spacing-md);
     }
 
-    .related-card-title {
+    .aggregator-card-title {
         font-size: 16px;
         font-weight: 600;
         line-height: 1.4;
@@ -474,7 +508,7 @@
         overflow: hidden;
     }
 
-    .related-meta {
+    .aggregator-meta {
         display: flex;
         justify-content: space-between;
         font-size: 13px;
@@ -600,11 +634,7 @@
         }
         
         .share-buttons {
-            flex-direction: column;
-        }
-        
-        .social-btn {
-            width: 100%;
+            grid-template-columns: 1fr;
         }
     }
 
@@ -638,7 +668,6 @@
             </div>
         </div>
     </header>
-
     <!-- LOADING -->
     <div id="loading" class="loading-container">
         <div class="loading-spinner"></div>
@@ -681,14 +710,48 @@
             <a href="#" class="social-btn linkedin" id="linkedin-share">
                 <i class="fab fa-linkedin-in"></i> LinkedIn
             </a>
+            <button class="social-btn copy" id="copy-link-btn" onclick="copyArticleLink()">
+                <i class="fas fa-copy"></i> Copiar Link
+            </button>
+        </div>
+    </div>
+
+    <!-- MINI AGREGADOR -->
+    <div id="mini-aggregator" class="container mini-aggregator" style="display: none;">
+        <div class="aggregator-header">
+            <h3 class="aggregator-title">
+                <i class="fas fa-newspaper"></i> Mais Notícias
+            </h3>
+            <button class="refresh-aggregator-btn" onclick="loadAggregatorNews()">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+        </div>
+        <div class="aggregator-grid" id="aggregator-grid">
+            <!-- News will be loaded here -->
         </div>
     </div>
 
     <script>
     // ===== CONFIGURAÇÃO =====
     const CONFIG = {
-        storageKey: 'cld_news_v2',
-        maxRetries: 3
+        sources: [
+            {
+                id: 'opais',
+                name: 'O País Moçambique',
+                url: 'https://opais.co.mz/wp-json/wp/v2/posts'
+            },
+            {
+                id: 'noticias',
+                name: 'Jornal Notícias',
+                url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts'
+            },
+            {
+                id: 'canal',
+                name: 'Canal de Moçambique',
+                url: 'https://canal.co.mz/wp-json/wp/v2/posts'
+            }
+        ],
+        aggregatorLimit: 6
     };
 
     // ===== VARIÁVEIS =====
@@ -702,14 +765,11 @@
     const errorEl = document.getElementById('error');
     const shareOptionsEl = document.getElementById('share-options');
     const saveActionBtn = document.getElementById('save-action-btn');
+    const miniAggregatorEl = document.getElementById('mini-aggregator');
+    const aggregatorGrid = document.getElementById('aggregator-grid');
 
     // ===== INICIALIZAÇÃO =====
-    document.addEventListener('DOMContentLoaded', () => {
-        loadArticle();
-    });
-
-    // ===== CARREGAMENTO DO ARTIGO =====
-    async function loadArticle() {
+    document.addEventListener('DOMContentLoaded', async () => {
         articleId = getArticleId();
         
         if (!articleId) {
@@ -717,19 +777,27 @@
             return;
         }
         
+        await Promise.all([
+            loadArticle(),
+            loadAggregatorNews()
+        ]);
+    });
+
+    function getArticleId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('id');
+    }
+
+    // ===== CARREGAMENTO DO ARTIGO =====
+    async function loadArticle() {
         try {
             // Tenta carregar de múltiplas fontes
-            const article = await fetchArticleWithRetry(articleId);
+            currentArticle = await findArticle();
             
-            if (article) {
-                displayArticle(article);
-                setupShareLinks(article);
-                checkIfSaved(articleId);
-                loadRelatedArticles(article);
-                
-                // Salva automaticamente
-                autoSaveArticle(article);
-                
+            if (currentArticle) {
+                displayArticle(currentArticle);
+                setupShareLinks();
+                checkIfSaved();
             } else {
                 showError();
             }
@@ -739,149 +807,116 @@
         }
     }
 
-    function getArticleId() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('id');
-    }
-
-    async function fetchArticleWithRetry(id, retries = CONFIG.maxRetries) {
-        for (let i = 0; i < retries; i++) {
-            try {
-                // Tenta carregar do cache primeiro
-                let article = await findArticleInCache(id);
-                
-                if (!article) {
-                    // Tenta carregar de fontes externas
-                    article = await fetchExternalArticle(id);
-                }
-                
-                if (article) {
-                    return article;
-                }
-            } catch (error) {
-                if (i === retries - 1) throw error;
-                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-            }
-        }
-        return null;
-    }
-
-    async function findArticleInCache(id) {
-        // Primeiro tenta do histórico
-        const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
-        const cached = history.find(article => article.id === id);
-        
-        if (cached) return cached;
-        
-        // Tenta das notícias salvas
-        const saved = 
-JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        return saved.find(article => article.id === id);
-    }
-
-    async function fetchExternalArticle(id) {
+    async function findArticle() {
         // Extrai informações do ID
-        const [sourceId] = id.split('_');
+        const [sourceId, postId] = articleId.split('_');
         
-        // Lista de endpoints possíveis
-        const endpoints = [
-            `https://www.opais.co.mz/wp-json/wp/v2/posts/${id.split('_')[1]}?_embed`,
-            `https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts/${id.split('_')[1]}?_embed`,
-            `https://canal.co.mz/wp-json/wp/v2/posts/${id.split('_')[1]}?_embed`,
-            `https://savana.co.mz/wp-json/wp/v2/posts/${id.split('_')[1]}?_embed`
-        ];
+        // Tenta carregar do localStorage primeiro
+        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const cachedArticle = savedArticles.find(article => article.id === articleId);
         
-        for (const endpoint of endpoints) {
+        if (cachedArticle) {
+            return cachedArticle;
+        }
+        
+        // Tenta carregar do histórico
+        const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
+        const historyArticle = history.find(article => article.id === articleId);
+        
+        if (historyArticle) {
+            return historyArticle;
+        }
+        
+        // Tenta carregar da API
+        const source = CONFIG.sources.find(s => s.id === sourceId);
+        if (source && postId) {
             try {
-                const response = await fetch(endpoint, { timeout: 5000 });
+                const response = await fetch(`${source.url}/${postId}?_embed`);
                 if (response.ok) {
                     const data = await response.json();
-                    return processArticleData(data, sourceId, id);
+                    return processArticleData(data, source);
                 }
             } catch (error) {
-                continue;
+                console.error('Erro ao buscar da API:', error);
             }
         }
         
-        return null;
+        // Cria artigo de fallback
+        return createFallbackArticle();
     }
 
-    function processArticleData(data, sourceId, id) {
+    function processArticleData(data, source) {
         const content = data.content?.rendered || data.content || '';
         
         return {
-            id: id,
+            id: articleId,
             title: cleanText(data.title?.rendered || data.title || 'Sem título'),
             content: content,
             excerpt: cleanText(data.excerpt?.rendered || data.excerpt || content).substring(0, 200) + '...',
             image: getFeaturedImage(data),
-            source: getSourceName(sourceId),
-            sourceId: sourceId,
+            source: source.name,
+            sourceId: source.id,
             date: data.date || data.published || new Date().toISOString(),
-            link: data.link || data.url || '#',
-            category: detectCategory(data.title?.rendered || data.title, content),
-            views: 0
+            link: data.link || data.url || window.location.href,
+            category: detectCategory(data.title?.rendered || data.title, content)
         };
     }
 
-    function getSourceName(sourceId) {
-        const sources = {
-            'opais': 'O País Moçambique',
-            'noticias': 'Jornal Notícias',
-            'canal': 'Canal de Moçambique',
-            'savana': 'Savana Digital'
+    function createFallbackArticle() {
+        return {
+            id: articleId,
+            title: 'Notícia não disponível',
+            content: '<p>Esta notícia não está mais disponível ou ocorreu um erro ao carregá-la.</p>',
+            excerpt: 'Conteúdo não disponível no momento.',
+            image: 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia+Indisponível',
+            source: 'Notícias CLD',
+            sourceId: 'cld',
+            date: new Date().toISOString(),
+            link: window.location.href,
+            category: 'Notícia'
         };
-        return sources[sourceId] || 'Fonte Desconhecida';
+    }
+
+    function getFeaturedImage(article) {
+        const imageSources = [
+            article._embedded?.['wp:featuredmedia']?.[0]?.source_url,
+            article._embedded?.featuredmedia?.[0]?.source_url,
+            article.jetpack_featured_media_url,
+            article.featured_image
+        ];
+        
+        for (const src of imageSources) {
+            if (src && src.startsWith('http')) {
+                return src;
+            }
+        }
+        
+        return 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia';
     }
 
     function detectCategory(title, content) {
         const text = ((title || '') + ' ' + (content || '')).toLowerCase();
         
-        const categories = {
-            'Política': ['política', 'governo', 'presidente', 'ministro'],
-            'Economia': ['economia', 'negócio', 'empresa', 'investimento'],
-            'Esportes': ['esporte', 'futebol', 'jogo', 'competição'],
-            'Sociedade': ['sociedade', 'social', 'comunidade', 'educação']
-        };
+        if (/politica|governo|presidente|ministro/i.test(text)) return 'Política';
+        if (/economia|negocio|empresa|investimento/i.test(text)) return 'Economia';
+        if (/esporte|futebol|jogo|competicao/i.test(text)) return 'Esportes';
+        if (/tecnologia|digital|internet|software/i.test(text)) return 'Tecnologia';
         
-        for (const [category, keywords] of Object.entries(categories)) {
-            if (keywords.some(keyword => text.includes(keyword))) {
-                return category;
-            }
-        }
-        
-        return 'Notícias';
+        return 'Sociedade';
     }
 
-    function getFeaturedImage(article) {
-        if (article._embedded?.featuredmedia?.[0]?.source_url) {
-            return article._embedded.featuredmedia[0].source_url;
-        }
-        if (article._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
-            return article._embedded['wp:featuredmedia'][0].source_url;
-        }
-        if (article.jetpack_featured_media_url) {
-            return article.jetpack_featured_media_url;
-        }
+    function cleanText(text) {
+        if (!text) return '';
         
-        return `https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia`;
-    }
-
-    function cleanText(html) {
-        if (!html) return '';
-        
-        return html
+        return text
             .replace(/<[^>]*>/g, '')
             .replace(/&nbsp;/g, ' ')
             .replace(/&#[0-9]+;/g, '')
             .replace(/\s+/g, ' ')
             .trim();
     }
-
     // ===== EXIBIÇÃO DO ARTIGO =====
     function displayArticle(article) {
-        currentArticle = article;
-        
         const timeAgo = getTimeAgo(article.date);
         const sourceInitials = article.source.substring(0, 2).toUpperCase();
         
@@ -895,15 +930,8 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
                     <div class="source-icon">${sourceInitials}</div>
                     <div class="source-details">
                         <h3>${article.source}</h3>
-                        <p>Fonte verificada</p>
+                        <p>Publicado ${timeAgo}</p>
                     </div>
-                </div>
-                <div class="article-time">
-                    <i class="far fa-clock"></i>
-                    <span>${timeAgo}</span>
-                    ${article.views ? `<span style="margin-left: 16px;">
-                        <i class="far fa-eye"></i> ${article.views} visualizações
-                    </span>` : ''}
                 </div>
             </div>
         </div>
@@ -931,23 +959,18 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
                 ${article.content || '<p>Conteúdo não disponível.</p>'}
             </div>
         </div>
-        
-        <div class="related-articles">
-            <h3 class="related-title">
-                <i class="fas fa-newspaper"></i> Notícias Relacionadas
-            </h3>
-            <div class="related-grid" id="related-grid">
-                <!-- Related articles will be loaded here -->
-            </div>
-        </div>
         `;
         
         articleEl.innerHTML = html;
         loadingEl.style.display = 'none';
         articleEl.style.display = 'block';
+        miniAggregatorEl.style.display = 'block';
         
         // Limpa e formata o conteúdo
         formatArticleContent();
+        
+        // Adiciona ao histórico
+        addToHistory(article);
     }
 
     function getTimeAgo(dateString) {
@@ -955,21 +978,15 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
         const now = new Date();
         const diff = now - date;
         
-        const seconds = Math.floor(diff / 1000);
-        const minutes = Math.floor(seconds / 60);
+        const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
         
-        if (seconds < 60) return 'Agora mesmo';
         if (minutes < 60) return `${minutes} minutos atrás`;
         if (hours < 24) return `${hours} horas atrás`;
         if (days < 7) return `${days} dias atrás`;
         
-        return date.toLocaleDateString('pt-PT', { 
-            day: 'numeric', 
-            month: 'long', 
-            year: 'numeric' 
-        });
+        return date.toLocaleDateString('pt-PT');
     }
 
     function formatArticleContent() {
@@ -978,7 +995,7 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
         
         // Remove elementos indesejados
         const elementsToRemove = contentEl.querySelectorAll(
-            '.ads, .advertisement, iframe, script, style, .social-share, .comments'
+            '.ads, .advertisement, iframe, script, style'
         );
         elementsToRemove.forEach(el => el.remove());
         
@@ -989,37 +1006,98 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             p.style.lineHeight = '1.8';
             p.style.marginBottom = '24px';
         });
+    }
+
+    // ===== MINI AGREGADOR =====
+    async function loadAggregatorNews() {
+        try {
+            aggregatorGrid.innerHTML = '<p>Carregando mais notícias...</p>';
+            
+            const newsItems = [];
+            const limitPerSource = Math.ceil(CONFIG.aggregatorLimit / CONFIG.sources.length);
+            
+            for (const source of CONFIG.sources) {
+                try {
+                    const response = await fetch(`${source.url}?per_page=${limitPerSource}&_embed`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const processed = processAggregatorData(data, source);
+                        newsItems.push(...processed.slice(0, limitPerSource));
+                    }
+                } catch (error) {
+                    console.error(`Erro ao buscar de ${source.name}:`, error);
+                    continue;
+                }
+            }
+            
+            // Remove duplicatas e o artigo atual
+            const uniqueNews = newsItems.filter((news, index, self) => {
+                return index === self.findIndex(n => n.id === news.id) && news.id !== articleId;
+            }).slice(0, CONFIG.aggregatorLimit);
+            
+            displayAggregatorNews(uniqueNews);
+            
+        } catch (error) {
+            console.error('Erro ao carregar notícias do agregador:', error);
+            aggregatorGrid.innerHTML = '<p>Não foi possível carregar mais notícias no momento.</p>';
+        }
+    }
+
+    function processAggregatorData(data, source) {
+        return data.map(item => {
+            const content = item.content?.rendered || item.content || '';
+            
+            return {
+                id: `${source.id}_${item.id}`,
+                title: cleanText(item.title?.rendered || item.title || 'Sem título'),
+                excerpt: cleanText(item.excerpt?.rendered || item.excerpt || content).substring(0, 100) + '...',
+                image: getFeaturedImage(item) || 'https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia',
+                source: source.name,
+                date: item.date || item.published || new Date().toISOString(),
+                link: `article.html?id=${source.id}_${item.id}`
+            };
+        }).filter(item => item.title !== 'Sem título');
+    }
+
+    function displayAggregatorNews(newsItems) {
+        if (newsItems.length === 0) {
+            aggregatorGrid.innerHTML = '<p>Não há mais notícias disponíveis no momento.</p>';
+            return;
+        }
         
-        // Adiciona classes às imagens
-        const images = contentEl.querySelectorAll('img');
-        images.forEach(img => {
-            img.style.maxWidth = '100%';
-            img.style.height = 'auto';
-            img.style.borderRadius = '8px';
-            img.style.margin = '20px 0';
+        let html = '';
+        newsItems.forEach(news => {
+            const timeAgo = getTimeAgo(news.date);
+            
+            html += `
+            <a href="${news.link}" class="aggregator-card" onclick="openAggregatorArticle('${news.id}', event)">
+                <img src="${news.image}" 
+                     class="aggregator-image" 
+                     alt="${news.title}"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia'">
+                <div class="aggregator-content">
+                    <h4 class="aggregator-card-title">${news.title}</h4>
+                    <div class="aggregator-meta">
+                        <span>${news.source}</span>
+                        <span>${timeAgo}</span>
+                    </div>
+                </div>
+            </a>
+            `;
         });
+        
+        aggregatorGrid.innerHTML = html;
+    }
+
+    function openAggregatorArticle(newsId, event) {
+        if (event) event.preventDefault();
+        window.location.href = `article.html?id=${newsId}`;
     }
 
     // ===== SALVAR ARTIGO =====
-    function autoSaveArticle(article) {
+    function checkIfSaved() {
         const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        
-        // Remove se já existir
-        const existingIndex = savedArticles.findIndex(n => n.id === article.id);
-        if (existingIndex !== -1) {
-            savedArticles.splice(existingIndex, 1);
-        }
-        
-        // Adiciona no início (sem data de expiração)
-        article.savedAt = new Date().toISOString();
-        article.lastViewed = new Date().toISOString();
-        savedArticles.unshift(article);
-        
-        // Salva sem limite de tempo
-        localStorage.setItem('cld_saved', JSON.stringify(savedArticles));
-        
-        // Atualiza status
-        isSaved = true;
+        isSaved = savedArticles.some(n => n.id === articleId);
         updateSaveButton();
     }
 
@@ -1028,27 +1106,24 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
         
         if (isSaved) {
             // Remove
-            const index = savedArticles.findIndex(n => n.id === currentArticle.id);
+            const index = savedArticles.findIndex(n => n.id === articleId);
             if (index !== -1) {
                 savedArticles.splice(index, 1);
             }
             isSaved = false;
-            showNotification('Notícia removida das guardadas');
+            showNotification('Notícia removida das guardadas', 'info');
         } else {
             // Adiciona
-            currentArticle.savedAt = new Date().toISOString();
-            savedArticles.unshift(currentArticle);
+            const articleToSave = {
+                ...currentArticle,
+                savedAt: new Date().toISOString()
+            };
+            savedArticles.unshift(articleToSave);
             isSaved = true;
-            showNotification('Notícia guardada');
+            showNotification('Notícia guardada', 'success');
         }
         
         localStorage.setItem('cld_saved', JSON.stringify(savedArticles));
-        updateSaveButton();
-    }
-
-    function checkIfSaved(id) {
-        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        isSaved = savedArticles.some(n => n.id === id);
         updateSaveButton();
     }
 
@@ -1076,11 +1151,10 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             }
         }
     }
-
-    // ===== COMPARTILHAR =====
-    function setupShareLinks(article) {
+    // ===== COMPARTILHAMENTO =====
+    function setupShareLinks() {
         const shareUrl = encodeURIComponent(window.location.href);
-        const shareText = encodeURIComponent(`${article.title} - Notícias CLD`);
+        const shareText = encodeURIComponent(`${currentArticle?.title} - Notícias CLD`);
         
         document.getElementById('facebook-share').href = 
             `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
@@ -1095,64 +1169,74 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareText}`;
     }
 
+    function copyArticleLink() {
+        const url = window.location.href;
+        
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                const btn = document.getElementById('copy-link-btn');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Link Copiado!';
+                btn.style.background = '#34a853';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                }, 2000);
+                
+                showNotification('Link copiado para a área de transferência', 'success');
+            })
+            .catch(err => {
+                console.error('Erro ao copiar link:', err);
+                showNotification('Erro ao copiar link', 'error');
+            });
+    }
+
     function toggleShare() {
         shareOptionsEl.classList.toggle('active');
     }
 
-    // ===== NOTÍCIAS RELACIONADAS =====
-    async function loadRelatedArticles(article) {
-        const container = document.getElementById('related-grid');
-        if (!container) return;
+    // ===== HISTÓRICO =====
+    function addToHistory(article) {
+        const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
         
-        try {
-            // Tenta carregar do cache
-            const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
-            const related = history
-                .filter(n => n.id !== article.id && n.category === article.category)
-                .slice(0, 4);
-            
-            if (related.length === 0) {
-                document.getElementById('related-articles').style.display = 'none';
-                return;
-            }
-            
-            let html = '';
-            related.forEach(relatedArticle => {
-                const timeAgo = getTimeAgo(relatedArticle.date);
-                
-                html += `
-                <a href="article.html?id=${relatedArticle.id}" class="related-card">
-                    <img src="${relatedArticle.image}" 
-                         class="related-image" 
-                         alt="${relatedArticle.title}"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia'">
-                    <div class="related-content">
-                        <h4 class="related-card-title">${relatedArticle.title}</h4>
-                        <div class="related-meta">
-                            <span>${relatedArticle.source}</span>
-                            <span>${timeAgo}</span>
-                        </div>
-                    </div>
-                </a>
-                `;
-            });
-            
-            container.innerHTML = html;
-            
-        } catch (error) {
-            console.error('Erro ao carregar notícias relacionadas:', error);
-            document.getElementById('related-articles').style.display = 'none';
+        // Remove se já existir
+        const existingIndex = history.findIndex(n => n.id === article.id);
+        if (existingIndex !== -1) {
+            history.splice(existingIndex, 1);
         }
+        
+        // Adiciona no início
+        article.lastViewed = new Date().toISOString();
+        history.unshift(article);
+        
+        // Limita histórico a 50 itens
+        localStorage.setItem('cld_history', JSON.stringify(history.slice(0, 50)));
     }
 
     // ===== NOTIFICAÇÕES =====
     function showNotification(message, type = 'info') {
+        const existing = document.querySelector('.notification');
+        if (existing) existing.remove();
+        
         const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        
+        const icon = type === 'error' ? 'exclamation-triangle' : 
+                    type === 'success' ? 'check-circle' : 'info-circle';
+        
+        notification.innerHTML = `
+            <i class="fas fa-${icon}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${type === 'error' ? '#ea4335' : '#34a853'};
+            background: ${type === 'error' ? '#ea4335' : type === 'success' ? '#34a853' : '#1a73e8'};
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -1166,19 +1250,6 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             font-size: 14px;
         `;
         
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
-            <span>${message}</span>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-        
-        // Adiciona estilos de animação
         if (!document.getElementById('notification-styles')) {
             const style = document.createElement('style');
             style.id = 'notification-styles';
@@ -1194,6 +1265,11 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             `;
             document.head.appendChild(style);
         }
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     // ===== ERRO =====
@@ -1204,9 +1280,14 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
 
     // ===== NAVEGAÇÃO =====
     function goBack() {
-        window.history.back();
+        if (document.referrer && document.referrer.includes(window.location.hostname)) {
+            window.history.back();
+        } else {
+            window.location.href = 'index.html';
+        }
     }
-   // ===== ATALHOS DE TECLADO =====
+
+    // ===== ATALHOS DE TECLADO =====
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             goBack();
@@ -1217,10 +1298,19 @@ JSON.parse(localStorage.getItem('cld_saved') || '[]');
             toggleSave();
         }
         
-        if (e.ctrlKey && e.key === 'c') {
+        if (e.ctrlKey && e.key === 'c' && shareOptionsEl.classList.contains('active')) {
             e.preventDefault();
-            toggleShare();
+            copyArticleLink();
         }
+    });
+
+    // ===== DETECÇÃO DE CONEXÃO =====
+    window.addEventListener('online', () => {
+        showNotification('Conexão restaurada', 'success');
+    });
+
+    window.addEventListener('offline', () => {
+        showNotification('Você está offline', 'error');
     });
     </script>
 </body>
