@@ -134,6 +134,32 @@
         gap: var(--spacing-sm);
     }
 
+    .refresh-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+        background: var(--background-hover);
+        color: var(--primary-color);
+        transform: rotate(180deg);
+    }
+
+    .refresh-btn.loading {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
     /* ===== NAVEGAÇÃO ===== */
     .main-nav {
         background: var(--background-primary);
@@ -164,6 +190,10 @@
         color: var(--text-secondary);
         border-radius: var(--radius-lg);
         transition: all 0.2s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .nav-item:hover {
@@ -224,6 +254,19 @@
         color: var(--text-tertiary);
     }
 
+    .search-stats {
+        margin-top: var(--spacing-sm);
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .search-stats.visible {
+        opacity: 1;
+    }
+
     /* ===== MAIN CONTENT ===== */
     .main-content {
         padding: var(--spacing-xl) 0;
@@ -237,6 +280,12 @@
         margin-bottom: var(--spacing-xl);
     }
 
+    @media (max-width: 768px) {
+        .news-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
     /* ===== CARDS ===== */
     .news-card {
         background: var(--background-primary);
@@ -248,6 +297,7 @@
         opacity: 0;
         transform: translateY(20px);
         animation: fadeInUp 0.6s forwards;
+        position: relative;
     }
 
     @keyframes fadeInUp {
@@ -261,6 +311,11 @@
         transform: translateY(-4px);
         box-shadow: var(--shadow-lg);
         border-color: var(--primary-color);
+    }
+
+    .news-card.loading {
+        opacity: 0.7;
+        pointer-events: none;
     }
 
     .card-image {
@@ -294,6 +349,7 @@
         letter-spacing: 0.5px;
         color: var(--text-primary);
         backdrop-filter: blur(4px);
+        z-index: 2;
     }
 
     .save-btn {
@@ -310,6 +366,7 @@
         color: var(--text-secondary);
         transition: all 0.3s ease;
         backdrop-filter: blur(4px);
+        z-index: 2;
     }
 
     .save-btn:hover {
@@ -407,8 +464,24 @@
         animation: spin 1s linear infinite;
     }
 
-    @keyframes spin {
-        to { transform: rotate(360deg); }
+    /* ===== SKELETON LOADER ===== */
+    .skeleton {
+        animation: skeleton-loading 1s linear infinite alternate;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-color: var(--background-hover);
+        }
+        100% {
+            background-color: var(--border-color);
+        }
+    }
+
+    .skeleton-card {
+        height: 400px;
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
     }
 
     /* ===== EMPTY STATE ===== */
@@ -418,6 +491,7 @@
         background: var(--background-primary);
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-md);
+        margin-bottom: var(--spacing-xl);
     }
 
     .empty-icon {
@@ -687,7 +761,7 @@
             </div>
             
             <div class="header-actions">
-                <button class="save-btn" onclick="refreshNews()" title="Atualizar notícias">
+                <button class="refresh-btn" onclick="refreshNews()" title="Atualizar notícias">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
@@ -722,7 +796,7 @@
     </nav>
 
     <!-- BUSCA -->
-    <section class="search-section">
+       <section class="search-section">
         <div class="container search-container">
             <div class="search-box">
                 <div class="search-icon">
@@ -730,9 +804,11 @@
                 </div>
                 <input type="text" 
                        class="search-input" 
-                       placeholder="Pesquisar notícias..."
+                       id="search-input"
+                       placeholder="Pesquisar notícias por título, conteúdo ou fonte..."
                        oninput="searchNews(this.value)">
             </div>
+            <div class="search-stats" id="search-stats"></div>
         </div>
     </section>
 
@@ -743,6 +819,9 @@
             <div class="news-grid" id="news-grid">
                 <!-- Notícias serão carregadas aqui -->
             </div>
+
+            <!-- SKELETON LOADERS -->
+            <div id="skeleton-loaders"></div>
 
             <!-- LOADER -->
             <div class="loader-container" id="loader">
@@ -765,7 +844,7 @@
             <!-- SEÇÃO DE CONTATO -->
             <section class="contact-section" id="contact">
                 <div class="contact-header">
-                      <h2 class="contact-title">Entre em Contato</h2>
+                    <h2 class="contact-title">Entre em Contato</h2>
                     <p class="contact-subtitle">Estamos aqui para ajudar e ouvir suas sugestões</p>
                 </div>
                 
@@ -865,8 +944,7 @@
             </div>
         </div>
     </footer>
-
-    <!-- BOTÕES FLUTUANTES -->
+   <!-- BOTÕES FLUTUANTES -->
     <div class="floating-buttons">
         <button class="floating-btn" onclick="scrollToTop()" title="Voltar ao topo">
             <i class="fas fa-arrow-up"></i>
@@ -875,7 +953,8 @@
             <i class="fas fa-envelope"></i>
         </button>
     </div>
-   <script>
+
+    <script>
     // ===== CONFIGURAÇÃO =====
     const CONFIG = {
         appName: 'Notícias CLD',
@@ -884,14 +963,18 @@
             {
                 id: 'opais',
                 name: 'O País Moçambique',
-                url: 'https://www.opais.co.mz/wp-json/wp/v2/posts',
+                url: 'https://opais.co.mz/wp-json/wp/v2/posts',
                 color: '#1a73e8',
-                enabled: true
+                enabled: true,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
             },
             {
                 id: 'noticias',
                 name: 'Jornal Notícias',
-                url: 'https://www.jornalnoticias.co.mz/wp-json/wp/v2/posts',
+                url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts',
                 color: '#34a853',
                 enabled: true
             },
@@ -910,8 +993,9 @@
                 enabled: true
             }
         ],
-        batchSize: 6,
-        maxRetries: 3
+        batchSize: 12,
+        maxRetries: 3,
+        debounceDelay: 300
     };
 
     // ===== VARIÁVEIS GLOBAIS =====
@@ -924,11 +1008,17 @@
     let currentSearch = '';
     let newsCache = new Map();
     let retryCount = 0;
+    let isInitialLoad = true;
+    let searchTimeout = null;
 
     // ===== ELEMENTOS DOM =====
     const newsGrid = document.getElementById('news-grid');
     const loader = document.getElementById('loader');
     const emptyState = document.getElementById('empty-state');
+    const searchStats = document.getElementById('search-stats');
+    const skeletonLoaders = document.getElementById('skeleton-loaders');
+    const refreshBtn = document.querySelector('.refresh-btn');
+    const searchInput = document.getElementById('search-input');
 
     // ===== INICIALIZAÇÃO =====
     document.addEventListener('DOMContentLoaded', () => {
@@ -936,17 +1026,35 @@
     });
 
     async function initApp() {
-        // Carrega notícias salvas
-        await loadSavedNews();
+        showSkeletonLoaders();
+        
+        // Primeiro carrega do cache
+        await loadFromCache();
         
         // Inicia carregamento das notícias
-        loadMoreNews();
+        setTimeout(() => loadMoreNews(), 500);
         
         // Configura scroll infinito
         setupInfiniteScroll();
         
+        // Configura debounce para busca
+        setupSearchDebounce();
+        
         // Configura service worker para cache
         setupServiceWorker();
+    }
+
+    function showSkeletonLoaders() {
+        skeletonLoaders.innerHTML = '';
+        for (let i = 0; i < 6; i++) {
+            const skeleton = document.createElement('div');
+            skeleton.className = 'skeleton skeleton-card';
+            skeletonLoaders.appendChild(skeleton);
+        }
+    }
+
+    function hideSkeletonLoaders() {
+        skeletonLoaders.innerHTML = '';
     }
 
     // ===== FUNÇÕES DE ARMAZENAMENTO =====
@@ -956,6 +1064,7 @@
             return true;
         } catch (e) {
             console.error('Erro ao salvar:', e);
+            showNotification('Erro ao salvar dados', 'error');
             return false;
         }
     }
@@ -970,31 +1079,90 @@
         }
     }
 
+    async function loadFromCache() {
+        const cachedNews = loadFromStorage('cld_news_cache') || [];
+        if (cachedNews.length > 0) {
+            allNews = cachedNews;
+            displayedNews = cachedNews;
+            updateNewsDisplay();
+            showNotification(`Carregadas ${cachedNews.length} notícias do cache`);
+        }
+    }
+
+    // ===== SISTEMA DE BUSCA MELHORADO =====
+    function setupSearchDebounce() {
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchNews(e.target.value);
+            }, CONFIG.debounceDelay);
+        });
+    }
+
+    function searchNews(query) {
+        const searchTerm = query.toLowerCase().trim();
+        currentSearch = searchTerm;
+        
+        if (searchTerm.length === 0) {
+            searchStats.classList.remove('visible');
+            currentSearch = '';
+            applyCurrentFilters();
+            return;
+        }
+        
+        // Filtra as notícias
+        const results = allNews.filter(news => {
+            const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
+            return searchText.includes(searchTerm);
+        });
+        
+        // Atualiza estatísticas
+        updateSearchStats(results.length, searchTerm);
+        
+        // Atualiza exibição
+        displayedNews = results;
+        updateNewsDisplay();
+    }
+
+    function updateSearchStats(count, term) {
+        if (count === 0) {
+            searchStats.textContent = `Nenhum resultado encontrado para "${term}"`;
+        } else {
+            searchStats.textContent = `${count} resultado(s) encontrado(s) para "${term}"`;
+        }
+        searchStats.classList.add('visible');
+    }
+
     // ===== CARREGAMENTO DE NOTÍCIAS =====
     async function loadMoreNews() {
         if (isLoading || !hasMore) return;
         
         isLoading = true;
         loader.style.display = 'block';
+        hideSkeletonLoaders();
         
         try {
-            const newsBatch = await fetchNewsBatch();
+            // Carrega notícias uma fonte de cada vez
+            const newsBatch = await fetchNewsSequentially();
             
             if (newsBatch.length === 0) {
                 hasMore = false;
-                loader.style.display = 'none';
                 
-                if (allNews.length === 0) {
+                if (allNews.length === 0 && isInitialLoad) {
                     emptyState.style.display = 'block';
                 }
                 
-                return;
+                showNotification('Todas as notícias foram carregadas');
+            } else {
+                // Processa notícias uma de cada vez
+                await processNewsSequentially(newsBatch);
+                
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                }
+                
+                currentPage++;
             }
-            
-            // Processa e exibe as notícias
-            await processAndDisplayNews(newsBatch);
-            
-            currentPage++;
             
         } catch (error) {
             console.error('Erro ao carregar notícias:', error);
@@ -1003,59 +1171,73 @@
             if (retryCount < CONFIG.maxRetries) {
                 retryCount++;
                 setTimeout(loadMoreNews, 2000);
+            } else {
+                hasMore = false;
+                if (allNews.length === 0) {
+                    emptyState.style.display = 'block';
+                }
             }
         } finally {
             isLoading = false;
+            loader.style.display = 'none';
+            
+            // Salva no cache após carregamento
+            saveToStorage('cld_news_cache', allNews.slice(0, 50)); // Guarda apenas as 50 mais recentes
         }
     }
 
-    async function fetchNewsBatch() {
-        const promises = CONFIG.sources
-            .filter(source => source.enabled)
-            .map(source => fetchSourceNews(source));
-        
-        const results = await Promise.allSettled(promises);
-        
+    async function fetchNewsSequentially() {
         let allFetchedNews = [];
-        results.forEach(result => {
-            if (result.status === 'fulfilled' && result.value) {
-                allFetchedNews = allFetchedNews.concat(result.value);
-            }
-        });
         
-        // Remove duplicatas
+        for (const source of CONFIG.sources) {
+            if (!source.enabled) continue;
+            
+            try {
+                const sourceNews = await fetchSourceNews(source);
+                if (sourceNews && sourceNews.length > 0) {
+                    allFetchedNews = allFetchedNews.concat(sourceNews);
+                    
+                    // Exibe cada notícia conforme é processada
+                    for (const news of sourceNews) {
+                        await createNewsCard(news);
+                        await new Promise(resolve => setTimeout(resolve, 100)); // Pequeno delay para animação
+                    }
+                }
+            } catch (error) {
+                console.error(`Erro na fonte ${source.name}:`, error);
+                continue;
+            }
+        }
+         // Remove duplicatas
         return removeDuplicates(allFetchedNews);
     }
 
     async function fetchSourceNews(source) {
-        const cacheKey = `news_${source.id}_page${currentPage}`;
+        const cacheKey = `${source.id}_page${currentPage}`;
         
-        // Verifica cache
+        // Verifica cache primeiro
         if (newsCache.has(cacheKey)) {
             return newsCache.get(cacheKey);
         }
         
         try {
-            // Tenta múltiplos endpoints
-            const endpoints = [
-                `${source.url}?per_page=${CONFIG.batchSize}&page=${currentPage}&_embed`,
-                `${source.url}?per_page=${CONFIG.batchSize}&page=${currentPage}`,
-                source.url
-            ];
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
             
-            let data = null;
-            
-            for (const endpoint of endpoints) {
-                try {
-                    const response = await fetchWithRetry(endpoint);
-                    if (response && response.length > 0) {
-                        data = response;
-                        break;
-                    }
-                } catch (e) {
-                    continue;
+            const response = await fetch(`${source.url}?per_page=${CONFIG.batchSize}&page=${currentPage}&_embed`, {
+                signal: controller.signal,
+                headers: source.headers || {
+                    'Accept': 'application/json'
                 }
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
             }
+            
+            const data = await response.json();
             
             if (!data || data.length === 0) {
                 return [];
@@ -1074,75 +1256,63 @@
         }
     }
 
-    async function fetchWithRetry(url, retries = 3) {
-        for (let i = 0; i < retries; i++) {
+    function processNewsData(data, source) {
+        const newsItems = [];
+        
+        for (const item of data) {
             try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 5000);
+                const content = item.content?.rendered || item.content || '';
+                const cleanContent = content.replace(/<[^>]*>/g, '');
                 
-                const response = await fetch(url, {
-                    signal: controller.signal,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    }
-                });
+                const newsId = `${source.id}_${item.id}_${Date.now()}`;
                 
-                clearTimeout(timeout);
+                const newsItem = {
+                    id: newsId,
+                    title: cleanText(item.title?.rendered || item.title || 'Sem título'),
+                    excerpt: cleanText(item.excerpt?.rendered || item.excerpt || cleanContent.substring(0, 200)),
+                    content: cleanContent,
+                    image: getFeaturedImage(item),
+                    source: source.name,
+                    sourceId: source.id,
+                    date: item.date || item.published || new Date().toISOString(),
+                    link: item.link || item.url || '#',
+                    category: detectCategory(item.title?.rendered || item.title, content),
+                    addedAt: new Date().toISOString(),
+                    isSaved: checkIfSaved(newsId),
+                    views: Math.floor(Math.random() * 1000) // Simulação para demonstração
+                };
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                // Filtra itens sem título
+                if (newsItem.title !== 'Sem título' && newsItem.title.trim().length > 10) {
+                    newsItems.push(newsItem);
                 }
-                
-                return await response.json();
-                
             } catch (error) {
-                if (i === retries - 1) throw error;
-                await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                console.error('Erro ao processar item:', error);
+                continue;
             }
         }
+        
+        return newsItems;
     }
 
-    function processNewsData(data, source) {
-        return data.map(item => {
-            const content = item.content?.rendered || item.content || '';
-            const category = detectCategory(item.title?.rendered || item.title, content);
-            
-            const newsId = `${source.id}_${item.id || Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            
-            return {
-                id: newsId,
-                title: cleanText(item.title?.rendered || item.title || 'Sem título'),
-                excerpt: cleanText(item.excerpt?.rendered || item.excerpt || content).substring(0, 150) + '...',
-                content: content,
-                image: getFeaturedImage(item),
-                source: source.name,
-                sourceId: source.id,
-                date: item.date || item.published || new Date().toISOString(),
-                link: item.link || item.url || '#',
-                category: category,
-                addedAt: new Date().toISOString(),
-                isSaved: checkIfSaved(newsId),
-                views: 0
-            };
-        }).filter(news => news.title !== 'Sem título');
-    }
-
-    function getFeaturedImage(article) {
-        if (article._embedded?.featuredmedia?.[0]?.source_url) {
-            return article._embedded.featuredmedia[0].source_url;
-        }
-        if (article._embedded?.['wp:featuredmedia']?.[0]?.source_url) {
-            return article._embedded['wp:featuredmedia'][0].source_url;
-        }
-        if (article.jetpack_featured_media_url) {
-            return article.jetpack_featured_media_url;
-        }
-        if (article.thumbnail) {
-            return article.thumbnail;
+    function getFeaturedImage(item) {
+        // Tenta várias fontes possíveis de imagem
+        const imageSources = [
+            item._embedded?.['wp:featuredmedia']?.[0]?.source_url,
+            item._embedded?.featuredmedia?.[0]?.source_url,
+            item.jetpack_featured_media_url,
+            item.thumbnail,
+            item.featured_image
+        ];
+        
+        for (const src of imageSources) {
+            if (src && typeof src === 'string' && src.startsWith('http')) {
+                return src;
+            }
         }
         
-        const colors = {
+        // Imagem de fallback baseada na categoria
+        const categoryColors = {
             politics: '3f51b5',
             economy: '4caf50',
             sports: 'ff9800',
@@ -1150,27 +1320,23 @@
             tech: '607d8b',
             default: '1a73e8'
         };
-              const category = detectCategory(article.title?.rendered || article.title, article.content?.rendered || article.content);
-        const color = colors[category] || colors.default;
         
-        return `https://via.placeholder.com/600x400/${color}/ffffff?text=${sourceId.substring(0,2).toUpperCase()}`;
+        return `https://via.placeholder.com/600x400/${categoryColors.default}/ffffff?text=Notícia`;
     }
 
     function detectCategory(title, content) {
-        if (!title && !content) return 'society';
-        
         const text = ((title || '') + ' ' + (content || '')).toLowerCase();
         
         const categories = {
-            politics: ['política', 'político', 'governo', 'presidente', 'ministro', 'eleições', 'parlamento'],
-            economy: ['economia', 'econômico', 'negócio', 'empresa', 'investimento', 'mercado', 'banco'],
-            sports: ['esporte', 'futebol', 'jogo', 'atleta', 'competição', 'campeonato', 'seleção'],
-            society: ['sociedade', 'social', 'comunidade', 'educação', 'família', 'jovem', 'mulher'],
-            tech: ['tecnologia', 'digital', 'internet', 'aplicativo', 'software', 'startup', 'inovação']
+            politics: [/politica/i, /governo/i, /presidente/i, /ministro/i, /eleicoes/i, /parlamento/i],
+            economy: [/economia/i, /negocio/i, /empresa/i, /investimento/i, /mercado/i, /banco/i],
+            sports: [/esporte/i, /futebol/i, /jogo/i, /atleta/i, /competicao/i, /campeonato/i],
+            society: [/sociedade/i, /social/i, /comunidade/i, /educacao/i, /familia/i, /jovem/i, /mulher/i],
+            tech: [/tecnologia/i, /digital/i, /internet/i, /aplicativo/i, /software/i, /startup/i, /inovacao/i]
         };
         
-        for (const [category, keywords] of Object.entries(categories)) {
-            if (keywords.some(keyword => text.includes(keyword))) {
+        for (const [category, patterns] of Object.entries(categories)) {
+            if (patterns.some(pattern => pattern.test(text))) {
                 return category;
             }
         }
@@ -1178,65 +1344,95 @@
         return 'society';
     }
 
-    function cleanText(html) {
-        if (!html) return '';
+    function cleanText(text) {
+        if (!text) return '';
         
-        return html
+        return text
             .replace(/<[^>]*>/g, '')
             .replace(/&nbsp;/g, ' ')
             .replace(/&#[0-9]+;/g, '')
             .replace(/\s+/g, ' ')
-            .trim();
+            .trim()
+            .substring(0, 300);
     }
 
     function removeDuplicates(newsArray) {
-        const seen = new Set();
+        const seenTitles = new Set();
         return newsArray.filter(news => {
-            const key = news.title + news.source;
-            if (seen.has(key)) return false;
-            seen.add(key);
+            const normalizedTitle = news.title.toLowerCase().trim();
+            if (seenTitles.has(normalizedTitle) || news.title.length < 10) {
+                return false;
+            }
+            seenTitles.add(normalizedTitle);
             return true;
         });
     }
 
-    // ===== EXIBIÇÃO DE NOTÍCIAS =====
-    async function processAndDisplayNews(newsBatch) {
+    // ===== PROCESSAMENTO SEQUENCIAL =====
+    async function processNewsSequentially(newsBatch) {
         for (const news of newsBatch) {
             // Verifica se já existe
             if (allNews.some(n => n.id === news.id)) continue;
             
+            // Adiciona à lista geral
             allNews.push(news);
             
-            // Cria e exibe o card
-            await createNewsCard(news);
+            // Adiciona à lista de exibição se passar pelos filtros atuais
+            if (passesCurrentFilters(news)) {
+                displayedNews.push(news);
+                await createNewsCard(news);
+            }
             
-            // Pequeno delay para animação
+            // Pequeno delay para animação suave
             await new Promise(resolve => setTimeout(resolve, 50));
         }
         
-        // Aplica filtros atuais
-        applyCurrentFilters();
+        // Atualiza estatísticas se houver busca
+        if (currentSearch) {
+            updateSearchStats(displayedNews.length, currentSearch);
+        }
     }
 
+    function passesCurrentFilters(news) {
+        // Filtro por categoria
+        if (currentFilter !== 'all' && news.category !== currentFilter) {
+            return false;
+        }
+        
+        // Filtro por busca
+        if (currentSearch) {
+            const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
+            return searchText.includes(currentSearch.toLowerCase());
+        }
+        
+        return true;
+    }
+ // ===== CRIAÇÃO DE CARDS =====
     async function createNewsCard(news) {
+        // Remove o skeleton loader se existir
+        if (skeletonLoaders.children.length > 0) {
+            skeletonLoaders.firstChild?.remove();
+        }
+        
         const card = document.createElement('article');
         card.className = 'news-card';
         card.setAttribute('data-id', news.id);
         card.setAttribute('data-category', news.category);
         
         const timeAgo = getTimeAgo(news.date);
+        const sourceColor = CONFIG.sources.find(s => s.id === news.sourceId)?.color || '#1a73e8';
         
         card.innerHTML = `
             <div class="card-image">
                 <img src="${news.image}" 
                      alt="${news.title}"
                      loading="lazy"
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=${news.source.substring(0,2)}'">
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=Notícia'">
                 <span class="category-badge">${getCategoryName(news.category)}</span>
                 <button class="save-btn ${news.isSaved ? 'saved' : ''}" 
                         onclick="toggleSave('${news.id}', this)"
                         title="${news.isSaved ? 'Remover das guardadas' : 'Guardar notícia'}">
-                    <i class="fas fa-${news.isSaved ? 'bookmark' : 'bookmark'}"></i>
+                    <i class="fas fa-bookmark"></i>
                 </button>
             </div>
             <div class="card-content">
@@ -1248,14 +1444,15 @@
                 <p class="card-excerpt">${news.excerpt}</p>
                 <div class="card-meta">
                     <div class="source-info">
-                        <div class="source-icon" style="background: ${getSourceColor(news.sourceId)}">
-                            ${news.source.substring(0,2)}
+                        <div class="source-icon" style="background: ${sourceColor}">
+                            ${news.source.substring(0, 2).toUpperCase()}
                         </div>
                         <span class="source-name">${news.source}</span>
                     </div>
                     <div class="card-time">
                         <i class="far fa-clock"></i>
                         <span>${timeAgo}</span>
+                        ${news.views ? `<span style="margin-left: 8px;"><i class="far fa-eye"></i> ${formatViews(news.views)}</span>` : ''}
                     </div>
                 </div>
             </div>
@@ -1288,6 +1485,11 @@
         return date.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
     }
 
+    function formatViews(views) {
+        if (views >= 1000) return `${(views / 1000).toFixed(1)}k`;
+        return views.toString();
+    }
+
     function getCategoryName(category) {
         const names = {
             politics: 'Política',
@@ -1299,15 +1501,12 @@
         return names[category] || 'Notícia';
     }
 
-    function getSourceColor(sourceId) {
-        const source = CONFIG.sources.find(s => s.id === sourceId);
-        return source ? source.color : '#1a73e8';
-    }
-
-    // ===== FILTROS E BUSCA =====
+    // ===== FILTROS =====
     function filterNews(category) {
         currentFilter = category;
         currentSearch = '';
+        searchInput.value = '';
+        searchStats.classList.remove('visible');
         
         // Atualiza navegação
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -1315,60 +1514,35 @@
         });
         event.target.classList.add('active');
         
-        // Reseta scroll infinito
-        resetInfiniteScroll();
-        
         // Aplica filtros
-        applyCurrentFilters();
+        displayedNews = allNews.filter(news => 
+            currentFilter === 'all' || news.category === currentFilter
+        );
+        
+        updateNewsDisplay();
         
         // Scroll para topo
         scrollToTop();
     }
 
-    function searchNews(query) {
-        currentSearch = query.toLowerCase().trim();
-        
-        // Reseta scroll infinito
-        resetInfiniteScroll();
-        
-        // Aplica filtros
-        applyCurrentFilters();
-    }
-
     function applyCurrentFilters() {
-        let filtered = allNews;
-        
-        // Filtro por categoria
-        if (currentFilter !== 'all') {
-            filtered = filtered.filter(news => news.category === currentFilter);
-        }
-        
-        // Filtro por busca
-        if (currentSearch) {
-            filtered = filtered.filter(news => 
-                news.title.toLowerCase().includes(currentSearch) ||
-                news.excerpt.toLowerCase().includes(currentSearch) ||
-                news.source.toLowerCase().includes(currentSearch)
-            );
-        }
-        
-        displayedNews = filtered;
+        displayedNews = allNews.filter(passesCurrentFilters);
         updateNewsDisplay();
     }
 
     function updateNewsDisplay() {
-        newsGrid.innerHTML = '';
-        
         if (displayedNews.length === 0) {
             emptyState.style.display = 'block';
-            return;
+            newsGrid.innerHTML = '';
+        } else {
+            emptyState.style.display = 'none';
+            newsGrid.innerHTML = '';
+            
+            // Adiciona apenas as notícias que passam nos filtros
+            displayedNews.forEach(news => {
+                createNewsCard(news);
+            });
         }
-        
-        emptyState.style.display = 'none';
-        
-        displayedNews.forEach(news => {
-            createNewsCard(news);
-        });
     }
 
     // ===== NOTÍCIAS GUARDADAS =====
@@ -1381,6 +1555,10 @@
         const savedNews = loadFromStorage('cld_saved') || [];
         const news = allNews.find(n => n.id === newsId);
         
+        if (!news) {
+            news = displayedNews.find(n => n.id === newsId);
+        }
+        
         if (!news) return;
         
         const isSaved = savedNews.some(n => n.id === newsId);
@@ -1390,7 +1568,7 @@
             const index = savedNews.findIndex(n => n.id === newsId);
             savedNews.splice(index, 1);
             button.classList.remove('saved');
-            button.innerHTML = '<i class="far fa-bookmark"></i>';
+            button.innerHTML = '<i class="fas fa-bookmark"></i>';
             showNotification('Notícia removida das guardadas');
         } else {
             // Adiciona (sem data de expiração)
@@ -1402,71 +1580,62 @@
         }
         
         saveToStorage('cld_saved', savedNews);
+        
+        // Atualiza o status na lista geral
+        const newsIndex = allNews.findIndex(n => n.id === newsId);
+        if (newsIndex !== -1) {
+            allNews[newsIndex].isSaved = !isSaved;
+        }
     }
 
     function showSavedNews() {
         const savedNews = loadFromStorage('cld_saved') || [];
-        
-        if (savedNews.length === 0) {
-            showNotification('Nenhuma notícia guardada');
-            return;
-        }
         
         // Atualiza navegação
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
         });
         
-        // Mostra apenas notícias guardadas
-        displayedNews = savedNews;
-        updateNewsDisplay();
+        // Atualiza filtros
+        currentFilter = 'saved';
+        currentSearch = '';
+        searchInput.value = '';
+        searchStats.classList.remove('visible');
         
-        showNotification(`Mostrando ${savedNews.length} notícias guardadas`);
+        if (savedNews.length === 0) {
+            emptyState.style.display = 'block';
+            newsGrid.innerHTML = '';
+            showNotification('Nenhuma notícia guardada');
+        } else {
+            displayedNews = savedNews;
+            updateNewsDisplay();
+            showNotification(`Mostrando ${savedNews.length} notícias guardadas`);
+        }
     }
 
     // ===== SCROLL INFINITO =====
     function setupInfiniteScroll() {
-        let ticking = false;
-        
         window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    checkScrollPosition();
-                    ticking = false;
-                });
-                ticking = true;
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+                if (!isLoading && hasMore) {
+                    loadMoreNews();
+                }
             }
         });
-    }
-
-    function checkScrollPosition() {
-        const scrollPosition = window.innerHeight + window.scrollY;
-        const pageHeight = document.documentElement.scrollHeight;
-        const threshold = 500;
-        
-        if (pageHeight - scrollPosition < threshold && !isLoading && hasMore) {
-            loadMoreNews();
-        }
-    }
-
-    function resetInfiniteScroll() {
-        currentPage = 1;
-        hasMore = true;
-        isLoading = false;
     }
 
     // ===== NAVEGAÇÃO DE ARTIGOS =====
     function openArticle(newsId, event) {
         if (event) event.preventDefault();
         
-        const news = allNews.find(n => n.id === newsId);
-        if (!news) return;
+        const news = allNews.find(n => n.id === newsId) || displayedNews.find(n => n.id === newsId);
+        if (!news) {
+            showNotification('Notícia não encontrada', 'error');
+            return;
+        }
         
         // Salva no histórico
         saveToHistory(news);
-        
-        // Incrementa visualizações
-        incrementViews(newsId);
         
         // Abre em nova aba
         window.open(`article.html?id=${encodeURIComponent(newsId)}`, '_blank');
@@ -1485,18 +1654,8 @@
         news.lastViewed = new Date().toISOString();
         history.unshift(news);
         
-        // Limita histórico a 50 itens
-        saveToStorage('cld_history', history.slice(0, 50));
-    }
-
-    function incrementViews(newsId) {
-        const allNews = loadFromStorage('cld_news') || [];
-        const index = allNews.findIndex(n => n.id === newsId);
-        
-        if (index !== -1) {
-            allNews[index].views = (allNews[index].views || 0) + 1;
-            saveToStorage('cld_news', allNews);
-        }
+        // Limita histórico a 100 itens
+        saveToStorage('cld_history', history.slice(0, 100));
     }
 
     // ===== NOTIFICAÇÕES =====
@@ -1507,11 +1666,23 @@
         
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
+        
+        const icon = type === 'error' ? 'exclamation-triangle' : 
+                    type === 'success' ? 'check-circle' : 'info-circle';
+        
+        notification.innerHTML = `
+            <i class="fas fa-${icon}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Estilos inline para evitar conflitos
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: ${type === 'error' ? '#ea4335' : '#34a853'};
+            background: ${type === 'error' ? '#ea4335' : type === 'success' ? '#34a853' : '#1a73e8'};
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -1524,81 +1695,70 @@
             gap: 12px;
             font-size: 14px;
         `;
-        
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
-            <span>${message}</span>
-        `;
-        
-        document.body.appendChild(notification);
+                // Adiciona estilos de animação se não existirem
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
         
         setTimeout(() => {
             notification.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
-        
-        // Adiciona estilos de animação
-        addNotificationStyles();
     }
 
-    function addNotificationStyles() {
-        if (document.getElementById('notification-styles')) return;
-        
-        const style = document.createElement('style');
-        style.id = 'notification-styles';
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    // ===== SERVICE WORKER PARA CACHE =====
+    // ===== SERVICE WORKER =====
     function setupServiceWorker() {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(error => {
-                    console.log('Service Worker registration failed:', error);
-                });
+                navigator.serviceWorker.register('/sw.js')
+                    .then(() => console.log('Service Worker registrado'))
+                    .catch(error => console.log('Service Worker falhou:', error));
             });
         }
     }
-   // ===== FUNÇÕES UTILITÁRIAS =====
+
+    // ===== FUNÇÕES UTILITÁRIAS =====
     async function refreshNews() {
+        // Mostra estado de carregamento
+        refreshBtn.classList.add('loading');
+        
         // Limpa cache
         newsCache.clear();
+        localStorage.removeItem('cld_news_cache');
         
         // Reseta estado
         allNews = [];
         displayedNews = [];
+        currentPage = 1;
+        hasMore = true;
+        isInitialLoad = true;
         newsGrid.innerHTML = '';
-        resetInfiniteScroll();
-        
-        // Mostra loader
-        loader.style.display = 'block';
+        searchInput.value = '';
+        currentSearch = '';
+        searchStats.classList.remove('visible');
         emptyState.style.display = 'none';
         
+        // Mostra skeleton loaders
+        showSkeletonLoaders();
+        
         // Recarrega notícias
-        await loadMoreNews();
-        
-        showNotification('Notícias atualizadas');
-    }
-
-    async function loadSavedNews() {
-        const saved = loadFromStorage('cld_news') || [];
-        
-        if (saved.length > 0) {
-            allNews = saved;
-            displayedNews = saved;
-            updateNewsDisplay();
-            loader.style.display = 'none';
-        }
+        setTimeout(async () => {
+            await loadMoreNews();
+            refreshBtn.classList.remove('loading');
+            showNotification('Notícias atualizadas com sucesso', 'success');
+        }, 500);
     }
 
     function exportNews() {
@@ -1615,14 +1775,16 @@
         a.download = `noticias-cld-${new Date().toISOString().split('T')[0]}.json`;
         a.click();
         
-        showNotification('Notícias exportadas com sucesso');
+        showNotification('Notícias exportadas com sucesso', 'success');
     }
 
     function clearCache() {
         localStorage.clear();
         newsCache.clear();
-        showNotification('Cache limpo com sucesso');
-        setTimeout(() => location.reload(), 1000);
+        showNotification('Cache limpo com sucesso', 'success');
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     }
 
     function scrollToTop() {
@@ -1635,33 +1797,41 @@
 
     // ===== FUNÇÕES DO FOOTER =====
     function showAbout() {
-        showNotification('Notícias CLD - Agregador de notícias moçambicanas');
+        showNotification('Notícias CLD - Agregador de notícias moçambicanas. Desenvolvido para trazer as principais notícias do país em tempo real.');
     }
 
     function showPrivacy() {
-        showNotification('Política de Privacidade: Não coletamos dados pessoais');
+        showNotification('Política de Privacidade: Não coletamos dados pessoais. As notícias são agregadas de fontes públicas.');
     }
 
-    // ===== INICIALIZAÇÃO DE ANIMAÇÕES =====
-    function initAnimations() {
-        const cards = document.querySelectorAll('.news-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.1}s`;
-        });
-    }
-
-    // ===== OBSERVADOR DE VISIBILIDADE =====
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            // Recarrega notícias se estiver visível há mais de 5 minutos
-            const lastUpdate = localStorage.getItem('last_update');
-            const now = Date.now();
-            
-            if (!lastUpdate || (now - parseInt(lastUpdate)) > 300000) {
-                refreshNews();
-                localStorage.setItem('last_update', now.toString());
-            }
+    // ===== ATALHOS DE TECLADO =====
+    document.addEventListener('keydown', (e) => {
+        // Ctrl + F para focar na busca
+        if (e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            searchInput.focus();
         }
+        
+        // Ctrl + R para atualizar
+        if (e.ctrlKey && e.key === 'r') {
+            e.preventDefault();
+            refreshNews();
+        }
+        
+        // Esc para limpar busca
+        if (e.key === 'Escape' && searchInput.value) {
+            searchInput.value = '';
+            searchNews('');
+        }
+    });
+
+    // ===== DETECÇÃO DE CONEXÃO =====
+    window.addEventListener('online', () => {
+        showNotification('Conexão restaurada', 'success');
+    });
+
+    window.addEventListener('offline', () => {
+        showNotification('Você está offline. Algumas funcionalidades podem estar limitadas.', 'error');
     });
     </script>
 </body>
