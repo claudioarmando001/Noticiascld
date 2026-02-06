@@ -91,6 +91,7 @@
         justify-content: center;
         color: var(--text-secondary);
         transition: all 0.2s ease;
+        cursor: pointer;
     }
 
     .back-btn:hover {
@@ -102,6 +103,7 @@
         font-size: 20px;
         font-weight: 700;
         color: var(--primary-color);
+        cursor: pointer;
     }
 
     .header-actions {
@@ -118,6 +120,7 @@
         justify-content: center;
         color: var(--text-secondary);
         transition: all 0.2s ease;
+        cursor: pointer;
     }
 
     .action-btn:hover {
@@ -247,6 +250,7 @@
         font-size: 14px;
         font-style: italic;
     }
+    
     /* ===== CONTEÚDO DO ARTIGO ===== */
     .article-content {
         background: var(--background-primary);
@@ -300,7 +304,7 @@
     }
 
     /* ===== AÇÕES DO ARTIGO ===== */
-    .article-actions {
+        .article-actions {
         display: flex;
         gap: var(--spacing-md);
         margin-bottom: var(--spacing-xl);
@@ -479,6 +483,7 @@
         text-decoration: none;
         color: inherit;
         border: 1px solid var(--border-color);
+        cursor: pointer;
     }
 
     .aggregator-card:hover {
@@ -668,6 +673,7 @@
             </div>
         </div>
     </header>
+
     <!-- LOADING -->
     <div id="loading" class="loading-container">
         <div class="loading-spinner"></div>
@@ -735,9 +741,9 @@
     // ===== CONFIGURAÇÃO =====
     const CONFIG = {
         sources: [
-            {
+            { 
                 id: 'opais',
-                name: 'O País Moçambique',
+                name: 'O País', 
                 url: 'https://opais.co.mz/wp-json/wp/v2/posts'
             },
             {
@@ -745,13 +751,24 @@
                 name: 'Jornal Notícias',
                 url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts'
             },
-            {
+            { 
                 id: 'canal',
-                name: 'Canal de Moçambique',
+                name: 'Canal de Moçambique', 
                 url: 'https://canal.co.mz/wp-json/wp/v2/posts'
+            },
+            { 
+                id: 'savana',
+                name: 'Savana', 
+                url: 'https://savana.co.mz/wp-json/wp/v2/posts'
+            },
+            {
+                id: 'integrity',
+                name: 'Integrity Magazine',
+                url: 'https://integritymagazine.co.mz/wp-json/wp/v2/posts'
             }
         ],
-        aggregatorLimit: 6
+        aggregatorLimit: 6,
+        cacheTTL: 30 * 60 * 1000 // 30 minutos
     };
 
     // ===== VARIÁVEIS =====
@@ -777,27 +794,29 @@
             return;
         }
         
+        // Carrega artigo e notícias relacionadas em paralelo
         await Promise.all([
             loadArticle(),
             loadAggregatorNews()
         ]);
+        
+        setupKeyboardShortcuts();
     });
 
     function getArticleId() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id');
     }
-
-    // ===== CARREGAMENTO DO ARTIGO =====
+   // ===== CARREGAMENTO RÁPIDO DO ARTIGO =====
     async function loadArticle() {
         try {
-            // Tenta carregar de múltiplas fontes
-            currentArticle = await findArticle();
+            currentArticle = await fetchArticle();
             
             if (currentArticle) {
                 displayArticle(currentArticle);
                 setupShareLinks();
                 checkIfSaved();
+                addToHistory(currentArticle);
             } else {
                 showError();
             }
@@ -807,42 +826,74 @@
         }
     }
 
-    async function findArticle() {
+    async function fetchArticle() {
         // Extrai informações do ID
         const [sourceId, postId] = articleId.split('_');
         
-        // Tenta carregar do localStorage primeiro
-        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        const cachedArticle = savedArticles.find(article => article.id === articleId);
+        // Tenta múltiplas fontes em sequência
+        const sourcesToTry = [
+            () => loadFromCache('saved'),
+            () => loadFromCache('history'),
+            () => fetchFromAPI(sourceId, postId),
+            () => fetchFromAnySource(postId),
+            () => createFallbackArticle()
+        ];
         
-        if (cachedArticle) {
-            return cachedArticle;
-        }
-        
-        // Tenta carregar do histórico
-        const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
-        const historyArticle = history.find(article => article.id === articleId);
-        
-        if (historyArticle) {
-            return historyArticle;
-        }
-        
-        // Tenta carregar da API
-        const source = CONFIG.sources.find(s => s.id === sourceId);
-        if (source && postId) {
+        for (const sourceFn of sourcesToTry) {
             try {
-                const response = await fetch(`${source.url}/${postId}?_embed`);
+                const article = await sourceFn();
+                if (article) {
+                    article.category = detectCategory(article.title, article.content);
+                    return article;
+                }
+            } catch (error) {
+                continue;
+            }
+        }
+        
+        return null;
+    }
+
+    async function loadFromCache(type) {
+        const data = JSON.parse(localStorage.getItem(`cld_${type}`) || '[]');
+        return data.find(article => article.id === articleId);
+    }
+
+    async function fetchFromAPI(sourceId, postId) {
+        const source = CONFIG.sources.find(s => s.id === sourceId);
+        if (!source || !postId) return null;
+        
+        try {
+            const response = await fetch(`${source.url}/${postId}?_embed`, {
+                signal: AbortSignal.timeout(8000)
+            });
+            
+            if (!response.ok) return null;
+            
+            const data = await response.json();
+            return processArticleData(data, source);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async function fetchFromAnySource(postId) {
+        // Tenta buscar de qualquer fonte disponível
+        for (const source of CONFIG.sources) {
+            try {
+                const response = await fetch(`${source.url}/${postId}?_embed`, {
+                    signal: AbortSignal.timeout(5000)
+                });
+                
                 if (response.ok) {
                     const data = await response.json();
                     return processArticleData(data, source);
                 }
             } catch (error) {
-                console.error('Erro ao buscar da API:', error);
+                continue;
             }
         }
-        
-        // Cria artigo de fallback
-        return createFallbackArticle();
+        return null;
     }
 
     function processArticleData(data, source) {
@@ -857,23 +908,7 @@
             source: source.name,
             sourceId: source.id,
             date: data.date || data.published || new Date().toISOString(),
-            link: data.link || data.url || window.location.href,
-            category: detectCategory(data.title?.rendered || data.title, content)
-        };
-    }
-
-    function createFallbackArticle() {
-        return {
-            id: articleId,
-            title: 'Notícia não disponível',
-            content: '<p>Esta notícia não está mais disponível ou ocorreu um erro ao carregá-la.</p>',
-            excerpt: 'Conteúdo não disponível no momento.',
-            image: 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia+Indisponível',
-            source: 'Notícias CLD',
-            sourceId: 'cld',
-            date: new Date().toISOString(),
-            link: window.location.href,
-            category: 'Notícia'
+            link: data.link || data.url || window.location.href
         };
     }
 
@@ -897,17 +932,27 @@
     function detectCategory(title, content) {
         const text = ((title || '') + ' ' + (content || '')).toLowerCase();
         
-        if (/politica|governo|presidente|ministro/i.test(text)) return 'Política';
-        if (/economia|negocio|empresa|investimento/i.test(text)) return 'Economia';
-        if (/esporte|futebol|jogo|competicao/i.test(text)) return 'Esportes';
-        if (/tecnologia|digital|internet|software/i.test(text)) return 'Tecnologia';
+        const categories = {
+            'Sociedade': [/sociedade/i, /social/i, /comunidade/i],
+            'Política': [/politica/i, /governo/i, /presidente/i, /ministro/i],
+            'Economia': [/economia/i, /negocio/i, /empresa/i, /investimento/i],
+            'Esportes': [/esporte/i, /futebol/i, /jogo/i, /atleta/i],
+            'Cultura': [/cultura/i, /arte/i, /música/i, /teatro/i],
+            'Saúde': [/saúde/i, /hospital/i, /médico/i, /enfermeiro/i],
+            'Tecnologia': [/tecnologia/i, /digital/i, /internet/i, /software/i]
+        };
+        
+        for (const [category, patterns] of Object.entries(categories)) {
+            if (patterns.some(pattern => pattern.test(text))) {
+                return category;
+            }
+        }
         
         return 'Sociedade';
     }
 
     function cleanText(text) {
         if (!text) return '';
-        
         return text
             .replace(/<[^>]*>/g, '')
             .replace(/&nbsp;/g, ' ')
@@ -915,7 +960,23 @@
             .replace(/\s+/g, ' ')
             .trim();
     }
-    // ===== EXIBIÇÃO DO ARTIGO =====
+
+    function createFallbackArticle() {
+        return {
+            id: articleId,
+            title: 'Notícia não disponível',
+            content: '<p>Esta notícia não está mais disponível ou ocorreu um erro ao carregá-la. Por favor, tente novamente mais tarde ou volte à página principal.</p>',
+            excerpt: 'Conteúdo não disponível no momento.',
+            image: 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia+Indisponível',
+            source: 'Notícias CLD',
+            sourceId: 'cld',
+            date: new Date().toISOString(),
+            link: window.location.href,
+            category: 'Notícia'
+        };
+    }
+
+    // ===== EXIBIÇÃO RÁPIDA =====
     function displayArticle(article) {
         const timeAgo = getTimeAgo(article.date);
         const sourceInitials = article.source.substring(0, 2).toUpperCase();
@@ -939,6 +1000,7 @@
         <div class="article-image">
             <img src="${article.image}" 
                  alt="${article.title}"
+                 loading="lazy"
                  onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia'">
             <div class="image-caption">Imagem: ${article.source}</div>
         </div>
@@ -967,10 +1029,7 @@
         miniAggregatorEl.style.display = 'block';
         
         // Limpa e formata o conteúdo
-        formatArticleContent();
-        
-        // Adiciona ao histórico
-        addToHistory(article);
+        setTimeout(() => formatArticleContent(), 100);
     }
 
     function getTimeAgo(dateString) {
@@ -992,88 +1051,111 @@
     function formatArticleContent() {
         const contentEl = document.getElementById('article-content');
         if (!contentEl) return;
-        
-        // Remove elementos indesejados
+  // Remove elementos indesejados
         const elementsToRemove = contentEl.querySelectorAll(
-            '.ads, .advertisement, iframe, script, style'
+            '.ads, .advertisement, iframe, script, style, .wp-block-embed, .sharedaddy'
         );
         elementsToRemove.forEach(el => el.remove());
         
-        // Melhora a formatação
+        // Melhora formatação
         const paragraphs = contentEl.querySelectorAll('p');
         paragraphs.forEach(p => {
-            p.style.fontSize = '18px';
-            p.style.lineHeight = '1.8';
-            p.style.marginBottom = '24px';
+            if (p.textContent.trim().length > 10) {
+                p.style.fontSize = '18px';
+                p.style.lineHeight = '1.8';
+                p.style.marginBottom = '24px';
+            }
+        });
+        
+        // Adiciona classes para imagens
+        const images = contentEl.querySelectorAll('img');
+        images.forEach(img => {
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.borderRadius = '8px';
+            img.style.margin = '20px 0';
         });
     }
 
-    // ===== MINI AGREGADOR =====
+    // ===== MINI AGREGADOR RÁPIDO =====
     async function loadAggregatorNews() {
         try {
-            aggregatorGrid.innerHTML = '<p>Carregando mais notícias...</p>';
+            aggregatorGrid.innerHTML = '<div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>';
             
-            const newsItems = [];
-            const limitPerSource = Math.ceil(CONFIG.aggregatorLimit / CONFIG.sources.length);
-            
-            for (const source of CONFIG.sources) {
-                try {
-                    const response = await fetch(`${source.url}?per_page=${limitPerSource}&_embed`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        const processed = processAggregatorData(data, source);
-                        newsItems.push(...processed.slice(0, limitPerSource));
-                    }
-                } catch (error) {
-                    console.error(`Erro ao buscar de ${source.name}:`, error);
-                    continue;
-                }
+            // Tenta carregar do cache primeiro
+            const cached = JSON.parse(localStorage.getItem('cld_aggregator_cache') || 'null');
+            if (cached && Date.now() - cached.timestamp < 5 * 60 * 1000) {
+                displayAggregatorNews(cached.data);
+                return;
             }
             
-            // Remove duplicatas e o artigo atual
-            const uniqueNews = newsItems.filter((news, index, self) => {
-                return index === self.findIndex(n => n.id === news.id) && news.id !== articleId;
-            }).slice(0, CONFIG.aggregatorLimit);
+            // Carrega de múltiplas fontes em paralelo
+            const promises = CONFIG.sources.map(source => 
+                fetch(`${source.url}?per_page=3&_embed`).then(r => r.ok ? r.json() : [])
+            );
+            
+            const results = await Promise.allSettled(promises);
+            const allNews = [];
+            
+            results.forEach((result, index) => {
+                if (result.status === 'fulfilled' && result.value.length > 0) {
+                    const source = CONFIG.sources[index];
+                    const processed = result.value.map(item => ({
+                        id: `${source.id}_${item.id}`,
+                        title: cleanText(item.title?.rendered || item.title),
+                        excerpt: cleanText(item.excerpt?.rendered || item.content?.rendered).substring(0, 100) + '...',
+                        image: getFeaturedImage(item),
+                        source: source.name,
+                        date: item.date,
+                        link: `article.html?id=${source.id}_${item.id}`
+                    })).filter(item => item.id !== articleId);
+                    
+                    allNews.push(...processed);
+                }
+            });
+            
+            // Remove duplicatas e limita
+            const uniqueNews = [...new Map(allNews.map(item => [item.id, item])).values()]
+                .slice(0, CONFIG.aggregatorLimit);
+            
+            // Salva no cache
+            localStorage.setItem('cld_aggregator_cache', JSON.stringify({
+                data: uniqueNews,
+                timestamp: Date.now()
+            }));
             
             displayAggregatorNews(uniqueNews);
             
         } catch (error) {
-            console.error('Erro ao carregar notícias do agregador:', error);
-            aggregatorGrid.innerHTML = '<p>Não foi possível carregar mais notícias no momento.</p>';
+            console.error('Erro no agregador:', error);
+            aggregatorGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Não foi possível carregar mais notícias.</p>';
         }
-    }
-
-    function processAggregatorData(data, source) {
-        return data.map(item => {
-            const content = item.content?.rendered || item.content || '';
-            
-            return {
-                id: `${source.id}_${item.id}`,
-                title: cleanText(item.title?.rendered || item.title || 'Sem título'),
-                excerpt: cleanText(item.excerpt?.rendered || item.excerpt || content).substring(0, 100) + '...',
-                image: getFeaturedImage(item) || 'https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia',
-                source: source.name,
-                date: item.date || item.published || new Date().toISOString(),
-                link: `article.html?id=${source.id}_${item.id}`
-            };
-        }).filter(item => item.title !== 'Sem título');
     }
 
     function displayAggregatorNews(newsItems) {
-        if (newsItems.length === 0) {
-            aggregatorGrid.innerHTML = '<p>Não há mais notícias disponíveis no momento.</p>';
+        if (!newsItems || newsItems.length === 0) {
+            aggregatorGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Nenhuma notícia relacionada disponível.</p>';
             return;
         }
         
-        let html = '';
+        const fragment = document.createDocumentFragment();
+        
         newsItems.forEach(news => {
             const timeAgo = getTimeAgo(news.date);
             
-            html += `
-            <a href="${news.link}" class="aggregator-card" onclick="openAggregatorArticle('${news.id}', event)">
+            const card = document.createElement('a');
+            card.href = news.link;
+            card.className = 'aggregator-card';
+            card.onclick = (e) => {
+                e.preventDefault();
+                window.location.href = news.link;
+            };
+            
+            card.innerHTML = `
                 <img src="${news.image}" 
                      class="aggregator-image" 
                      alt="${news.title}"
+                     loading="lazy"
                      onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia'">
                 <div class="aggregator-content">
                     <h4 class="aggregator-card-title">${news.title}</h4>
@@ -1082,16 +1164,13 @@
                         <span>${timeAgo}</span>
                     </div>
                 </div>
-            </a>
             `;
+            
+            fragment.appendChild(card);
         });
         
-        aggregatorGrid.innerHTML = html;
-    }
-
-    function openAggregatorArticle(newsId, event) {
-        if (event) event.preventDefault();
-        window.location.href = `article.html?id=${newsId}`;
+        aggregatorGrid.innerHTML = '';
+        aggregatorGrid.appendChild(fragment);
     }
 
     // ===== SALVAR ARTIGO =====
@@ -1105,20 +1184,13 @@
         const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
         
         if (isSaved) {
-            // Remove
             const index = savedArticles.findIndex(n => n.id === articleId);
-            if (index !== -1) {
-                savedArticles.splice(index, 1);
-            }
+            if (index !== -1) savedArticles.splice(index, 1);
             isSaved = false;
             showNotification('Notícia removida das guardadas', 'info');
         } else {
-            // Adiciona
-            const articleToSave = {
-                ...currentArticle,
-                savedAt: new Date().toISOString()
-            };
-            savedArticles.unshift(articleToSave);
+            currentArticle.savedAt = new Date().toISOString();
+            savedArticles.unshift(currentArticle);
             isSaved = true;
             showNotification('Notícia guardada', 'success');
         }
@@ -1151,6 +1223,7 @@
             }
         }
     }
+
     // ===== COMPARTILHAMENTO =====
     function setupShareLinks() {
         const shareUrl = encodeURIComponent(window.location.href);
@@ -1195,22 +1268,19 @@
     function toggleShare() {
         shareOptionsEl.classList.toggle('active');
     }
-
     // ===== HISTÓRICO =====
     function addToHistory(article) {
         const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
         
-        // Remove se já existir
         const existingIndex = history.findIndex(n => n.id === article.id);
         if (existingIndex !== -1) {
             history.splice(existingIndex, 1);
         }
         
-        // Adiciona no início
         article.lastViewed = new Date().toISOString();
         history.unshift(article);
         
-        // Limita histórico a 50 itens
+        // Mantém apenas os 50 mais recentes
         localStorage.setItem('cld_history', JSON.stringify(history.slice(0, 50)));
     }
 
@@ -1288,21 +1358,27 @@
     }
 
     // ===== ATALHOS DE TECLADO =====
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            goBack();
-        }
-        
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            toggleSave();
-        }
-        
-        if (e.ctrlKey && e.key === 'c' && shareOptionsEl.classList.contains('active')) {
-            e.preventDefault();
-            copyArticleLink();
-        }
-    });
+    function setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (shareOptionsEl.classList.contains('active')) {
+                    toggleShare();
+                } else {
+                    goBack();
+                }
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                toggleSave();
+            }
+            
+            if ((e.ctrlKey || e.metaKey) && e.key === 'c' && shareOptionsEl.classList.contains('active')) {
+                e.preventDefault();
+                copyArticleLink();
+            }
+        });
+    }
 
     // ===== DETECÇÃO DE CONEXÃO =====
     window.addEventListener('online', () => {
@@ -1310,7 +1386,7 @@
     });
 
     window.addEventListener('offline', () => {
-        showNotification('Você está offline', 'error');
+        showNotification('Você está offline. Conteúdo carregado do cache.', 'error');
     });
     </script>
 </body>
