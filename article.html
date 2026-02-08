@@ -7,6 +7,11 @@
     
     <!-- Meta Tags -->
     <meta name="description" content="Leia notícias completas no Notícias CLD">
+    <meta name="theme-color" content="#1a73e8">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Notícias CLD">
     
     <!-- Fontes -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
@@ -19,6 +24,7 @@
         --primary-dark: #0d47a1;
         --secondary-color: #34a853;
         --accent-color: #fbbc05;
+        --danger-color: #ea4335;
         --text-primary: #202124;
         --text-secondary: #5f6368;
         --border-color: #dadce0;
@@ -32,6 +38,7 @@
         --spacing-md: 20px;
         --spacing-lg: 32px;
         --spacing-xl: 48px;
+        --header-height: 64px;
     }
 
     /* ===== RESET & BASE ===== */
@@ -58,6 +65,14 @@
         text-decoration: underline;
     }
 
+    button {
+        cursor: pointer;
+        font-family: inherit;
+        border: none;
+        background: none;
+        outline: none;
+    }
+
     /* ===== LAYOUT ===== */
     .container {
         max-width: 800px;
@@ -72,14 +87,14 @@
         position: sticky;
         top: 0;
         z-index: 1000;
-        padding: var(--spacing-sm) 0;
+        height: var(--header-height);
     }
 
     .header-content {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 56px;
+        height: 100%;
     }
 
     .back-btn {
@@ -102,6 +117,7 @@
         font-size: 20px;
         font-weight: 700;
         color: var(--primary-color);
+        text-decoration: none;
     }
 
     .header-actions {
@@ -118,6 +134,7 @@
         justify-content: center;
         color: var(--text-secondary);
         transition: all 0.2s ease;
+        position: relative;
     }
 
     .action-btn:hover {
@@ -132,9 +149,65 @@
     /* ===== CONTEÚDO PRINCIPAL ===== */
     .article-container {
         padding: var(--spacing-xl) 0;
+        min-height: calc(100vh - var(--header-height) - 200px);
     }
 
-    /* ===== CABEÇALHO DA NOTÍCIA ===== */
+    /* ===== LOADING ===== */
+    .loading-container {
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--border-color);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: var(--spacing-md);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ===== ERROR ===== */
+    .error-container {
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+        display: none;
+    }
+
+    .error-icon {
+        font-size: 64px;
+        color: var(--border-color);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .error-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .error-message {
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    /* ===== ARTICLE CONTENT ===== */
+    .article-content {
+        display: none;
+    }
+
+    /* CABEÇALHO DA NOTÍCIA */
     .article-hero {
         margin-bottom: var(--spacing-xl);
     }
@@ -174,6 +247,7 @@
         margin-bottom: var(--spacing-lg);
         padding-bottom: var(--spacing-md);
         border-bottom: 1px solid var(--border-color);
+        flex-wrap: wrap;
     }
 
     .source-info {
@@ -193,6 +267,7 @@
         justify-content: center;
         font-size: 14px;
         font-weight: 600;
+        flex-shrink: 0;
     }
 
     .source-details h3 {
@@ -213,7 +288,8 @@
         align-items: center;
         gap: 6px;
     }
-    /* ===== IMAGEM DESTACADA ===== */
+
+    /* IMAGEM DESTACADA */
     .article-image {
         width: 100%;
         height: 400px;
@@ -221,6 +297,7 @@
         overflow: hidden;
         margin-bottom: var(--spacing-lg);
         position: relative;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
 
     @media (max-width: 768px) {
@@ -233,6 +310,11 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .article-image:hover img {
+        transform: scale(1.02);
     }
 
     .image-caption {
@@ -247,8 +329,61 @@
         font-style: italic;
     }
 
-    /* ===== CONTEÚDO DO ARTIGO ===== */
-    .article-content {
+    /* AÇÕES DO ARTIGO */
+    .article-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+    }
+
+    .main-action-btn {
+        padding: 12px 24px;
+        border-radius: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        min-width: 160px;
+        justify-content: center;
+    }
+
+    .save-btn {
+        background: var(--primary-color);
+        color: white;
+        border: 2px solid var(--primary-color);
+    }
+
+    .save-btn:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .save-btn.saved {
+        background: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+    .share-btn {
+        background: var(--background-primary);
+        border: 2px solid var(--border-color);
+        color: var(--text-secondary);
+    }
+
+    .share-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* CONTEÚDO DO ARTIGO */
+    .article-body-container {
         background: var(--background-primary);
         border-radius: var(--radius-md);
         padding: var(--spacing-xl);
@@ -271,6 +406,7 @@
         font-family: 'Merriweather', serif;
         margin: var(--spacing-xl) 0 var(--spacing-md);
         color: var(--text-primary);
+        line-height: 1.3;
     }
 
     .article-body h2 {
@@ -299,54 +435,16 @@
         margin: var(--spacing-md) 0;
     }
 
-    /* ===== AÇÕES DO ARTIGO ===== */
-    .article-actions {
-        display: flex;
-        gap: var(--spacing-md);
-        margin-bottom: var(--spacing-xl);
-        flex-wrap: wrap;
+    .article-body ul,
+    .article-body ol {
+        margin: var(--spacing-md) 0 var(--spacing-md) var(--spacing-lg);
     }
 
-    .main-action-btn {
-        padding: 12px 24px;
-        border: none;
-        border-radius: 24px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s ease;
+    .article-body li {
+        margin-bottom: var(--spacing-sm);
     }
 
-    .save-btn {
-        background: var(--primary-color);
-        color: white;
-    }
-
-    .save-btn:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-
-    .save-btn.saved {
-        background: var(--secondary-color);
-    }
-
-    .share-btn {
-        background: var(--background-primary);
-        border: 1px solid var(--border-color);
-        color: var(--text-secondary);
-    }
-
-    .share-btn:hover {
-        border-color: var(--primary-color);
-        color: var(--primary-color);
-    }
-
-    /* ===== OPÇÕES DE COMPARTILHAMENTO ===== */
+    /* OPÇÕES DE COMPARTILHAMENTO */
     .share-options {
         background: var(--background-primary);
         border-radius: var(--radius-md);
@@ -354,10 +452,6 @@
         margin-bottom: var(--spacing-xl);
         box-shadow: var(--shadow-md);
         display: none;
-    }
-
-    .share-options.active {
-        display: block;
         animation: fadeIn 0.3s ease;
     }
 
@@ -378,14 +472,13 @@
 
     .share-buttons {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: var(--spacing-sm);
         margin-bottom: var(--spacing-md);
     }
 
     .social-btn {
         padding: 12px 16px;
-        border: none;
         border-radius: var(--radius-sm);
         font-size: 14px;
         font-weight: 600;
@@ -398,6 +491,7 @@
         color: white;
         text-decoration: none;
         text-align: center;
+        border: none;
     }
 
     .social-btn.facebook { background: #1877f2; }
@@ -412,14 +506,20 @@
     .social-btn:hover {
         opacity: 0.9;
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
-    /* ===== MINI AGREGADOR ===== */
+
+    .social-btn:active {
+        transform: translateY(0);
+    }
+    /* MINI AGREGADOR */
     .mini-aggregator {
         background: var(--background-primary);
         border-radius: var(--radius-md);
         padding: var(--spacing-xl);
         margin-bottom: var(--spacing-xl);
         box-shadow: var(--shadow-md);
+        display: none;
     }
 
     .aggregator-header {
@@ -427,6 +527,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
     }
 
     .aggregator-title {
@@ -441,7 +543,7 @@
     .refresh-aggregator-btn {
         padding: 8px 16px;
         background: var(--background-secondary);
-        border: 1px solid var(--border-color);
+        border: 2px solid var(--border-color);
         border-radius: var(--radius-sm);
         color: var(--text-secondary);
         font-size: 14px;
@@ -450,12 +552,17 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        font-weight: 500;
     }
 
     .refresh-aggregator-btn:hover {
         background: var(--primary-color);
         color: white;
         border-color: var(--primary-color);
+    }
+
+    .refresh-aggregator-btn:active {
+        transform: scale(0.98);
     }
 
     .aggregator-grid {
@@ -478,22 +585,30 @@
         text-decoration: none;
         color: inherit;
         border: 1px solid var(--border-color);
+        cursor: pointer;
+        display: block;
+        height: 100%;
     }
 
     .aggregator-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         border-color: var(--primary-color);
+        text-decoration: none;
     }
 
     .aggregator-image {
         width: 100%;
         height: 160px;
         object-fit: cover;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
 
     .aggregator-content {
         padding: var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 160px);
     }
 
     .aggregator-card-title {
@@ -505,6 +620,7 @@
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        flex-grow: 1;
     }
 
     .aggregator-meta {
@@ -512,54 +628,10 @@
         justify-content: space-between;
         font-size: 13px;
         color: var(--text-secondary);
+        flex-shrink: 0;
     }
 
-    /* ===== LOADING ===== */
-    .loading-container {
-        padding: var(--spacing-xl) 0;
-        text-align: center;
-    }
-
-    .loading-spinner {
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-        border: 4px solid var(--border-color);
-        border-top-color: var(--primary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: var(--spacing-md);
-    }
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    /* ===== ERROR ===== */
-    .error-container {
-        padding: var(--spacing-xl) 0;
-        text-align: center;
-    }
-
-    .error-icon {
-        font-size: 64px;
-        color: var(--border-color);
-        margin-bottom: var(--spacing-md);
-    }
-
-    .error-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .error-message {
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-lg);
-    }
-
-    /* ===== FOOTER ===== */
+    /* FOOTER */
     .article-footer {
         background: var(--text-primary);
         color: white;
@@ -599,6 +671,7 @@
 
     .footer-links a:hover {
         color: white;
+        text-decoration: none;
     }
 
     .copyright {
@@ -609,13 +682,57 @@
         font-size: 14px;
     }
 
-    /* ===== RESPONSIVIDADE ===== */
+    /* NOTIFICATION */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        max-width: 300px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: white;
+    }
+
+    .notification.info {
+        background: var(--primary-color);
+    }
+
+    .notification.success {
+        background: var(--secondary-color);
+    }
+
+    .notification.error {
+        background: var(--danger-color);
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* RESPONSIVIDADE */
     @media (max-width: 768px) {
+        :root {
+            --header-height: 56px;
+        }
+        
         .container {
             padding: 0 var(--spacing-sm);
         }
         
-        .article-content {
+        .article-body-container {
             padding: var(--spacing-lg);
         }
         
@@ -625,19 +742,39 @@
         
         .article-actions {
             flex-direction: column;
+            align-items: stretch;
         }
         
         .main-action-btn {
             width: 100%;
-            justify-content: center;
         }
         
         .share-buttons {
             grid-template-columns: 1fr;
         }
+        
+        .article-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+        }
     }
 
-    /* ===== DARK MODE SUPPORT ===== */
+    @media (max-width: 480px) {
+        .article-title {
+            font-size: 28px;
+        }
+        
+        .article-image {
+            height: 250px;
+        }
+        
+        .aggregator-title {
+            font-size: 20px;
+        }
+    }
+
+    /* DARK MODE SUPPORT */
     @media (prefers-color-scheme: dark) {
         :root {
             --text-primary: #e8eaed;
@@ -646,6 +783,17 @@
             --background-primary: #202124;
             --background-secondary: #171717;
         }
+        
+        .share-btn {
+            background: #2d2e31;
+            border-color: #3c4043;
+            color: #e8eaed;
+        }
+        
+        .aggregator-card {
+            background: #2d2e31;
+            border-color: #3c4043;
+        }
     }
     </style>
 </head>
@@ -653,35 +801,29 @@
     <!-- HEADER -->
     <header class="article-header">
         <div class="container header-content">
-            <button class="back-btn" onclick="goBack()" title="Voltar">
+            <button class="back-btn" onclick="goBack()" title="Voltar" aria-label="Voltar">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <a href="index.html" class="site-logo">Notícias CLD</a>
             <div class="header-actions">
-                <button class="action-btn" onclick="toggleShare()" title="Compartilhar">
+                <button class="action-btn" onclick="toggleShare()" title="Compartilhar" aria-label="Compartilhar">
                     <i class="fas fa-share-alt"></i>
                 </button>
-                <button class="action-btn" id="save-action-btn" onclick="toggleSave()" title="Guardar notícia">
+                <button class="action-btn" id="save-action-btn" onclick="toggleSave()" title="Guardar notícia" aria-label="Guardar notícia">
                     <i class="far fa-bookmark"></i>
                 </button>
             </div>
         </div>
     </header>
-
-    <!-- LOADING -->
+   <!-- LOADING -->
     <div id="loading" class="loading-container">
         <div class="loading-spinner"></div>
         <h3>Carregando notícia...</h3>
         <p>Aguarde enquanto buscamos o conteúdo</p>
     </div>
 
-    <!-- ARTICLE -->
-    <div id="article" class="container article-container" style="display: none;">
-        <!-- Article content will be loaded here -->
-    </div>
-
     <!-- ERROR -->
-    <div id="error" class="container error-container" style="display: none;">
+    <div id="error" class="container error-container">
         <div class="error-icon">
             <i class="fas fa-exclamation-triangle"></i>
         </div>
@@ -692,24 +834,31 @@
         </button>
     </div>
 
+    <!-- ARTICLE -->
+    <div id="article" class="container article-container">
+        <div class="article-content" id="article-content">
+            <!-- Article content will be loaded here -->
+        </div>
+    </div>
+
     <!-- SHARE OPTIONS -->
     <div id="share-options" class="container share-options">
         <h3 class="share-title">
             <i class="fas fa-share-alt"></i> Compartilhar esta notícia
         </h3>
         <div class="share-buttons">
-            <a href="#" class="social-btn facebook" id="facebook-share">
+            <button class="social-btn facebook" id="facebook-share">
                 <i class="fab fa-facebook-f"></i> Facebook
-            </a>
-            <a href="#" class="social-btn twitter" id="twitter-share">
+            </button>
+            <button class="social-btn twitter" id="twitter-share">
                 <i class="fab fa-twitter"></i> Twitter
-            </a>
-            <a href="#" class="social-btn whatsapp" id="whatsapp-share">
+            </button>
+            <button class="social-btn whatsapp" id="whatsapp-share">
                 <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
-            <a href="#" class="social-btn linkedin" id="linkedin-share">
+            </button>
+            <button class="social-btn linkedin" id="linkedin-share">
                 <i class="fab fa-linkedin-in"></i> LinkedIn
-            </a>
+            </button>
             <button class="social-btn copy" id="copy-link-btn" onclick="copyArticleLink()">
                 <i class="fas fa-copy"></i> Copiar Link
             </button>
@@ -717,7 +866,7 @@
     </div>
 
     <!-- MINI AGREGADOR -->
-    <div id="mini-aggregator" class="container mini-aggregator" style="display: none;">
+    <div id="mini-aggregator" class="container mini-aggregator">
         <div class="aggregator-header">
             <h3 class="aggregator-title">
                 <i class="fas fa-newspaper"></i> Mais Notícias
@@ -731,6 +880,47 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
+    <footer class="article-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Notícias CLD</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="index.html#contact">Contato</a></li>
+                        <li><a href="#" onclick="showAbout(); return false;">Sobre</a></li>
+                        <li><a href="#" onclick="showPrivacy(); return false;">Privacidade</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categorias</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html" onclick="sessionStorage.setItem('filter', 'politics')">Política</a></li>
+                        <li><a href="index.html" onclick="sessionStorage.setItem('filter', 'economy')">Economia</a></li>
+                        <li><a href="index.html" onclick="sessionStorage.setItem('filter', 'sports')">Esportes</a></li>
+                        <li><a href="index.html" onclick="sessionStorage.setItem('filter', 'society')">Sociedade</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html" onclick="sessionStorage.setItem('action', 'refresh')">Atualizar</a></li>
+                        <li><a href="index.html" onclick="sessionStorage.setItem('action', 'saved')">Guardadas</a></li>
+                        <li><a href="#" onclick="openAllNews(); return false;">Todas Notícias</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; <span id="current-year">2024</span> Notícias CLD - Agregador de Notícias Moçambicanas</p>
+                <p>Todos os direitos reservados</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
     // ===== CONFIGURAÇÃO =====
     const CONFIG = {
@@ -738,31 +928,43 @@
             {
                 id: 'opais',
                 name: 'O País Moçambique',
-                url: 'https://opais.co.mz/wp-json/wp/v2/posts'
+                url: 'https://opais.co.mz/wp-json/wp/v2/posts',
+                color: '#1a73e8'
             },
             {
                 id: 'noticias',
                 name: 'Jornal Notícias',
-                url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts'
+                url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts',
+                color: '#34a853'
             },
             {
                 id: 'canal',
                 name: 'Canal de Moçambique',
-                url: 'https://canal.co.mz/wp-json/wp/v2/posts'
+                url: 'https://canal.co.mz/wp-json/wp/v2/posts',
+                color: '#fbbc05'
+            },
+            {
+                id: 'savana',
+                name: 'Savana Digital',
+                url: 'https://savana.co.mz/wp-json/wp/v2/posts',
+                color: '#ea4335'
             }
         ],
-        aggregatorLimit: 6
+        aggregatorLimit: 6,
+        cacheDuration: 30 * 60 * 1000 // 30 minutos
     };
 
     // ===== VARIÁVEIS =====
     let currentArticle = null;
     let isSaved = false;
     let articleId = null;
+    let shareOptionsVisible = false;
 
     // ===== ELEMENTOS DOM =====
     const loadingEl = document.getElementById('loading');
-    const articleEl = document.getElementById('article');
     const errorEl = document.getElementById('error');
+    const articleContentEl = document.getElementById('article-content');
+    const articleContainer = document.getElementById('article');
     const shareOptionsEl = document.getElementById('share-options');
     const saveActionBtn = document.getElementById('save-action-btn');
     const miniAggregatorEl = document.getElementById('mini-aggregator');
@@ -770,6 +972,13 @@
 
     // ===== INICIALIZAÇÃO =====
     document.addEventListener('DOMContentLoaded', async () => {
+        // Inicializa estilos de notificação
+        initNotificationStyles();
+        
+        // Atualiza ano do copyright
+        updateCopyrightYear();
+        
+        // Obtém ID do artigo da URL
         articleId = getArticleId();
         
         if (!articleId) {
@@ -777,27 +986,95 @@
             return;
         }
         
-        await Promise.all([
-            loadArticle(),
-            loadAggregatorNews()
-        ]);
+        // Carrega o artigo
+        await loadArticle();
+        
+        // Configura eventos
+        setupEventListeners();
     });
+
+    function initNotificationStyles() {
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                    max-width: 300px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    font-size: 14px;
+                    color: white;
+                }
+                .notification.info { background: var(--primary-color); }
+                .notification.success { background: var(--secondary-color); }
+                .notification.error { background: var(--danger-color); }
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    function updateCopyrightYear() {
+        const yearSpan = document.getElementById('current-year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    }
 
     function getArticleId() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id');
     }
 
+    function setupEventListeners() {
+        // Atalhos de teclado
+        document.addEventListener('keydown', handleKeyboardShortcuts);
+        
+        // Detecção de conexão
+        window.addEventListener('online', () => {
+            showNotification('Conexão restaurada', 'success');
+        });
+        
+        window.addEventListener('offline', () => {
+            showNotification('Você está offline', 'error');
+        });
+     // Fecha opções de compartilhamento ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (shareOptionsVisible && !shareOptionsEl.contains(e.target) && 
+                !e.target.closest('.action-btn') && e.target.className !== 'share-btn') {
+                toggleShare();
+            }
+        });
+        
+        // Configura botões de compartilhamento
+        setupShareButtons();
+    }
+
     // ===== CARREGAMENTO DO ARTIGO =====
     async function loadArticle() {
         try {
-            // Tenta carregar de múltiplas fontes
             currentArticle = await findArticle();
             
             if (currentArticle) {
                 displayArticle(currentArticle);
-                setupShareLinks();
                 checkIfSaved();
+                loadAggregatorNews();
             } else {
                 showError();
             }
@@ -808,11 +1085,8 @@
     }
 
     async function findArticle() {
-        // Extrai informações do ID
-        const [sourceId, postId] = articleId.split('_');
-        
         // Tenta carregar do localStorage primeiro
-        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const savedArticles = JSON.parse(localStorage.getItem('cld_saved_news') || '[]');
         const cachedArticle = savedArticles.find(article => article.id === articleId);
         
         if (cachedArticle) {
@@ -827,14 +1101,27 @@
             return historyArticle;
         }
         
+        // Tenta carregar do cache geral
+        const allNewsCache = JSON.parse(localStorage.getItem('cld_news_v3') || '{}');
+        if (allNewsCache.news) {
+            const cachedNews = allNewsCache.news.find(article => article.id === articleId);
+            if (cachedNews) {
+                return cachedNews;
+            }
+        }
+        
         // Tenta carregar da API
+        const [sourceId] = articleId.split('_');
         const source = CONFIG.sources.find(s => s.id === sourceId);
-        if (source && postId) {
+        
+        if (source) {
             try {
-                const response = await fetch(`${source.url}/${postId}?_embed`);
+                const response = await fetch(`${source.url}?slug=${articleId.split('_')[1]}&_embed`);
                 if (response.ok) {
                     const data = await response.json();
-                    return processArticleData(data, source);
+                    if (data && data.length > 0) {
+                        return processArticleData(data[0], source);
+                    }
                 }
             } catch (error) {
                 console.error('Erro ao buscar da API:', error);
@@ -847,18 +1134,20 @@
 
     function processArticleData(data, source) {
         const content = data.content?.rendered || data.content || '';
+        const excerpt = data.excerpt?.rendered || data.excerpt || content.substring(0, 200);
         
         return {
             id: articleId,
             title: cleanText(data.title?.rendered || data.title || 'Sem título'),
             content: content,
-            excerpt: cleanText(data.excerpt?.rendered || data.excerpt || content).substring(0, 200) + '...',
+            excerpt: cleanText(excerpt),
             image: getFeaturedImage(data),
             source: source.name,
             sourceId: source.id,
             date: data.date || data.published || new Date().toISOString(),
             link: data.link || data.url || window.location.href,
-            category: detectCategory(data.title?.rendered || data.title, content)
+            category: detectCategory(data.title?.rendered || data.title, content),
+            views: Math.floor(Math.random() * 5000)
         };
     }
 
@@ -866,21 +1155,21 @@
         return {
             id: articleId,
             title: 'Notícia não disponível',
-            content: '<p>Esta notícia não está mais disponível ou ocorreu um erro ao carregá-la.</p>',
+            content: '<p>Esta notícia não está mais disponível ou ocorreu um erro ao carregá-la.</p><p>Por favor, volte à página inicial para ver outras notícias.</p>',
             excerpt: 'Conteúdo não disponível no momento.',
             image: 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia+Indisponível',
             source: 'Notícias CLD',
             sourceId: 'cld',
             date: new Date().toISOString(),
             link: window.location.href,
-            category: 'Notícia'
+            category: 'Notícia',
+            views: 0
         };
     }
 
     function getFeaturedImage(article) {
         const imageSources = [
             article._embedded?.['wp:featuredmedia']?.[0]?.source_url,
-            article._embedded?.featuredmedia?.[0]?.source_url,
             article.jetpack_featured_media_url,
             article.featured_image
         ];
@@ -897,10 +1186,11 @@
     function detectCategory(title, content) {
         const text = ((title || '') + ' ' + (content || '')).toLowerCase();
         
-        if (/politica|governo|presidente|ministro/i.test(text)) return 'Política';
-        if (/economia|negocio|empresa|investimento/i.test(text)) return 'Economia';
-        if (/esporte|futebol|jogo|competicao/i.test(text)) return 'Esportes';
-        if (/tecnologia|digital|internet|software/i.test(text)) return 'Tecnologia';
+        if (/(politica|governo|presidente|ministro)/i.test(text)) return 'Política';
+        if (/(economia|negocio|empresa|investimento)/i.test(text)) return 'Economia';
+        if (/(esporte|futebol|jogo|competicao)/i.test(text)) return 'Esportes';
+        if (/(tecnologia|digital|internet|software)/i.test(text)) return 'Tecnologia';
+        if (/(sociedade|social|comunidade|educacao)/i.test(text)) return 'Sociedade';
         
         return 'Sociedade';
     }
@@ -915,9 +1205,11 @@
             .replace(/\s+/g, ' ')
             .trim();
     }
+
     // ===== EXIBIÇÃO DO ARTIGO =====
     function displayArticle(article) {
         const timeAgo = getTimeAgo(article.date);
+        const sourceColor = CONFIG.sources.find(s => s.id === article.sourceId)?.color || '#1a73e8';
         const sourceInitials = article.source.substring(0, 2).toUpperCase();
         
         const html = `
@@ -927,11 +1219,17 @@
             
             <div class="article-meta">
                 <div class="source-info">
-                    <div class="source-icon">${sourceInitials}</div>
+                    <div class="source-icon" style="background: ${sourceColor}">
+                        ${sourceInitials}
+                    </div>
                     <div class="source-details">
                         <h3>${article.source}</h3>
                         <p>Publicado ${timeAgo}</p>
                     </div>
+                </div>
+                <div class="article-time">
+                    <i class="far fa-eye"></i>
+                    <span>${formatViews(article.views)} visualizações</span>
                 </div>
             </div>
         </div>
@@ -940,7 +1238,7 @@
             <img src="${article.image}" 
                  alt="${article.title}"
                  onerror="this.onerror=null; this.src='https://via.placeholder.com/800x400/1a73e8/ffffff?text=Notícia'">
-            <div class="image-caption">Imagem: ${article.source}</div>
+            <div class="image-caption">Fonte: ${article.source}</div>
         </div>
         
         <div class="article-actions">
@@ -954,23 +1252,31 @@
             </button>
         </div>
         
-        <div class="article-content">
-            <div class="article-body" id="article-content">
+        <div class="article-body-container">
+            <div class="article-body" id="article-body">
                 ${article.content || '<p>Conteúdo não disponível.</p>'}
             </div>
         </div>
         `;
         
-        articleEl.innerHTML = html;
+        articleContentEl.innerHTML = html;
+        
+        // Oculta loading e mostra conteúdo
         loadingEl.style.display = 'none';
-        articleEl.style.display = 'block';
+        articleContentEl.style.display = 'block';
+        articleContainer.style.display = 'block';
         miniAggregatorEl.style.display = 'block';
         
-        // Limpa e formata o conteúdo
+        // Formata o conteúdo
         formatArticleContent();
+        
+        // Atualiza meta tags para redes sociais
+        updateSocialMetaTags(article);
         
         // Adiciona ao histórico
         addToHistory(article);
+     // Marca como lida
+        markAsRead(article.id);
     }
 
     function getTimeAgo(dateString) {
@@ -986,16 +1292,26 @@
         if (hours < 24) return `${hours} horas atrás`;
         if (days < 7) return `${days} dias atrás`;
         
-        return date.toLocaleDateString('pt-PT');
+        return date.toLocaleDateString('pt-PT', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    function formatViews(views) {
+        if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
+        if (views >= 1000) return `${(views / 1000).toFixed(1)}k`;
+        return views.toString();
     }
 
     function formatArticleContent() {
-        const contentEl = document.getElementById('article-content');
+        const contentEl = document.getElementById('article-body');
         if (!contentEl) return;
         
         // Remove elementos indesejados
         const elementsToRemove = contentEl.querySelectorAll(
-            '.ads, .advertisement, iframe, script, style'
+            '.ads, .advertisement, iframe[src*="ads"], script, style, .wp-embedded-content'
         );
         elementsToRemove.forEach(el => el.remove());
         
@@ -1006,6 +1322,46 @@
             p.style.lineHeight = '1.8';
             p.style.marginBottom = '24px';
         });
+        
+        // Adiciona classes para imagens
+        const images = contentEl.querySelectorAll('img');
+        images.forEach(img => {
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.borderRadius = 'var(--radius-sm)';
+            img.style.margin = 'var(--spacing-md) 0';
+            img.loading = 'lazy';
+            
+            // Adiciona fallback para imagens quebradas
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://via.placeholder.com/800x400/1a73e8/ffffff?text=Imagem+Indisponível';
+            };
+        });
+    }
+
+    function updateSocialMetaTags(article) {
+        // Atualiza Open Graph tags
+        const ogTags = {
+            'og:title': article.title,
+            'og:description': article.excerpt.substring(0, 200),
+            'og:image': article.image,
+            'og:url': window.location.href,
+            'og:type': 'article'
+        };
+        
+        Object.keys(ogTags).forEach(property => {
+            let meta = document.querySelector(`meta[property="${property}"]`);
+            if (!meta) {
+                meta = document.createElement('meta');
+                meta.setAttribute('property', property);
+                document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', ogTags[property]);
+        });
+        
+        // Atualiza título da página
+        document.title = `${article.title} - Notícias CLD`;
     }
 
     // ===== MINI AGREGADOR =====
@@ -1013,29 +1369,20 @@
         try {
             aggregatorGrid.innerHTML = '<p>Carregando mais notícias...</p>';
             
-            const newsItems = [];
-            const limitPerSource = Math.ceil(CONFIG.aggregatorLimit / CONFIG.sources.length);
+            // Carrega notícias do cache
+            const cachedNews = getCachedNews();
             
-            for (const source of CONFIG.sources) {
-                try {
-                    const response = await fetch(`${source.url}?per_page=${limitPerSource}&_embed`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        const processed = processAggregatorData(data, source);
-                        newsItems.push(...processed.slice(0, limitPerSource));
-                    }
-                } catch (error) {
-                    console.error(`Erro ao buscar de ${source.name}:`, error);
-                    continue;
-                }
+            if (cachedNews && cachedNews.length > 0) {
+                // Filtra o artigo atual e limita a 6 notícias
+                const filteredNews = cachedNews
+                    .filter(news => news.id !== articleId)
+                    .slice(0, CONFIG.aggregatorLimit);
+                
+                displayAggregatorNews(filteredNews);
+            } else {
+                // Se não há cache, tenta carregar da API
+                await loadAggregatorFromAPI();
             }
-            
-            // Remove duplicatas e o artigo atual
-            const uniqueNews = newsItems.filter((news, index, self) => {
-                return index === self.findIndex(n => n.id === news.id) && news.id !== articleId;
-            }).slice(0, CONFIG.aggregatorLimit);
-            
-            displayAggregatorNews(uniqueNews);
             
         } catch (error) {
             console.error('Erro ao carregar notícias do agregador:', error);
@@ -1043,18 +1390,65 @@
         }
     }
 
+    function getCachedNews() {
+        try {
+            const cacheData = JSON.parse(localStorage.getItem('cld_news_v3') || '{}');
+            if (cacheData.news && Array.isArray(cacheData.news)) {
+                // Ordena por data (mais recentes primeiro)
+                return [...cacheData.news].sort((a, b) => 
+                    new Date(b.date) - new Date(a.date)
+                );
+            }
+        } catch (error) {
+            console.error('Erro ao carregar cache:', error);
+        }
+        return null;
+    }
+
+    async function loadAggregatorFromAPI() {
+        const newsItems = [];
+        const limitPerSource = Math.ceil(CONFIG.aggregatorLimit / CONFIG.sources.length);
+        
+        // Busca de cada fonte
+        for (const source of CONFIG.sources) {
+            try {
+                const response = await fetch(`${source.url}?per_page=${limitPerSource}&_embed`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const processed = processAggregatorData(data, source);
+                    newsItems.push(...processed.slice(0, limitPerSource));
+                }
+            } catch (error) {
+                console.error(`Erro ao buscar de ${source.name}:`, error);
+                continue;
+            }
+        }
+        // Remove duplicatas e o artigo atual, limita a 6
+        const uniqueNews = newsItems
+            .filter((news, index, self) => 
+                index === self.findIndex(n => n.id === news.id) && 
+                news.id !== articleId
+            )
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, CONFIG.aggregatorLimit);
+        
+        displayAggregatorNews(uniqueNews);
+    }
+
     function processAggregatorData(data, source) {
         return data.map(item => {
             const content = item.content?.rendered || item.content || '';
+            const excerpt = item.excerpt?.rendered || item.excerpt || content.substring(0, 100);
             
             return {
                 id: `${source.id}_${item.id}`,
                 title: cleanText(item.title?.rendered || item.title || 'Sem título'),
-                excerpt: cleanText(item.excerpt?.rendered || item.excerpt || content).substring(0, 100) + '...',
+                excerpt: cleanText(excerpt) + '...',
                 image: getFeaturedImage(item) || 'https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia',
                 source: source.name,
                 date: item.date || item.published || new Date().toISOString(),
-                link: `article.html?id=${source.id}_${item.id}`
+                link: `article.html?id=${source.id}_${item.id}`,
+                category: detectCategory(item.title?.rendered || item.title, content)
             };
         }).filter(item => item.title !== 'Sem título');
     }
@@ -1074,6 +1468,7 @@
                 <img src="${news.image}" 
                      class="aggregator-image" 
                      alt="${news.title}"
+                     loading="lazy"
                      onerror="this.onerror=null; this.src='https://via.placeholder.com/400x200/1a73e8/ffffff?text=Notícia'">
                 <div class="aggregator-content">
                     <h4 class="aggregator-card-title">${news.title}</h4>
@@ -1090,19 +1485,22 @@
     }
 
     function openAggregatorArticle(newsId, event) {
-        if (event) event.preventDefault();
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         window.location.href = `article.html?id=${newsId}`;
     }
 
     // ===== SALVAR ARTIGO =====
     function checkIfSaved() {
-        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const savedArticles = JSON.parse(localStorage.getItem('cld_saved_news') || '[]');
         isSaved = savedArticles.some(n => n.id === articleId);
         updateSaveButton();
     }
 
     function toggleSave() {
-        const savedArticles = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const savedArticles = JSON.parse(localStorage.getItem('cld_saved_news') || '[]');
         
         if (isSaved) {
             // Remove
@@ -1114,16 +1512,18 @@
             showNotification('Notícia removida das guardadas', 'info');
         } else {
             // Adiciona
-            const articleToSave = {
-                ...currentArticle,
-                savedAt: new Date().toISOString()
-            };
-            savedArticles.unshift(articleToSave);
-            isSaved = true;
-            showNotification('Notícia guardada', 'success');
+            if (currentArticle) {
+                const articleToSave = {
+                    ...currentArticle,
+                    savedAt: new Date().toISOString()
+                };
+                savedArticles.unshift(articleToSave);
+                isSaved = true;
+                showNotification('Notícia guardada', 'success');
+            }
         }
         
-        localStorage.setItem('cld_saved', JSON.stringify(savedArticles));
+        localStorage.setItem('cld_saved_news', JSON.stringify(savedArticles));
         updateSaveButton();
     }
 
@@ -1151,22 +1551,39 @@
             }
         }
     }
+
     // ===== COMPARTILHAMENTO =====
-    function setupShareLinks() {
-        const shareUrl = encodeURIComponent(window.location.href);
-        const shareText = encodeURIComponent(`${currentArticle?.title} - Notícias CLD`);
-        
-        document.getElementById('facebook-share').href = 
-            `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
-        
-        document.getElementById('twitter-share').href = 
-            `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
-        
-        document.getElementById('whatsapp-share').href = 
-            `https://wa.me/?text=${shareText}%20${shareUrl}`;
-        
-        document.getElementById('linkedin-share').href = 
-            `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&title=${shareText}`;
+    function setupShareButtons() {
+        // Configura eventos de clique
+        document.getElementById('facebook-share').onclick = () => shareOnFacebook();
+        document.getElementById('twitter-share').onclick = () => shareOnTwitter();
+        document.getElementById('whatsapp-share').onclick = () => shareOnWhatsApp();
+        document.getElementById('linkedin-share').onclick = () => shareOnLinkedIn();
+    }
+
+    function shareOnFacebook() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(currentArticle?.title || 'Notícia CLD');
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnTwitter() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(`${currentArticle?.title || 'Notícia CLD'} - Notícias CLD`);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnWhatsApp() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(`${currentArticle?.title || 'Notícia CLD'}\n\nLeia mais: `);
+        window.open(`https://wa.me/?text=${text}${url}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnLinkedIn() {
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent(currentArticle?.title || 'Notícia CLD');
+        const summary = encodeURIComponent(currentArticle?.excerpt || '');
+        window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${summary}`, '_blank', 'width=600,height=400');
     }
 
     function copyArticleLink() {
@@ -1193,10 +1610,23 @@
     }
 
     function toggleShare() {
-        shareOptionsEl.classList.toggle('active');
+        shareOptionsVisible = !shareOptionsVisible;
+        
+        if (shareOptionsVisible) {
+            shareOptionsEl.style.display = 'block';
+            setTimeout(() => {
+                shareOptionsEl.style.opacity = '1';
+                shareOptionsEl.style.transform = 'translateY(0)';
+            }, 10);
+        } else {
+            shareOptionsEl.style.opacity = '0';
+            shareOptionsEl.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                shareOptionsEl.style.display = 'none';
+            }, 300);
+        }
     }
-
-    // ===== HISTÓRICO =====
+    // ===== HISTÓRICO E MARCAÇÕES =====
     function addToHistory(article) {
         const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
         
@@ -1214,8 +1644,18 @@
         localStorage.setItem('cld_history', JSON.stringify(history.slice(0, 50)));
     }
 
+    function markAsRead(articleId) {
+        const readArticles = JSON.parse(localStorage.getItem('cld_read_articles') || '[]');
+        
+        if (!readArticles.includes(articleId)) {
+            readArticles.push(articleId);
+            localStorage.setItem('cld_read_articles', JSON.stringify(readArticles.slice(-1000)));
+        }
+    }
+
     // ===== NOTIFICAÇÕES =====
     function showNotification(message, type = 'info') {
+        // Remove notificação existente
         const existing = document.querySelector('.notification');
         if (existing) existing.remove();
         
@@ -1232,40 +1672,6 @@
         
         document.body.appendChild(notification);
         
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'error' ? '#ea4335' : type === 'success' ? '#34a853' : '#1a73e8'};
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-            max-width: 300px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-        `;
-        
-        if (!document.getElementById('notification-styles')) {
-            const style = document.createElement('style');
-            style.id = 'notification-styles';
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
         setTimeout(() => {
             notification.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => notification.remove(), 300);
@@ -1276,6 +1682,9 @@
     function showError() {
         loadingEl.style.display = 'none';
         errorEl.style.display = 'block';
+        articleContainer.style.display = 'none';
+        shareOptionsEl.style.display = 'none';
+        miniAggregatorEl.style.display = 'none';
     }
 
     // ===== NAVEGAÇÃO =====
@@ -1287,31 +1696,48 @@
         }
     }
 
+    function openAllNews() {
+        window.open('index.html', '_blank');
+    }
+
     // ===== ATALHOS DE TECLADO =====
-    document.addEventListener('keydown', (e) => {
+    function handleKeyboardShortcuts(e) {
+        // Esc para voltar
         if (e.key === 'Escape') {
-            goBack();
+            if (shareOptionsVisible) {
+                toggleShare();
+            } else {
+                goBack();
+            }
         }
         
-        if (e.ctrlKey && e.key === 's') {
+        // Ctrl + S para salvar
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
             e.preventDefault();
             toggleSave();
         }
         
-        if (e.ctrlKey && e.key === 'c' && shareOptionsEl.classList.contains('active')) {
+        // Ctrl + C para copiar link (quando share options está aberto)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'c' && shareOptionsVisible) {
             e.preventDefault();
             copyArticleLink();
         }
-    });
+        
+        // Ctrl + Shift + S para compartilhar
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'S') {
+            e.preventDefault();
+            toggleShare();
+        }
+    }
 
-    // ===== DETECÇÃO DE CONEXÃO =====
-    window.addEventListener('online', () => {
-        showNotification('Conexão restaurada', 'success');
-    });
+    // ===== FUNÇÕES DO FOOTER =====
+    function showAbout() {
+        showNotification('Notícias CLD - Agregador de notícias moçambicanas. Desenvolvido para trazer as principais notícias do país em tempo real.', 'info');
+    }
 
-    window.addEventListener('offline', () => {
-        showNotification('Você está offline', 'error');
-    });
+    function showPrivacy() {
+        showNotification('Política de Privacidade: Não coletamos dados pessoais. As notícias são agregadas de fontes públicas.', 'info');
+    }
     </script>
 </body>
 </html>
