@@ -1,1058 +1,1219 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Carregando... | Notícias CLD</title>
-    <meta name="description" content="Lendo notícia">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ler Notícia - Notícias CLD</title>
     
-    <!-- Open Graph -->
-    <meta property="og:type" content="article">
-    <meta property="og:site_name" content="Notícias CLD">
-    <meta property="og:url" id="og-url">
+    <!-- Meta Tags -->
+    <meta name="description" content="Leia notícias completas no Notícias CLD">
     
-    <!-- JSON-LD para SEO -->
-    <script type="application/ld+json" id="article-jsonld"></script>
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Styles -->
     <style>
-    /* Estilos otimizados do artigo (similar ao anterior, mas mais robusto) */
+    /* ===== VARIÁVEIS ===== */
     :root {
         --primary-color: #1a73e8;
-        --primary-dark: #0d62d9;
+        --primary-dark: #0d47a1;
+        --secondary-color: #34a853;
+        --accent-color: #fbbc05;
         --text-primary: #202124;
         --text-secondary: #5f6368;
         --border-color: #dadce0;
-        --background: #ffffff;
+        --background-primary: #ffffff;
+        --background-secondary: #f8f9fa;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --spacing-sm: 12px;
+        --spacing-md: 20px;
+        --spacing-lg: 32px;
+        --spacing-xl: 48px;
     }
-    
-    /* Sistema de fallback de links */
-    .link-status {
-        margin: 20px 0;
-        padding: 15px;
-        border-radius: 8px;
-        background: #fff3cd;
-        border-left: 4px solid #ffc107;
+
+    /* ===== RESET & BASE ===== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    
-    .link-status.warning {
-        background: #fff3cd;
-        border-color: #ffc107;
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: var(--background-secondary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
     }
-    
-    .link-status.error {
-        background: #f8d7da;
-        border-color: #dc3545;
+
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
     }
-    
-    .link-status.success {
-        background: #d1e7dd;
-        border-color: #198754;
+
+    a:hover {
+        text-decoration: underline;
     }
-    
-    .fallback-options {
-        margin-top: 15px;
+
+    /* ===== LAYOUT ===== */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+    }
+
+    /* ===== HEADER ===== */
+    .article-header {
+        background: var(--background-primary);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: var(--spacing-sm) 0;
+    }
+
+    .header-content {
         display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
     }
-    
-    .fallback-btn {
-        padding: 8px 16px;
+
+    .back-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .back-btn:hover {
+        background: var(--background-secondary);
+        color: var(--primary-color);
+    }
+
+    .site-logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+
+    .action-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .action-btn:hover {
+        background: var(--background-secondary);
+        color: var(--primary-color);
+    }
+
+    /* ===== CONTEÚDO PRINCIPAL ===== */
+    .article-container {
+        padding: var(--spacing-xl) 0;
+    }
+
+    /* ===== CABEÇALHO DA NOTÍCIA ===== */
+    .article-hero {
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .article-category {
+        display: inline-block;
+        padding: 6px 16px;
         background: var(--primary-color);
         color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+        border-radius: 20px;
         font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: var(--spacing-md);
     }
-    
-    .fallback-btn:hover {
+
+    .article-title {
+        font-family: 'Merriweather', serif;
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: var(--spacing-md);
+        color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+        .article-title {
+            font-size: 32px;
+        }
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .source-info {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .source-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .source-details h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+
+    .source-details p {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    .article-time {
+        font-size: 14px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* ===== IMAGEM DESTACADA ===== */
+    .article-image {
+        width: 100%;
+        height: 400px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-bottom: var(--spacing-lg);
+        position: relative;
+    }
+
+    @media (max-width: 768px) {
+        .article-image {
+            height: 300px;
+        }
+    }
+
+    .article-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    /* ===== CONTEÚDO DO ARTIGO ===== */
+    .article-content {
+        background: var(--background-primary);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-md);
+    }
+
+    .article-body {
+        font-size: 18px;
+        line-height: 1.8;
+        color: var(--text-primary);
+    }
+
+    .article-body p {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .article-body h2,
+    .article-body h3 {
+        font-family: 'Merriweather', serif;
+        margin: var(--spacing-xl) 0 var(--spacing-md);
+        color: var(--text-primary);
+    }
+
+    .article-body h2 {
+        font-size: 28px;
+    }
+
+    .article-body h3 {
+        font-size: 22px;
+    }
+
+    /* ===== AÇÕES DO ARTIGO ===== */
+    .article-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+    }
+
+    .main-action-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .save-btn {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .save-btn:hover {
         background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .save-btn.saved {
+        background: var(--secondary-color);
+    }
+
+    .share-btn {
+        background: var(--background-primary);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+    }
+
+    .share-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    /* ===== OPÇÕES DE COMPARTILHAMENTO ===== */
+    .share-options {
+        background: var(--background-primary);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-md);
+        display: none;
+    }
+
+    .share-options.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .share-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: var(--spacing-md);
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .share-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-sm);
+    }
+
+    .social-btn {
+        padding: 12px 16px;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .social-btn.facebook { background: #1877f2; }
+    .social-btn.twitter { background: #1da1f2; }
+    .social-btn.whatsapp { background: #25d366; }
+    .social-btn.copy { 
+        background: var(--primary-color);
+        grid-column: 1 / -1;
+    }
+
+    .social-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    /* ===== MINI AGREGADOR RÁPIDO ===== */
+    .mini-aggregator {
+        background: var(--background-primary);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-md);
+    }
+
+    .aggregator-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .aggregator-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .aggregator-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+    }
+
+    @media (max-width: 768px) {
+        .aggregator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .aggregator-card {
+        background: var(--background-secondary);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+    }
+
+    .aggregator-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        border-color: var(--primary-color);
+    }
+
+    .aggregator-image {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .aggregator-content {
+        padding: var(--spacing-md);
+    }
+
+    .aggregator-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: var(--spacing-sm);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .aggregator-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-secondary);
+    }
+
+    /* ===== LOADING ===== */
+    .loading-container {
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+    }
+
+    .loading-spinner {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        border: 4px solid var(--border-color);
+        border-top-color: var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: var(--spacing-md);
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* ===== ERROR ===== */
+    .error-container {
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+    }
+
+    .error-icon {
+        font-size: 64px;
+        color: var(--border-color);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .error-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .error-message {
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    /* ===== RESPONSIVIDADE ===== */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 var(--spacing-sm);
+        }
+        
+        .article-content {
+            padding: var(--spacing-lg);
+        }
+        
+        .article-body {
+            font-size: 16px;
+        }
+        
+        .article-actions {
+            flex-direction: column;
+        }
+        
+        .main-action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .share-buttons {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ===== DARK MODE SUPPORT ===== */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --border-color: #3c4043;
+            --background-primary: #202124;
+            --background-secondary: #171717;
+        }
     }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- Conteúdo será carregado aqui -->
+    <!-- HEADER -->
+    <header class="article-header">
+        <div class="container header-content">
+            <button class="back-btn" onclick="goBack()" title="Voltar">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <a href="index.html" class="site-logo">Notícias CLD</a>
+            <div class="header-actions">
+                <button class="action-btn" onclick="toggleShare()" title="Compartilhar">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <button class="action-btn" id="save-action-btn" onclick="toggleSave()" title="Guardar notícia">
+                    <i class="far fa-bookmark"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- LOADING -->
+    <div id="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <h3>Carregando notícia...</h3>
     </div>
-    
+
+    <!-- ARTICLE -->
+    <div id="article" class="container article-container" style="display: none;">
+        <!-- Article content will be loaded here -->
+    </div>
+
+    <!-- ERROR -->
+    <div id="error" class="container error-container" style="display: none;">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2 class="error-title">Notícia não encontrada</h2>
+        <p class="error-message">A notícia que você está procurando não existe ou foi removida.</p>
+        <button class="main-action-btn save-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Voltar para Notícias
+        </button>
+    </div>
+
+    <!-- SHARE OPTIONS -->
+    <div id="share-options" class="container share-options">
+        <h3 class="share-title">
+            <i class="fas fa-share-alt"></i> Compartilhar esta notícia
+        </h3>
+        <div class="share-buttons">
+            <a href="#" class="social-btn facebook" id="facebook-share">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a href="#" class="social-btn twitter" id="twitter-share">
+                <i class="fab fa-twitter"></i> Twitter
+            </a>
+            <a href="#" class="social-btn whatsapp" id="whatsapp-share">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <button class="social-btn copy" id="copy-link-btn" onclick="copyArticleLink()">
+                <i class="fas fa-copy"></i> Copiar Link
+            </button>
+        </div>
+    </div>
+
+    <!-- MINI AGREGADOR -->
+    <div id="mini-aggregator" class="container mini-aggregator" style="display: none;">
+        <div class="aggregator-header">
+            <h3 class="aggregator-title">
+                <i class="fas fa-newspaper"></i> Mais Notícias
+            </h3>
+        </div>
+        <div class="aggregator-grid" id="aggregator-grid">
+            <!-- News will be loaded here -->
+        </div>
+    </div>
+
     <script>
-    // ============================================
-    // SISTEMA DE RECUPERAÇÃO DE ARTIGO INFALÍVEL
-    // ============================================
-    
-    class ArticleRecoverySystem {
-        constructor() {
-            this.strategies = [
-                this.strategySessionStorage,
-                this.strategyURLParams,
-                this.strategyLocalStorage,
-                this.strategyIndexedDB,
-                this.strategyAPI,
-                this.strategyFallbackContent
-            ];
+    // ===== CONFIGURAÇÃO RÁPIDA =====
+    const CONFIG = {
+        sources: [
+            'https://opais.co.mz/wp-json/wp/v2/posts',
+            'https://jornalnoticias.co.mz/wp-json/wp/v2/posts',
+            'https://canal.co.mz/wp-json/wp/v2/posts'
+        ],
+        maxRelated: 6
+    };
+
+    // ===== VARIÁVEIS =====
+    let currentArticle = null;
+    let articleId = null;
+    let isSaved = false;
+
+    // ===== ELEMENTOS DOM =====
+    const loadingEl = document.getElementById('loading');
+    const articleEl = document.getElementById('article');
+    const errorEl = document.getElementById('error');
+    const shareOptionsEl = document.getElementById('share-options');
+    const miniAggregatorEl = document.getElementById('mini-aggregator');
+    const aggregatorGrid = document.getElementById('aggregator-grid');
+
+    // ===== INICIALIZAÇÃO RÁPIDA =====
+    document.addEventListener('DOMContentLoaded', () => {
+        articleId = getArticleId();
+        
+        if (!articleId) {
+            showError();
+            return;
         }
         
-        async recoverArticle() {
-            console.log('🔍 Iniciando recuperação de artigo...');
-            
-            for (const strategy of this.strategies) {
-                try {
-                    console.log(`Tentando estratégia: ${strategy.name}`);
-                    const article = await strategy.call(this);
-                    
-                    if (article && this.validateArticle(article)) {
-                        console.log(`✅ Artigo recuperado via ${strategy.name}`);
-                        return article;
-                    }
-                } catch (error) {
-                    console.warn(`Estratégia ${strategy.name} falhou:`, error);
-                }
-            }
-            
-            throw new Error('Não foi possível recuperar o artigo');
-        }
-        
-        // Estratégia 1: Session Storage (mais recente)
-        async strategySessionStorage() {
-            const sessionData = sessionStorage.getItem('currentArticle');
-            if (!sessionData) return null;
-            
-            return JSON.parse(sessionData);
-        }
-        
-        // Estratégia 2: Parâmetros da URL
-        async strategyURLParams() {
-            const params = new URLSearchParams(window.location.search);
-            const articleId = params.get('id');
-            
-            if (!articleId) return null;
-            
-            // Busca no cache global
-            return await this.getFromGlobalCache(articleId);
-        }
-      // Estratégia 3: Local Storage
-        async strategyLocalStorage() {
-            const backups = JSON.parse(localStorage.getItem('articleBackups') || '{}');
-            const params = new URLSearchParams(window.location.search);
-            const articleId = params.get('id');
-            
-            if (articleId && backups[articleId]) {
-                return backups[articleId];
-            }
-            
-            // Tenta pelo título
-            const titleSlug = params.get('title');
-            if (titleSlug) {
-                for (const id in backups) {
-                    if (this.slugify(backups[id].title) === titleSlug) {
-                        return backups[id];
-                    }
-                }
-            }
-            
-            return null;
-        }
-        
-        // Estratégia 4: IndexedDB
-        async strategyIndexedDB() {
-            if (!('indexedDB' in window)) return null;
-            
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('NoticiasCLD', 1);
-                
-                request.onerror = reject;
-                request.onsuccess = (event) => {
-                    const db = event.target.result;
-                    const transaction = db.transaction(['articles'], 'readonly');
-                    const store = transaction.objectStore('articles');
-                    
-                    const params = new URLSearchParams(window.location.search);
-                    const articleId = params.get('id');
-                    
-                    if (!articleId) {
-                        resolve(null);
-                        return;
-                    }
-                    
-                    const getRequest = store.get(articleId);
-                    getRequest.onsuccess = () => resolve(getRequest.result);
-                    getRequest.onerror = reject;
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains('articles')) {
-                        db.createObjectStore('articles', { keyPath: 'id' });
-                    }
-                };
-            });
-        }
-        
-        // Estratégia 5: API
-        async strategyAPI() {
-            const params = new URLSearchParams(window.location.search);
-            const articleId = params.get('id');
-            
-            if (!articleId) return null;
-            
-            try {
-                const response = await fetch(`/api/article/${articleId}`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                
-                if (response.ok) {
-                    return await response.json();
-                }
-            } catch (error) {
-                console.warn('API falhou:', error);
-            }
-            
-            return null;
-        }
-        
-        // Estratégia 6: Conteúdo de fallback
-        async strategyFallbackContent() {
-            const params = new URLSearchParams(window.location.search);
-            
-            // Tenta reconstruir do mínimo de informações
-            return {
-                id: params.get('id') || 'fallback_' + Date.now(),
-                title: decodeURIComponent(params.get('title') || 'Notícia não disponível'),
-                excerpt: 'Esta notícia não está mais disponível em cache.',
-                content: this.generateFallbackContent(params),
-                source: params.get('source') || 'Fonte desconhecida',
-                date: new Date(parseInt(params.get('date')) || Date.now()),
-                category: params.get('category') || 'geral',
-                fallback: true
-            };
-        }
-        
-        // ============================================
-        // FUNÇÕES AUXILIARES
-        // ============================================
-        
-        async getFromGlobalCache(articleId) {
-            // Tenta múltiplas fontes de cache
-            const cacheSources = [
-                () => localStorage.getItem(`article_${articleId}`),
-                () => sessionStorage.getItem(`article_${articleId}`),
-                () => this.getFromServiceWorkerCache(articleId)
-            ];
-            
-            for (const source of cacheSources) {
-                try {
-                    const data = await source();
-                    if (data) return JSON.parse(data);
-                } catch (error) {
-                    // Continua para próxima fonte
-                }
-            }
-            
-            return null;
-        }
-        
-        async getFromServiceWorkerCache(articleId) {
-            if (!navigator.serviceWorker) return null;
-            
-            const registration = await navigator.serviceWorker.ready;
-            const cache = await caches.open('articles-v1');
-            const response = await cache.match(`/api/article/${articleId}`);
-            
-            if (response) {
-                return await response.json();
-            }
-            
-            return null;
-        }
-        
-        generateFallbackContent(params) {
-            const originalUrl = params.get('original_url');
-            const source = params.get('source');
-            
-            return `
-                <div class="link-status error">
-                    <h3>⚠️ Conteúdo Não Disponível</h3>
-                    <p>Esta notícia não está mais disponível em nossos servidores.</p>
-                    
-                    ${originalUrl ? `
-                    <p><strong>URL Original:</strong> ${originalUrl}</p>
-                    <div class="fallback-options">
-                        <button class="fallback-btn" onclick="tryOriginalLink('${originalUrl}')">
-                            Tentar link original
-                        </button>
-                        <button class="fallback-btn" onclick="tryArchive('${originalUrl}')">
-                            Ver em arquivo
-                        </button>
-                    </div>
-                    ` : ''}
-                    
-                    ${source ? `<p><strong>Fonte:</strong> ${source}</p>` : ''}
-                    
-                    <p><em>Esta é uma versão de fallback. Algumas funcionalidades podem estar limitadas.</em></p>
-                </div>
-            `;
-        }
-        
-        slugify(text) {
-            return text
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-        }
-        
-        validateArticle(article) {
-            return article && 
-                   article.id && 
-                   article.title && 
-                   article.title.length > 5 &&
-                   article.date;
-        }
-    }
-        // ============================================
-    // SISTEMA DE VERIFICAÇÃO DE LINKS
-    // ============================================
-    
-    class LinkVerificationSystem {
-        constructor() {
-            this.verifiedLinks = new Map();
-        }
-        
-        async verifyLink(url, article) {
-            const linkId = this.generateLinkId(url, article);
-            
-            // Verifica cache
-            if (this.verifiedLinks.has(linkId)) {
-                return this.verifiedLinks.get(linkId);
-            }
-            
-            // Realiza verificação
-            const result = await this.performVerification(url, article);
-            
-            // Armazena resultado
-            this.verifiedLinks.set(linkId, result);
-            this.storeVerificationResult(linkId, result);
-            
-            return result;
-        }
-        
-        async performVerification(url, article) {
-            const checks = [
-                this.checkURLValidity,
-                this.checkContentAvailability,
-                this.checkArchiveStatus,
-                this.checkAlternativeSources
-            ];
-            
-            const results = {
-                url: url,
-                status: 'unknown',
-                alternatives: [],
-                timestamp: Date.now(),
-                articleId: article?.id
-            };
-            
-            for (const check of checks) {
-                try {
-                    const checkResult = await check.call(this, url, article);
-                    Object.assign(results, checkResult);
-                    
-                    if (results.status === 'available') {
-                        break;
-                    }
-                } catch (error) {
-                    console.warn(`Check ${check.name} falhou:`, error);
-                }
-            }
-            
-            return results;
-        }
-        
-        async checkURLValidity(url) {
-            try {
-                const urlObj = new URL(url);
-                
-                // Verifica protocolo
-                if (!['http:', 'https:'].includes(urlObj.protocol)) {
-                    return { status: 'invalid_protocol' };
-                }
-                
-                // Verifica domínio
-                if (!urlObj.hostname) {
-                    return { status: 'invalid_domain' };
-                }
-                
-                return { status: 'url_valid' };
-            } catch (error) {
-                return { status: 'invalid_url' };
-            }
-        }
-        
-        async checkContentAvailability(url) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-                
-                const response = await fetch(url, {
-                    method: 'HEAD',
-                    signal: controller.signal,
-                    headers: {
-                        'User-Agent': 'NoticiasCLD-LinkChecker/2.0'
-                    }
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (response.ok) {
-                    return { 
-                        status: 'available',
-                        contentType: response.headers.get('content-type'),
-                        lastModified: response.headers.get('last-modified')
-                    };
-                } else {
-                    return { status: 'unavailable', statusCode: response.status };
-                }
-            } catch (error) {
-                return { status: 'unreachable', error: error.message };
-            }
-        }
-        
-        async checkArchiveStatus(url) {
-            try {
-                // Verifica Wayback Machine
-                const waybackUrl = `https://archive.org/wayback/available?url=${encodeURIComponent(url)}`;
-                const response = await fetch(waybackUrl, { timeout: 3000 });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.archived_snapshots?.closest) {
-                        return {
-                            status: 'archived',
-                            archiveUrl: data.archived_snapshots.closest.url,
-                            archiveDate: data.archived_snapshots.closest.timestamp
-                        };
-                    }
-                }
-            } catch (error) {
-                // Ignora erros de arquivo
-            }
-            
-            return { status: 'not_archived' };
-        }
-        
-        async checkAlternativeSources(url) {
-            const alternatives = [];
-            
-            try {
-                // Google Cache
-                alternatives.push({
-                    source: 'Google Cache',
-                    url: `https://webcache.googleusercontent.com/search?q=cache:${encodeURIComponent(url)}`,
-                    type: 'cache'
-                });
-         // Archive.is
-                alternatives.push({
-                    source: 'Archive.is',
-                    url: `https://archive.is/newest/${url}`,
-                    type: 'archive'
-                });
-                
-                // Verifica cada alternativa
-                for (const alt of alternatives) {
-                    try {
-                        const response = await fetch(alt.url, { method: 'HEAD', timeout: 2000 });
-                        alt.available = response.ok;
-                    } catch (error) {
-                        alt.available = false;
-                    }
-                }
-                
-                return { alternatives: alternatives.filter(a => a.available) };
-            } catch (error) {
-                return { alternatives: [] };
-            }
-        }
-        
-        generateLinkId(url, article) {
-            return btoa(`${url}|${article?.id || 'unknown'}|${Date.now()}`)
-                .replace(/[+/=]/g, '')
-                .substring(0, 20);
-        }
-        
-        storeVerificationResult(linkId, result) {
-            try {
-                const verifications = JSON.parse(localStorage.getItem('linkVerifications') || '{}');
-                verifications[linkId] = {
-                    ...result,
-                    stored: Date.now()
-                };
-                
-                // Limita tamanho
-                const keys = Object.keys(verifications);
-                if (keys.length > 100) {
-                    const oldest = keys.sort((a, b) => 
-                        verifications[a].stored - verifications[b].stored
-                    )[0];
-                    delete verifications[oldest];
-                }
-                
-                localStorage.setItem('linkVerifications', JSON.stringify(verifications));
-            } catch (error) {
-                console.warn('Erro ao armazenar verificação:', error);
-            }
-        }
-        
-        displayLinkStatus(result, container) {
-            if (!container) return;
-            
-            let statusHtml = '';
-            
-            switch (result.status) {
-                case 'available':
-                    statusHtml = `
-                        <div class="link-status success">
-                            <p>✅ Link verificado e disponível</p>
-                            ${result.lastModified ? 
-                                `<small>Última modificação: ${new Date(result.lastModified).toLocaleDateString()}</small>` : ''}
-                        </div>
-                    `;
-                    break;
-                    
-                case 'archived':
-                    statusHtml = `
-                        <div class="link-status warning">
-                            <p>📚 Link disponível apenas em arquivo</p>
-                            <p>Este conteúdo foi arquivado em ${new Date(result.archiveDate).toLocaleDateString()}</p>
-                            <div class="fallback-options">
-                                <a href="${result.archiveUrl}" target="_blank" class="fallback-btn">
-                                    Abrir versão arquivada
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 'unavailable':
-                    statusHtml = `
-                        <div class="link-status error">
-                            <p>❌ Link não disponível (Erro ${result.statusCode})</p>
-                            ${this.displayAlternatives(result.alternatives)}
-                        </div>
-                    `;
-                    break;
-                    
-                default:
-                    statusHtml = `
-                        <div class="link-status warning">
-                            <p>⚠️ Status do link desconhecido</p>
-                            ${this.displayAlternatives(result.alternatives)}
-                        </div>
-                    `;
-            }
-            
-            container.innerHTML = statusHtml;
-        }
-        
-        displayAlternatives(alternatives) {
-            if (!alternatives || alternatives.length === 0) {
-                return '<p>Nenhuma alternativa disponível no momento.</p>';
-            }
-            
-            return `
-                <p><strong>Alternativas disponíveis:</strong></p>
-                <div class="fallback-options">
-                    ${alternatives.map(alt => `
-                        <a href="${alt.url}" target="_blank" class="fallback-btn">
-                            ${alt.source}
-                        </a>
-                    `).join('')}
-                </div>
-            `;
-        }
-    }
-    
-    // ============================================
-    // INICIALIZAÇÃO DO SISTEMA
-    // ============================================
-    
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Mostra estado de carregamento
-            document.getElementById('app').innerHTML = `
-                <div style="padding: 40px; text-align: center;">
-                    <div style="
-                        width: 40px;
-                        height: 40px;
-                        border: 3px solid #1a73e8;
-                        border-top-color: transparent;
-                        border-radius: 50%;
-                        animation: spin 1s linear infinite;
-                        margin: 0 auto 20px;
-                    "></div>
-                    <p style="color: #5f6368;">Carregando notícia...</p>
-                    <p style="font-size: 12px; color: #9aa0a6; margin-top: 10px;">
-                        Sistema de recuperação ativado
-                    </p>
-                </div>
-            `;
-            
-            // Inicia sistemas
-            const recoverySystem = new ArticleRecoverySystem();
-            const verificationSystem = new LinkVerificationSystem();
-            
-            // Recupera artigo
-            const article = await recoverySystem.recoverArticle();
-            
-            if (!article) {
-                throw new Error('Artigo não encontrado');
-            }
-           // Verifica links se não for fallback
-            let linkStatus = null;
-            if (!article.fallback && article.originalUrl) {
-                linkStatus = await verificationSystem.verifyLink(article.originalUrl, article);
-            }
-            
-            // Renderiza artigo
-            renderArticle(article, linkStatus, verificationSystem);
-            
-            // Atualiza SEO
-            updateSEO(article);
-            
-            // Salva no histórico
-            saveToHistory(article);
-            
-            console.log('✅ Artigo carregado com sucesso:', article.id);
-            
-        } catch (error) {
-            console.error('❌ Erro ao carregar artigo:', error);
-            showError(error.message);
-        }
+        Promise.all([
+            loadArticle(),
+            loadRelatedNews()
+        ]);
     });
-    
-    // ============================================
-    // FUNÇÕES DE RENDERIZAÇÃO
-    // ============================================
-    
-    function renderArticle(article, linkStatus, verificationSystem) {
-        const app = document.getElementById('app');
+
+    function getArticleId() {
+        return new URLSearchParams(window.location.search).get('id');
+    }
+
+    // ===== CARREGAMENTO RÁPIDO DO ARTIGO =====
+    async function loadArticle() {
+        try {
+            // Tenta múltiplas fontes simultaneamente
+            currentArticle = await findArticleFast();
+            
+            if (currentArticle) {
+                displayArticle(currentArticle);
+                setupShareLinks();
+                checkIfSaved();
+            } else {
+                showError();
+            }
+        } catch (error) {
+            console.error('Erro rápido:', error);
+            showError();
+        }
+    }
+
+    async function findArticleFast() {
+        // Tenta do cache primeiro
+        const cached = await getFromCache();
+        if (cached) return cached;
         
-        const html = `
-            <article>
-                <header style="
-                    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                                url('${article.image}') center/cover;
-                    color: white;
-                    padding: 40px 20px;
-                    text-align: center;
-                ">
-                    <div style="max-width: 800px; margin: 0 auto;">
-                        <h1 style="
-                            font-size: 2.5rem;
-                            margin-bottom: 20px;
-                            line-height: 1.2;
-                        ">${article.title}</h1>
-                        
-                        <div style="
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            gap: 20px;
-                            flex-wrap: wrap;
-                            margin-top: 30px;
-                            opacity: 0.9;
-                        ">
-                            <span style="
-                                background: rgba(255,255,255,0.2);
-                                padding: 5px 15px;
-                                border-radius: 20px;
-                                font-size: 0.9rem;
-                            ">${article.source}</span>
-                            
-                            <span>${formatDate(article.date)}</span>
-                            
-                            <span>•</span>
-                            
-                            <span>${article.readTime || 5} min de leitura</span>
-                            
-                            <button onclick="toggleSave('${article.id}')" 
-                                    style="
-                                        background: none;
-                                        border: 1px solid white;
-                                        color: white;
-                                        padding: 5px 15px;
-                                        border-radius: 20px;
-                                        cursor: pointer;
-                                    ">
-                                ${isSaved(article.id) ? '✓ Guardado' : 'Guardar'}
-                            </button>
-                        </div>
-                    </div>
-                </header>
-                
-                <main style="
-                    max-width: 800px;
-                    margin: 40px auto;
-                    padding: 0 20px;
-                    line-height: 1.8;
-                ">
-                    ${linkStatus ? '<div id="link-status-container"></div>' : ''}
-                    
-                    ${article.fallback ? 
-                        `<div class="link-status warning" style="margin-bottom: 30px;">
-                            <p><strong>Aviso:</strong> Esta é uma versão de fallback da notícia.</p>
-                        </div>` : ''}
-                    
-                    <div style="font-size: 1.1rem;">
-                        ${article.content}
-                    </div>
-                    
-                    ${article.originalUrl && !article.fallback ? `
-                        <div style="
-                            margin-top: 40px;
-                            padding-top: 20px;
-                            border-top: 1px solid #eee;
-                            text-align: center;
-                        ">
-                            <a href="${article.originalUrl}" 
-                               target="_blank"
-                               style="
-                                    display: inline-block;
-                                    background: #1a73e8;
-                                    color: white;
-                                    padding: 10px 20px;
-                                    border-radius: 5px;
-                                    text-decoration: none;
-                               ">
-                                Ver notícia original
-                            </a>
-                        </div>
-                    ` : ''}
-                </main>
-     <footer style="
-                    max-width: 800px;
-                    margin: 40px auto;
-                    padding: 40px 20px;
-                    border-top: 1px solid #eee;
-                ">
-                    <h2 style="margin-bottom: 20px;">Mais Notícias</h2>
-                    <div id="related-articles" style="
-                        display: grid;
-                        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                        gap: 20px;
-                    ">
-                        <!-- Artigos relacionados serão carregados aqui -->
-                    </div>
-                </footer>
-            </article>
-        `;
+        // Extrai informações do ID
+        const [sourceId, postId] = articleId.split('_');
         
-        app.innerHTML = html;
-        
-        // Exibe status do link se disponível
-        if (linkStatus && verificationSystem) {
-            const container = document.getElementById('link-status-container');
-            verificationSystem.displayLinkStatus(linkStatus, container);
+        if (postId) {
+            // Tenta da API correspondente
+            const apiUrl = CONFIG.sources.find(url => url.includes(sourceId));
+            if (apiUrl) {
+                try {
+                    const response = await fetch(`${apiUrl}/${postId}?_embed`, {
+                        signal: AbortSignal.timeout(3000)
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        return processArticleFast(data, sourceId);
+                    }
+                } catch (error) {
+                    console.error('API falhou:', error);
+                }
+            }
         }
         
-        // Carrega artigos relacionados
-        loadRelatedArticles(article);
+        // Fallback do histórico
+        return getFromHistory() || createFallbackArticle();
     }
-    
-    function showError(message) {
-        document.getElementById('app').innerHTML = `
-            <div style="
-                max-width: 600px;
-                margin: 100px auto;
-                padding: 40px;
-                text-align: center;
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            ">
-                <h2 style="color: #dc3545; margin-bottom: 20px;">❌ Erro ao carregar</h2>
-                <p style="color: #666; margin-bottom: 30px;">${message}</p>
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="window.history.back()" style="
-                        padding: 10px 20px;
-                        background: #6c757d;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                    ">
-                        Voltar
-                    </button>
-                    <button onclick="window.location.href = '/'" style="
-                        padding: 10px 20px;
-                        background: #1a73e8;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                    ">
-                        Página Inicial
-                    </button>
+
+    async function getFromCache() {
+        try {
+            const saved = localStorage.getItem('cld_saved');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                return parsed.find(n => n.id === articleId);
+            }
+            
+            const history = localStorage.getItem('cld_history');
+            if (history) {
+                const parsed = JSON.parse(history);
+                return parsed.find(n => n.id === articleId);
+            }
+        } catch (e) {
+            return null;
+        }
+        return null;
+    }
+
+    function getFromHistory() {
+        try {
+            const history = localStorage.getItem('cld_history');
+            if (history) {
+                const parsed = JSON.parse(history);
+                return parsed.find(n => n.id === articleId);
+            }
+        } catch (e) {
+            return null;
+        }
+        return null;
+    }
+
+    function processArticleFast(data, sourceId) {
+        const content = data.content?.rendered || data.content || '';
+        const cleanContent = content.replace(/<[^>]*>/g, '');
+        
+        return {
+            id: articleId,
+            title: (data.title?.rendered || data.title || 'Sem título').replace(/<[^>]*>/g, ''),
+            content: cleanContent,
+            excerpt: (data.excerpt?.rendered || data.excerpt || cleanContent.substring(0, 200))
+                .replace(/<[^>]*>/g, ''),
+            image: getImageFast(data),
+            source: getSourceName(sourceId),
+            sourceId: sourceId,
+            date: data.date || data.published || new Date().toISOString(),
+            link: data.link || data.url || window.location.href,
+            category: fastDetectCategory((data.title?.rendered || '') + ' ' + content),
+            timestamp: Date.now()
+        };
+    }
+
+    function getImageFast(item) {
+        const sources = [
+            item._embedded?.['wp:featuredmedia']?.[0]?.source_url,
+            item._embedded?.featuredmedia?.[0]?.source_url,
+            item.jetpack_featured_media_url
+        ];
+        
+        for (const src of sources) {
+            if (src && src.startsWith('http')) {
+                return src;
+            }
+        }
+        
+        return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%231a73e8'/%3E%3Ctext x='400' y='200' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3ENotícia%3C/text%3E%3C/svg%3E`;
+    }
+
+    function getSourceName(sourceId) {
+        const names = {
+            'opais': 'O País Moçambique',
+            'noticias': 'Jornal Notícias',
+            'canal': 'Canal de Moçambique',
+            'savana': 'Savana Digital'
+        };
+        return names[sourceId] || 'Fonte Desconhecida';
+    }
+
+    function fastDetectCategory(text) {
+        const lower = text.toLowerCase();
+        if (lower.includes('politic') || lower.includes('governo')) return 'Política';
+        if (lower.includes('econom') || lower.includes('negocio')) return 'Economia';
+        if (lower.includes('esport') || lower.includes('futebol')) return 'Esportes';
+        if (lower.includes('tecnolog') || lower.includes('digital')) return 'Tecnologia';
+        return 'Sociedade';
+    }
+
+    function createFallbackArticle() {
+        return {
+            id: articleId,
+            title: 'Notícia não disponível',
+            content: '<p>Esta notícia não está disponível no momento.</p>',
+            excerpt: 'Conteúdo temporariamente indisponível.',
+            image: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%231a73e8'/%3E%3Ctext x='400' y='200' font-family='Arial' font-size='24' fill='white' text-anchor='middle'%3ENotícia Indisponível%3C/text%3E%3C/svg%3E`,
+            source: 'Notícias CLD',
+            sourceId: 'cld',
+            date: new Date().toISOString(),
+            link: window.location.href,
+            category: 'Notícia',
+            timestamp: Date.now()
+        };
+    }
+    // ===== EXIBIÇÃO RÁPIDA =====
+    function displayArticle(article) {
+        const timeAgo = fastTimeAgo(article.date);
+        const sourceInitials = article.source.substring(0, 2).toUpperCase();
+        
+        articleEl.innerHTML = `
+        <div class="article-hero">
+            <span class="article-category">${article.category}</span>
+            <h1 class="article-title">${article.title}</h1>
+            
+            <div class="article-meta">
+                <div class="source-info">
+                    <div class="source-icon">${sourceInitials}</div>
+                    <div class="source-details">
+                        <h3>${article.source}</h3>
+                        <p>Publicado ${timeAgo}</p>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="article-image">
+            <img src="${article.image}" 
+                 alt="${article.title}"
+                 loading="lazy"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"800\" height=\"400\"%3E%3Crect width=\"800\" height=\"400\" fill=\"%231a73e8\"/%3E%3Ctext x=\"400\" y=\"200\" font-family=\"Arial\" font-size=\"24\" fill=\"white\" text-anchor=\"middle\"%3ENotícia%3C/text%3E%3C/svg%3E'">
+        </div>
+        
+        <div class="article-actions">
+            <button class="main-action-btn save-btn" id="save-btn" onclick="toggleSave()">
+                <i class="far fa-bookmark"></i>
+                <span>${isSaved ? 'Guardada' : 'Guardar Notícia'}</span>
+            </button>
+            <button class="main-action-btn share-btn" onclick="toggleShare()">
+                <i class="fas fa-share-alt"></i>
+                <span>Compartilhar</span>
+            </button>
+        </div>
+        
+        <div class="article-content">
+            <div class="article-body" id="article-content">
+                ${article.content || '<p>Conteúdo não disponível.</p>'}
+            </div>
+        </div>
         `;
+        
+        loadingEl.style.display = 'none';
+        articleEl.style.display = 'block';
+        miniAggregatorEl.style.display = 'block';
+        
+        // Limpa conteúdo
+        cleanContent();
+        
+        // Adiciona ao histórico
+        addToHistory(article);
     }
-    
-    // ============================================
-    // FUNÇÕES AUXILIARES
-    // ============================================
-    
-    function formatDate(date) {
-        return new Date(date).toLocaleDateString('pt-PT', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+
+    function fastTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        
+        if (minutes < 60) return `${minutes} minutos atrás`;
+        if (hours < 24) return `${hours} horas atrás`;
+        if (days < 7) return `${days} dias atrás`;
+        
+        return date.toLocaleDateString('pt-PT');
+    }
+
+    function cleanContent() {
+        const contentEl = document.getElementById('article-content');
+        if (!contentEl) return;
+        
+        // Remove elementos indesejados rapidamente
+        const unwanted = contentEl.querySelectorAll('script, style, iframe, .ads, .advertisement');
+        unwanted.forEach(el => el.remove());
+        
+        // Melhora parágrafos
+        const paragraphs = contentEl.querySelectorAll('p');
+        paragraphs.forEach(p => {
+            p.style.fontSize = '18px';
+            p.style.lineHeight = '1.8';
+            p.style.marginBottom = '24px';
         });
     }
-    
-    function isSaved(articleId) {
+
+    // ===== MINI AGREGADOR RÁPIDO =====
+    async function loadRelatedNews() {
         try {
-            const saved = JSON.parse(localStorage.getItem('savedArticles') || '[]');
-            return saved.includes(articleId);
-        } catch (error) {
-            return false;
-        }
-    }
-    
-    function toggleSave(articleId) {
-        try {
-            const saved = JSON.parse(localStorage.getItem('savedArticles') || '[]');
-            const index = saved.indexOf(articleId);
-            
-            if (index > -1) {
-                saved.splice(index, 1);
-                showMessage('Removido dos guardados');
-            } else {
-                saved.push(articleId);
-                showMessage('Notícia guardada');
-            }
-            
-            localStorage.setItem('savedArticles', JSON.stringify(saved));
-            
-            // Atualiza botão
-            const button = document.querySelector(`button[onclick="toggleSave('${articleId}')"]`);
-            if (button) {
-                button.textContent = isSaved(articleId) ? '✓ Guardado' : 'Guardar';
-            }
-            
-        } catch (error) {
-            showMessage('Erro ao guardar notícia', 'error');
-        }
-    }
-    
-    function showMessage(message, type = 'success') {
-        // Implementar sistema de notificação
-        alert(message);
-    }
-    
-    function updateSEO(article) {
-        // Atualiza título
-        document.title = `${article.title} | Notícias CLD`;
-        
-        // Atualiza meta description
-        const description = document.querySelector('meta[name="description"]');
-        if (description) {
-            description.setAttribute('content', 
-                article.excerpt || article.title.substring(0, 160));
-        }
-        
-        // Atualiza Open Graph
-        const ogTitle = document.querySelector('meta[property="og:title"]');
-        if (ogTitle) ogTitle.setAttribute('content', article.title);
-        
-        const ogDescription = document.querySelector('meta[property="og:description"]');
-        if (ogDescription) ogDescription.setAttribute('content', article.excerpt);
-        
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage) ogImage.setAttribute('content', article.image);
-        
-        const ogUrl = document.querySelector('meta[property="og:url"]');
-        if (ogUrl) ogUrl.setAttribute('content', window.location.href);
-        
-        // Schema.org JSON-LD
-        const jsonLd = {
-            "@context": "https://schema.org",
-            "@type": "NewsArticle",
-            "headline": article.title,
-            "description": article.excerpt,
-            "image": article.image,
-            "datePublished": article.date.toISOString(),
-            "dateModified": article.date.toISOString(),
-            "author": {
-                "@type": "Organization",
-                "name": article.source
-            },
-            "publisher": {
-                "@type": "Organization",
-                "name": "Notícias CLD",
-                "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://seusite.com/logo.png"
+            // Carrega do cache primeiro
+            const cached = localStorage.getItem('cld_news_cache');
+            if (cached) {
+                const news = JSON.parse(cached);
+                const related = news
+                    .filter(n => n.id !== articleId)
+                    .sort((a, b) => b.timestamp - a.timestamp)
+                    .slice(0, CONFIG.maxRelated);
+                
+                if (related.length > 0) {
+                    displayRelatedNews(related);
+                    return;
                 }
-            },
-            "mainEntityOfPage": {
-                "@type": "WebPage",
-                "@id": window.location.href
             }
-        };
-        
-        const script = document.getElementById('article-jsonld');
-        if (script) {
-            script.textContent = JSON.stringify(jsonLd);
+            
+            // Se não tem cache, tenta API
+            await loadRelatedFromAPI();
+            
+        } catch (error) {
+            console.error('Erro ao carregar notícias relacionadas:', error);
+            aggregatorGrid.innerHTML = '<p>Não foi possível carregar mais notícias.</p>';
         }
     }
-    
-    function saveToHistory(article) {
+
+    async function loadRelatedFromAPI() {
+        const promises = CONFIG.sources.map(url => 
+            fetch(`${url}?per_page=3&_embed`).then(r => r.ok ? r.json() : [])
+        );
+        
+        const results = await Promise.allSettled(promises);
+        let allNews = [];
+        
+        results.forEach(result => {
+            if (result.status === 'fulfilled' && result.value) {
+                allNews.push(...result.value);
+            }
+        });
+        
+        // Processa e exibe
+        const processed = allNews
+            .map((item, index) => processRelatedItem(item, index))
+            .filter(Boolean)
+            .slice(0, CONFIG.maxRelated);
+        
+        displayRelatedNews(processed);
+    }
+
+    function processRelatedItem(item, index) {
         try {
-            const history = JSON.parse(localStorage.getItem('readingHistory') || '[]');
+            const title = item.title?.rendered || item.title;
+            if (!title || title.includes('Sem título')) return null;
             
-            // Remove se já existir
-            const index = history.findIndex(item => item.id === article.id);
-            if (index > -1) {
+            const cleanTitle = title.replace(/<[^>]*>/g, '').trim();
+            if (cleanTitle.length < 10) return null;
+            
+            const sourceMatch = item.link?.match(/\/\/([^\/]+)/);
+            const sourceId = sourceMatch ? sourceMatch[1].split('.')[0] : `source${index}`;
+            
+            return {
+                id: `${sourceId}_${item.id}_${Date.now()}_${index}`,
+                title: cleanTitle,
+                image: getImageFast(item) || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect width='400' height='200' fill='%231a73e8'/%3E%3Ctext x='200' y='100' font-family='Arial' font-size='16' fill='white' text-anchor='middle'%3ENotícia%3C/text%3E%3C/svg%3E`,
+                source: getSourceName(sourceId),
+                date: item.date || new Date().toISOString(),
+                link: `article.html?id=${sourceId}_${item.id}`
+            };
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function displayRelatedNews(news) {
+        if (!news || news.length === 0) {
+            aggregatorGrid.innerHTML = '<p>Não há mais notícias disponíveis.</p>';
+            return;
+        }
+        
+        let html = '';
+        news.forEach(item => {
+            const timeAgo = fastTimeAgo(item.date);
+            
+            html += `
+            <div class="aggregator-card" onclick="window.location.href='${item.link}'">
+                <img src="${item.image}" 
+                     class="aggregator-image" 
+                     alt="${item.title}"
+                     loading="lazy"
+                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"%3E%3Crect width=\"400\" height=\"200\" fill=\"%231a73e8\"/%3E%3Ctext x=\"200\" y=\"100\" font-family=\"Arial\" font-size=\"16\" fill=\"white\" text-anchor=\"middle\"%3ENotícia%3C/text%3E%3C/svg%3E'">
+                <div class="aggregator-content">
+                    <h4 class="aggregator-card-title">${item.title}</h4>
+                    <div class="aggregator-meta">
+                        <span>${item.source}</span>
+                        <span>${timeAgo}</span>
+                    </div>
+                </div>
+            </div>
+            `;
+        });
+        
+        aggregatorGrid.innerHTML = html;
+    }
+
+    // ===== SALVAR ARTIGO =====
+    function checkIfSaved() {
+        try {
+            const saved = localStorage.getItem('cld_saved');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                isSaved = parsed.some(n => n.id === articleId);
+                updateSaveButton();
+            }
+        } catch (e) {
+            console.error('Erro ao verificar salvo:', e);
+        }
+    }
+
+    function toggleSave() {
+        try {
+            const saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+            
+            if (isSaved) {
+                // Remove
+                const index = saved.findIndex(n => n.id === articleId);
+                if (index !== -1) {
+                    saved.splice(index, 1);
+                }
+                isSaved = false;
+                showNotification('Notícia removida das guardadas', 'info');
+            } else {
+                // Adiciona
+                saved.unshift({
+                    ...currentArticle,
+                    savedAt: new Date().toISOString()
+                });
+                isSaved = true;
+                showNotification('Notícia guardada', 'success');
+            }
+            
+            localStorage.setItem('cld_saved', JSON.stringify(saved.slice(0, 100)));
+            updateSaveButton();
+            
+        } catch (e) {
+            showNotification('Erro ao guardar notícia', 'error');
+        }
+    }
+
+    function updateSaveButton() {
+        const btn = document.getElementById('save-btn');
+        const icon = document.querySelector('#save-action-btn i');
+        
+        if (isSaved) {
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-bookmark"></i><span>Guardada</span>';
+                btn.classList.add('saved');
+            }
+            if (icon) {
+                icon.className = 'fas fa-bookmark';
+            }
+        } else {
+            if (btn) {
+                btn.innerHTML = '<i class="far fa-bookmark"></i><span>Guardar Notícia</span>';
+                btn.classList.remove('saved');
+            }
+            if (icon) {
+                icon.className = 'far fa-bookmark';
+            }
+        }
+    }
+
+    // ===== COMPARTILHAMENTO =====
+    function setupShareLinks() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(`${currentArticle?.title} - Notícias CLD`);
+        
+        document.getElementById('facebook-share').href = 
+            `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        
+        document.getElementById('twitter-share').href = 
+            `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+        
+        document.getElementById('whatsapp-share').href = 
+            `https://wa.me/?text=${text}%20${url}`;
+    }
+
+    function copyArticleLink() {
+        const url = window.location.href;
+        
+        navigator.clipboard.writeText(url).then(() => {
+            const btn = document.getElementById('copy-link-btn');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+            
+            setTimeout(() => {
+                btn.innerHTML = original;
+            }, 2000);
+            
+            showNotification('Link copiado', 'success');
+        }).catch(() => {
+            showNotification('Erro ao copiar link', 'error');
+        });
+    }
+
+    function toggleShare() {
+        shareOptionsEl.classList.toggle('active');
+    }
+
+    // ===== HISTÓRICO =====
+    function addToHistory(article) {
+        try {
+            const history = JSON.parse(localStorage.getItem('cld_history') || '[]');
+        // Remove se já existir
+            const index = history.findIndex(n => n.id === article.id);
+            if (index !== -1) {
                 history.splice(index, 1);
             }
             
             // Adiciona no início
-            history.unshift({
-                id: article.id,
-                title: article.title,
-                source: article.source,
-                url: window.location.href,
-                date: new Date().toISOString()
-            });
+            article.lastViewed = Date.now();
+            history.unshift(article);
             
-            // Limita tamanho
-            if (history.length > 100) {
-                history.pop();
-            }
-            
-            localStorage.setItem('readingHistory', JSON.stringify(history));
-        } catch (error) {
-            console.warn('Erro ao salvar histórico:', error);
+            // Mantém apenas os 50 mais recentes
+            localStorage.setItem('cld_history', JSON.stringify(history.slice(0, 50)));
+        } catch (e) {
+            console.error('Erro ao salvar histórico:', e);
         }
     }
-    
-    async function loadRelatedArticles(currentArticle) {
-        try {
-            // Tenta carregar artigos relacionados do cache
-            const allArticles = JSON.parse(localStorage.getItem('articlesCache') || '{}');
-            if (!allArticles.articles || allArticles.articles.length === 0) {
-                return;
-            }
-            
-            // Filtra artigos relacionados (mesma categoria ou fonte)
-            const related = allArticles.articles
-                .filter(article => 
-                    article.id !== currentArticle.id &&
-                    (article.category === currentArticle.category || 
-                     article.source === currentArticle.source)
-                )
-                .slice(0, 6)
-                .map(article => ({
-                    ...article,
-                    date: new Date(article.date)
-                }));
-            
-            if (related.length === 0) return;
-            
-            // Renderiza artigos relacionados
-            const container = document.getElementById('related-articles');
-            if (!container) return;
-            
-            container.innerHTML = related.map(article => `
-                <div style="
-                    border: 1px solid #eee;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    cursor: pointer;
-                    transition: transform 0.2s;
-                " onclick="openRelatedArticle('${article.id}', '${encodeURIComponent(article.title)}')">
-                    ${article.image ? `
-                        <img src="${article.image}" 
-                             alt="${article.title}"
-                             style="width: 100%; height: 150px; object-fit: cover;">
-                    ` : ''}
-                    
-                    <div style="padding: 15px;">
-                        <h3 style="
-                            font-size: 1rem;
-                            margin-bottom: 10px;
-                            line-height: 1.3;
-                            display: -webkit-box;
-                            -webkit-line-clamp: 3;
-                            -webkit-box-orient: vertical;
-                            overflow: hidden;
-                        ">${article.title}</h3>
-                        
-                        <div style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            font-size: 0.8rem;
-                            color: #666;
-                        ">
-                            <span>${article.source}</span>
-                            <span>${formatTimeAgo(article.date)}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-        } catch (error) {
-            console.warn('Erro ao carregar artigos relacionados:', error);
+
+    // ===== UTILITÁRIOS =====
+    function showError() {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+    }
+
+    function goBack() {
+        if (document.referrer && document.referrer.includes(location.hostname)) {
+            history.back();
+        } else {
+            location.href = 'index.html';
         }
     }
-    
-    function formatTimeAgo(date) {
-        const now = new Date();
-        const diffMs = now - date;
-        const diffDays = Math.floor(diffMs / 86400000);
-        if (diffDays === 0) return 'Hoje';
-        if (diffDays === 1) return 'Ontem';
-        if (diffDays < 7) return `${diffDays} dias`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)} sem`;
+
+    function showNotification(message, type = 'info') {
+        const existing = document.querySelector('.notification');
+        if (existing) existing.remove();
         
-        return date.toLocaleDateString('pt-PT', { 
-            month: 'short', 
-            day: 'numeric' 
-        });
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        
+        const icon = type === 'error' ? 'exclamation-triangle' : 
+                    type === 'success' ? 'check-circle' : 'info-circle';
+        
+        notification.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
+        
+        document.body.appendChild(notification);
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'error' ? '#ea4335' : type === 'success' ? '#34a853' : '#1a73e8'};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        `;
+        
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
-    
-    function openRelatedArticle(articleId, title) {
-        // Abre artigo relacionado em nova aba
-        window.open(`/article.html?id=${articleId}&title=${title}`, '_blank');
-    }
-    
-    // ============================================
-    // FUNÇÕES DE FALLBACK (para exibição)
-    // ============================================
-    
-    function tryOriginalLink(url) {
-        window.open(url, '_blank');
-    }
-    
-    function tryArchive(url) {
-        const archiveUrl = `https://web.archive.org/web/${url}`;
-        window.open(archiveUrl, '_blank');
-    }
-    
-    // Exporta funções globais
-    window.toggleSave = toggleSave;
-    window.tryOriginalLink = tryOriginalLink;
-    window.tryArchive = tryArchive;
-    window.openRelatedArticle = openRelatedArticle;
-    
-    console.log('✅ Sistema de artigo inicializado');
+
+    // ===== ATALHOS DE TECLADO =====
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') goBack();
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            toggleSave();
+        }
+    });
     </script>
 </body>
 </html>
