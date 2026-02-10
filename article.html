@@ -4,6 +4,187 @@
 
 
 
+<style>
+:root {
+    --cor-primaria: inherit;
+}
+
+/* Overlay com fundo mais escuro porém não total */
+.banner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85); /* MAIS ESCURO QUE ANTES */
+    backdrop-filter: blur(2px);  /* Efeito moderno */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    font-family: Arial, sans-serif;
+    transition: background 0.4s ease;
+}
+
+.banner-box {
+    position: relative;
+    background: #ffffff;
+    padding: 25px 20px 20px 20px;
+    width: 90%;
+    max-width: 420px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.fechar-canto {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+}
+
+.fechar-canto:hover {
+    color: #000;
+}
+
+.banner-options button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--cor-primaria);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.banner-options button:hover {
+    opacity: 0.85;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+<!-- BANNERS (mantidos iguais) -->
+<div id="banner1" class="banner-overlay">
+    <div class="banner-box">
+        <button class="fechar-canto" onclick="acaoUsuario(1)">×</button>
+        <h3>Como você encontrou nosso site?</h3>
+        <div class="banner-options">
+            <button onclick="acaoUsuario(1)">Redes Sociais</button>
+            <button onclick="acaoUsuario(1)">Internet</button>
+            <button onclick="acaoUsuario(1)">Amigos</button>
+        </div>
+    </div>
+</div>
+
+<div id="banner2" class="banner-overlay">
+    <div class="banner-box">
+        <button class="fechar-canto" onclick="acaoUsuario(2)">×</button>
+        <h3>Você está gostando do conteúdo?</h3>
+        <div class="banner-options">
+            <button onclick="acaoUsuario(2)">Sim</button>
+            <button onclick="acaoUsuario(2)">Mais ou menos</button>
+            <button onclick="acaoUsuario(2)">Ainda não</button>
+        </div>
+    </div>
+</div>
+
+<div id="banner3" class="banner-overlay">
+    <div class="banner-box">
+        <button class="fechar-canto" onclick="acaoUsuario(3)">×</button>
+        <h3>Gostaria de ver mais conteúdos como este?</h3>
+        <div class="banner-options">
+            <button onclick="acaoUsuario(3)">Com certeza</button>
+            <button onclick="acaoUsuario(3)">Talvez</button>
+            <button onclick="acaoUsuario(3)">Não</button>
+        </div>
+    </div>
+</div>
+
+<script>
+window.onload = function () {
+    let corSite = window.getComputedStyle(document.body).color;
+    document.documentElement.style.setProperty('--cor-primaria', corSite);
+
+    setTimeout(() => mostrarBanner(1), 4000);
+};
+
+function mostrarBanner(numero) {
+    document.getElementById("banner" + numero).style.display = "flex";
+}
+
+function esconderBanner(numero) {
+    document.getElementById("banner" + numero).style.display = "none";
+}
+
+function acaoUsuario(bannerAtual) {
+    esconderBanner(bannerAtual);
+
+    if (bannerAtual === 1) {
+        setTimeout(() => mostrarBanner(2), 15000);
+    }
+
+    if (bannerAtual === 2) {
+        setTimeout(() => mostrarBanner(3), 30000);
+    }
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let popunderURL = "https://www.effectivegatecpm.com/qvdzdmrk6?key=c41207cda3bc64bcc9b3569afc89d708"; // Novo link Monetag
+    let lastPopTime = 0;
+    let minInterval = 10000; // Tempo mínimo entre popunders (10s)
+
+    function openPopunder() {
+        let now = new Date().getTime();
+        if (now - lastPopTime >= minInterval) {
+            let newWindow = window.open(popunderURL, "_blank");
+
+            if (newWindow) {
+                newWindow.blur();
+                window.focus();
+                lastPopTime = now;
+                console.log("Popunder aberto!");
+            } else {
+                console.log("Popunder bloqueado pelo navegador.");
+            }
+        } else {
+            console.log("Aguardando intervalo mínimo...");
+        }
+    }
+
+    function triggerPop() {
+        openPopunder(); // Popunder abre imediatamente
+    }
+
+    document.addEventListener("click", triggerPop);
+
+    document.addEventListener("mouseleave", function(event) {
+        if (event.clientY <= 0) {
+            triggerPop();
+        }
+    });
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            triggerPop();
+        }
+    });
+});
+</script>
 <script data-cfasync="false" type="text/javascript" id="clever-core">
 /* <![CDATA[ */
     (function (document, window) {
