@@ -14,779 +14,700 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <!-- Fontes com display swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <!-- Fontes com fallback -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-    /* ===== VARIÁVEIS ===== */
-    :root {
-        --primary-color: #1a73e8;
-        --primary-dark: #0d47a1;
-        --secondary-color: #34a853;
-        --accent-color: #fbbc05;
-        --danger-color: #ea4335;
-        --text-primary: #202124;
-        --text-secondary: #5f6368;
-        --text-tertiary: #80868b;
-        --border-color: #dadce0;
-        --background-primary: #ffffff;
-        --background-secondary: #f8f9fa;
-        --background-hover: #f1f3f4;
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 20px;
-        --spacing-xs: 4px;
-        --spacing-sm: 8px;
-        --spacing-md: 16px;
-        --spacing-lg: 24px;
-        --spacing-xl: 32px;
-    }
-
-    /* ===== RESET & BASE ===== */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background-color: var(--background-secondary);
-        color: var(--text-primary);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    a {
-        color: inherit;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-
-    a:hover {
-        color: var(--primary-color);
-    }
-
-    button {
-        font-family: inherit;
-        cursor: pointer;
-        border: none;
-        background: none;
-    }
-
-    /* ===== LAYOUT ===== */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 var(--spacing-md);
-        width: 100%;
-    }
-
-    /* ===== HEADER ===== */
-    .main-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background: var(--background-primary);
-        border-bottom: 1px solid var(--border-color);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 64px;
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-    }
-
-    .logo-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-        border-radius: var(--radius-sm);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-    .logo-text {
-        font-family: 'Inter', sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--text-primary);
-    }
-
-    .logo-text span {
-        color: var(--primary-color);
-    }
-
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-    }
-
-    .refresh-btn {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-    }
-
-    .refresh-btn:hover {
-        background: var(--background-hover);
-        color: var(--primary-color);
-        transform: rotate(180deg);
-    }
-
-    .refresh-btn.loading {
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    /* ===== NAVEGAÇÃO ===== */
-    .main-nav {
-        background: var(--background-primary);
-        border-bottom: 1px solid var(--border-color);
-        position: sticky;
-        top: 64px;
-        z-index: 999;
-    }
-
-    .nav-container {
-        display: flex;
-        gap: var(--spacing-xs);
-        padding: var(--spacing-sm) 0;
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .nav-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .nav-item {
-        padding: 8px 16px;
-        white-space: nowrap;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--text-secondary);
-        border-radius: var(--radius-lg);
-        transition: all 0.2s ease;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .nav-item:hover {
-        background: var(--background-hover);
-        color: var(--text-primary);
-    }
-
-    .nav-item.active {
-        background: var(--primary-color);
-        color: white;
-    }
-
-    /* ===== SEARCH ===== */
-    .search-section {
-        padding: var(--spacing-xl) 0;
-        background: linear-gradient(to right, var(--background-secondary), var(--background-primary));
-    }
-
-    .search-container {
-        max-width: 720px;
-        margin: 0 auto;
-    }
-
-    .search-box {
-        position: relative;
-        background: var(--background-primary);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-md);
-        transition: all 0.3s ease;
-    }
-
-    .search-box:focus-within {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-    }
-
-    .search-icon {
-        position: absolute;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-tertiary);
-        font-size: 18px;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 18px 20px 18px 52px;
-        border: none;
-        background: transparent;
-        font-size: 16px;
-        color: var(--text-primary);
-        outline: none;
-    }
-
-    .search-input::placeholder {
-        color: var(--text-tertiary);
-    }
-
-    .search-stats {
-        margin-top: var(--spacing-sm);
-        font-size: 14px;
-        color: var(--text-secondary);
-        text-align: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .search-stats.visible {
-        opacity: 1;
-    }
-
-    /* ===== MAIN CONTENT ===== */
-    .main-content {
-        padding: var(--spacing-xl) 0;
-    }
-
-    /* ===== GRID DE NOTÍCIAS ===== */
-    .news-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: var(--spacing-lg);
-        margin-bottom: var(--spacing-xl);
-    }
-
-    @media (max-width: 768px) {
-        .news-grid {
-            grid-template-columns: 1fr;
+        /* ===== VARIÁVEIS ===== */
+        :root {
+            --primary-color: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --danger-color: #ea4335;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-tertiary: #80868b;
+            --border-color: #dadce0;
+            --background-primary: #ffffff;
+            --background-secondary: #f8f9fa;
+            --background-hover: #f1f3f4;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
         }
-    }
 
-    /* ===== CARDS ===== */
-    .news-card {
-        background: var(--background-primary);
-        border-radius: var(--radius-md);
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid transparent;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.6s forwards;
-        position: relative;
-        cursor: pointer;
-        will-change: transform, opacity;
-    }
-
-    @keyframes fadeInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
 
-    .news-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-color);
-    }
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-    .card-image {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
-    .card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
 
-    .news-card:hover .card-image img {
-        transform: scale(1.05);
-    }
+        /* ===== LAYOUT ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            width: 100%;
+        }
 
-    .category-badge {
-        position: absolute;
-        top: 16px;
-        left: 16px;
-        background: rgba(255, 255, 255, 0.95);
-        padding: 6px 12px;
-        border-radius: var(--radius-lg);
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-primary);
-        backdrop-filter: blur(4px);
-        z-index: 2;
-    }
+        /* ===== HEADER ===== */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--background-primary);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
 
-    .save-btn {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-secondary);
-        transition: all 0.3s ease;
-        backdrop-filter: blur(4px);
-        z-index: 3;
-    }
-
-    .save-btn:hover {
-        background: white;
-        color: var(--primary-color);
-        transform: scale(1.1);
-    }
-
-    .save-btn.saved {
-        background: var(--secondary-color);
-        color: white;
-    }
-
-    .card-content {
-        padding: var(--spacing-lg);
-        position: relative;
-        z-index: 1;
-    }
-
-    .card-title {
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 1.4;
-        margin-bottom: var(--spacing-sm);
-        color: var(--text-primary);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .card-excerpt {
-        font-size: 14px;
-        line-height: 1.5;
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-md);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .card-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: var(--spacing-md);
-        border-top: 1px solid var(--border-color);
-    }
-
-    .source-info {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-sm);
-    }
-
-    .source-icon {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    .source-name {
-        font-size: 13px;
-        color: var(--text-secondary);
-        font-weight: 500;
-    }
-
-    .card-time {
-        font-size: 12px;
-        color: var(--text-tertiary);
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    /* ===== LOADER ===== */
-    .loader-container {
-        text-align: center;
-        padding: var(--spacing-xl);
-    }
-
-    .loader {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        border: 3px solid var(--border-color);
-        border-top-color: var(--primary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    /* ===== SKELETON LOADER ===== */
-    .skeleton-card {
-        height: 400px;
-        border-radius: var(--radius-md);
-        margin-bottom: var(--spacing-lg);
-        background: linear-gradient(90deg, var(--background-hover) 25%, var(--border-color) 50%, var(--background-hover) 75%);
-        background-size: 200% 100%;
-        animation: skeleton-loading 1.5s infinite;
-    }
-
-    @keyframes skeleton-loading {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-    }
-
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-        text-align: center;
-        padding: var(--spacing-xl);
-        background: var(--background-primary);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-md);
-        margin-bottom: var(--spacing-xl);
-    }
-
-    .empty-icon {
-        font-size: 64px;
-        color: var(--border-color);
-        margin-bottom: var(--spacing-md);
-    }
-
-    .empty-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .empty-text {
-        color: var(--text-secondary);
-        margin-bottom: var(--spacing-lg);
-    }
-
-    /* ===== CONTACT SECTION ===== */
-    .contact-section {
-        background: var(--background-primary);
-        border-radius: var(--radius-md);
-        padding: var(--spacing-xl);
-        margin: var(--spacing-xl) 0;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-color);
-    }
-
-    .contact-header {
-        text-align: center;
-        margin-bottom: var(--spacing-xl);
-    }
-
-    .contact-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .contact-subtitle {
-        color: var(--text-secondary);
-        font-size: 16px;
-    }
-
-    .contact-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: var(--spacing-lg);
-    }
-
-    .contact-card {
-        background: var(--background-secondary);
-        border-radius: var(--radius-md);
-        padding: var(--spacing-lg);
-        text-align: center;
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-    }
-
-    .contact-card:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-md);
-    }
-
-    .contact-icon {
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto var(--spacing-md);
-        color: white;
-        font-size: 24px;
-    }
-
-    .contact-card-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .contact-card-text {
-        color: var(--text-secondary);
-        line-height: 1.5;
-    }
-
-    /* ===== FOOTER ===== */
-    .main-footer {
-        background: var(--text-primary);
-        color: white;
-        padding: var(--spacing-xl) 0;
-        margin-top: var(--spacing-xl);
-    }
-
-    .footer-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: var(--spacing-xl);
-    }
-
-    .footer-section h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--border-color);
-        margin-bottom: var(--spacing-md);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .footer-links {
-        list-style: none;
-    }
-
-    .footer-links li {
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .footer-links a {
-        color: #9aa0a6;
-        font-size: 14px;
-        transition: color 0.2s ease;
-    }
-
-    .footer-links a:hover {
-        color: white;
-    }
-
-    .copyright {
-        text-align: center;
-        padding-top: var(--spacing-xl);
-        margin-top: var(--spacing-xl);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        color: #9aa0a6;
-        font-size: 14px;
-    }
-
-    /* ===== FLOATING BUTTONS ===== */
-    .floating-buttons {
-        position: fixed;
-        bottom: var(--spacing-xl);
-        right: var(--spacing-xl);
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-sm);
-        z-index: 1000;
-    }
-
-    .floating-btn {
-        width: 56px;
-        height: 56px;
-        background: var(--primary-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        box-shadow: var(--shadow-lg);
-        transition: all 0.3s ease;
-    }
-
-    .floating-btn:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
-    }
-
-    .floating-btn.secondary {
-        background: var(--secondary-color);
-    }
-
-    .floating-btn.secondary:hover {
-        background: #2e7d32;
-    }
-
-    /* ===== NOTIFICATION ===== */
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        animation: slideIn 0.3s ease;
-        max-width: 300px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 14px;
-    }
-
-    .notification.info { background: var(--primary-color); }
-    .notification.success { background: var(--secondary-color); }
-    .notification.error { background: var(--danger-color); }
-
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-
-    /* ===== RESPONSIVIDADE ===== */
-    @media (max-width: 768px) {
         .header-container {
-            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
         }
-        
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
         .logo-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text span {
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .refresh-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: var(--background-hover);
+            color: var(--primary-color);
+        }
+
+        .refresh-btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== NAVEGAÇÃO ===== */
+        .main-nav {
+            background: var(--background-primary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 64px;
+            z-index: 999;
+        }
+
+        .nav-container {
+            display: flex;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: var(--radius-lg);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-item:hover {
+            background: var(--background-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-section {
+            padding: var(--spacing-xl) 0;
+            background: linear-gradient(to right, var(--background-secondary), var(--background-primary));
+        }
+
+        .search-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            position: relative;
+            background: var(--background-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
             font-size: 18px;
         }
-        
-        .search-section {
-            padding: var(--spacing-lg) 0;
-        }
-        
-        .news-grid {
-            gap: var(--spacing-md);
-        }
-        
-        .contact-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .floating-buttons {
-            bottom: var(--spacing-lg);
-            right: var(--spacing-lg);
-        }
-        
-        .floating-btn {
-            width: 48px;
-            height: 48px;
-        }
-        
-        .nav-container {
-            padding: var(--spacing-xs) 0;
-        }
-    }
 
-    @media (max-width: 480px) {
-        .container {
-            padding: 0 var(--spacing-sm);
-        }
-        
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-        }
-        
         .search-input {
-            padding: 14px 16px 14px 48px;
-            font-size: 14px;
+            width: 100%;
+            padding: 18px 20px 18px 52px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: var(--text-primary);
+            outline: none;
         }
-        
-        .card-image {
-            height: 160px;
-        }
-        
-        .card-content {
-            padding: var(--spacing-md);
-        }
-    }
 
-    /* ===== DARK MODE SUPPORT ===== */
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --text-primary: #e8eaed;
-            --text-secondary: #9aa0a6;
-            --text-tertiary: #bdc1c6;
-            --border-color: #3c4043;
-            --background-primary: #202124;
-            --background-secondary: #171717;
-            --background-hover: #2d2e31;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+        .search-stats {
+            margin-top: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-    }
+
+        .search-stats.visible {
+            opacity: 1;
+        }
+
+        /* ===== GRID DE NOTÍCIAS ===== */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            min-height: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== CARDS ===== */
+        .news-card {
+            background: var(--background-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .card-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .news-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 12px;
+            border-radius: var(--radius-lg);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
+
+        .save-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            z-index: 3;
+        }
+
+        .save-btn:hover {
+            background: white;
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .save-btn.saved {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .card-content {
+            padding: var(--spacing-lg);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-excerpt {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .source-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .source-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .card-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ===== LOADER ===== */
+        .loader-container {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .loader {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* ===== SKELETON LOADER ===== */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .skeleton-card {
+            background: var(--background-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            height: 400px;
+            position: relative;
+        }
+
+        .skeleton-image {
+            height: 200px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        .skeleton-content {
+            padding: var(--spacing-lg);
+        }
+
+        .skeleton-line {
+            height: 20px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            background: var(--background-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            color: var(--border-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            background: var(--background-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-xl) 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .contact-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .contact-card {
+            background: var(--background-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            color: white;
+            font-size: 24px;
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background: var(--text-primary);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--border-color);
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .footer-links a {
+            color: #9aa0a6;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #9aa0a6;
+        }
+
+        /* ===== FLOATING BUTTONS ===== */
+        .floating-buttons {
+            position: fixed;
+            bottom: var(--spacing-xl);
+            right: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            z-index: 1000;
+        }
+
+        .floating-btn {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .floating-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .floating-btn.secondary {
+            background: var(--secondary-color);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.info { background: var(--primary-color); }
+        .notification.success { background: var(--secondary-color); }
+        .notification.error { background: var(--danger-color); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .header-container { height: 56px; }
+            .logo-text { font-size: 18px; }
+            .search-section { padding: var(--spacing-lg) 0; }
+            .floating-buttons { bottom: var(--spacing-lg); right: var(--spacing-lg); }
+            .floating-btn { width: 48px; height: 48px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 var(--spacing-sm); }
+            .logo-icon { width: 32px; height: 32px; font-size: 16px; }
+            .card-image { height: 160px; }
+        }
+
+        /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #e8eaed;
+                --text-secondary: #9aa0a6;
+                --border-color: #3c4043;
+                --background-primary: #202124;
+                --background-secondary: #171717;
+                --background-hover: #2d2e31;
+            }
+            
+            .skeleton-image,
+            .skeleton-line {
+                background: linear-gradient(90deg, #2d2e31 25%, #3c4043 50%, #2d2e31 75%);
+            }
+        }
     </style>
 </head>
 <body>
     <!-- HEADER -->
-        <header class="main-header">
+    <header class="main-header">
         <div class="container header-container">
             <div class="logo">
                 <div class="logo-icon">
@@ -840,7 +761,7 @@
                 <input type="text" 
                        class="search-input" 
                        id="search-input"
-                       placeholder="Pesquisar notícias por título, conteúdo ou fonte..."
+                       placeholder="Pesquisar notícias..."
                        oninput="debounceSearch(this.value)">
             </div>
             <div class="search-stats" id="search-stats"></div>
@@ -850,16 +771,18 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="main-content">
         <div class="container">
+            <!-- SKELETON LOADERS -->
+            <div id="skeleton-loaders" class="skeleton-grid">
+                <!-- Gerado via JS -->
+            </div>
+
             <!-- GRID DE NOTÍCIAS -->
             <div class="news-grid" id="news-grid"></div>
-
-            <!-- SKELETON LOADERS -->
-            <div id="skeleton-loaders" class="news-grid" style="display: none;"></div>
 
             <!-- LOADER -->
             <div class="loader-container" id="loader" style="display: none;">
                 <div class="loader"></div>
-                <p style="margin-top: 16px; color: var(--text-secondary);">Carregando notícias...</p>
+                <p style="margin-top: 16px; color: var(--text-secondary);">Carregando mais notícias...</p>
             </div>
 
             <!-- SEM NOTÍCIAS -->
@@ -868,9 +791,9 @@
                     <i class="fas fa-newspaper"></i>
                 </div>
                 <h3 class="empty-title">Nenhuma notícia encontrada</h3>
-                <p class="empty-text">Tente alterar os filtros de busca ou atualizar a página</p>
+                <p class="empty-text">Tente alterar os filtros ou atualizar a página</p>
                 <button class="nav-item active" onclick="refreshNews()" style="margin-top: 16px;">
-                    <i class="fas fa-sync-alt"></i> Atualizar Notícias
+                    <i class="fas fa-sync-alt"></i> Atualizar
                 </button>
             </div>
 
@@ -878,54 +801,29 @@
             <section class="contact-section" id="contact">
                 <div class="contact-header">
                     <h2 class="contact-title">Entre em Contato</h2>
-                    <p class="contact-subtitle">Estamos aqui para ajudar e ouvir suas sugestões</p>
+                    <p class="contact-subtitle">Estamos aqui para ajudar</p>
                 </div>
                 
                 <div class="contact-grid">
                     <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <h3 class="contact-card-title">Email</h3>
-                        <p class="contact-card-text">
-                            <a href="mailto:claudioarmando001@gmail.com" style="color: var(--primary-color); font-weight: 500;">
-                                claudioarmando001@gmail.com
-                            </a>
-                        </p>
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <h3>Email</h3>
+                        <p><a href="mailto:claudioarmando001@gmail.com">claudioarmando001@gmail.com</a></p>
                     </div>
-                    
                     <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <h3 class="contact-card-title">Telefone</h3>
-                        <p class="contact-card-text">
-                            <a href="tel:+258869667677" style="color: var(--primary-color); font-weight: 500;">
-                                +258 869 667 677
-                            </a>
-                        </p>
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <h3>Telefone</h3>
+                        <p><a href="tel:+258869667677">+258 869 667 677</a></p>
                     </div>
-                    
                     <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <h3 class="contact-card-title">Localização</h3>
-                        <p class="contact-card-text">Moçambique, África</p>
-                    </div>
-                    
-                    <div class="contact-card">
-                        <div class="contact-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <h3 class="contact-card-title">Horário</h3>
-                        <p class="contact-card-text">Segunda a Sexta<br>8:00 - 18:00</p>
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <h3>Localização</h3>
+                        <p>Moçambique</p>
                     </div>
                 </div>
             </section>
         </div>
     </main>
-
     <!-- FOOTER -->
     <footer class="main-footer">
         <div class="container">
@@ -936,7 +834,6 @@
                         <li><a href="#" onclick="scrollToTop()">Início</a></li>
                         <li><a href="#contact">Contato</a></li>
                         <li><a href="#" onclick="showAbout()">Sobre</a></li>
-                        <li><a href="#" onclick="showPrivacy()">Privacidade</a></li>
                     </ul>
                 </div>
                 
@@ -946,7 +843,6 @@
                         <li><a href="#" onclick="filterNews('politics')">Política</a></li>
                         <li><a href="#" onclick="filterNews('economy')">Economia</a></li>
                         <li><a href="#" onclick="filterNews('sports')">Esportes</a></li>
-                        <li><a href="#" onclick="filterNews('society')">Sociedade</a></li>
                     </ul>
                 </div>
                 
@@ -956,27 +852,16 @@
                         <li><a href="https://opais.co.mz" target="_blank">O País</a></li>
                         <li><a href="https://jornalnoticias.co.mz" target="_blank">Jornal Notícias</a></li>
                         <li><a href="https://canal.co.mz" target="_blank">Canal Moz</a></li>
-                        <li><a href="https://savana.co.mz" target="_blank">Savana</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Recursos</h3>
-                    <ul class="footer-links">
-                        <li><a href="#" onclick="refreshNews()">Atualizar</a></li>
-                        <li><a href="#" onclick="showSavedNews()">Notícias Guardadas</a></li>
-                        <li><a href="#" onclick="exportNews()">Exportar</a></li>
-                        <li><a href="#" onclick="clearCache()">Limpar Cache</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                <p>&copy; 2024 Notícias CLD - Agregador de Notícias Moçambicanas</p>
-                <p>Todos os direitos reservados</p>
+                <p>&copy; 2024 Notícias CLD - Agregador Moçambicano</p>
             </div>
         </div>
     </footer>
+
     <!-- BOTÕES FLUTUANTES -->
     <div class="floating-buttons">
         <button class="floating-btn" onclick="scrollToTop()" title="Voltar ao topo">
@@ -988,689 +873,570 @@
     </div>
 
     <script>
-    // ===== CONFIGURAÇÃO OTIMIZADA =====
-    const CONFIG = {
-        appName: 'Notícias CLD',
-        storageKey: 'cld_news_v4',
-        sources: [
-            { id: 'opais', name: 'O País', url: 'https://opais.co.mz/wp-json/wp/v2/posts', color: '#1a73e8', enabled: true },
-            { id: 'noticias', name: 'Jornal Notícias', url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts', color: '#34a853', enabled: true },
-            { id: 'integrity', name: 'Integrity', url: 'https://integritymagazine.co.mz/wp-json/wp/v2/posts', color: '#fbbc05', enabled: true },
-            { id: 'time', name: 'Time de Todos', url: 'https://timesdetodos.com/wp-json/wp/v2/posts', color: '#fbbc05', enabled: true },
-            { id: 'canal', name: 'Canal de Moçambique', url: 'https://canal.co.mz/wp-json/wp/v2/posts', color: '#fbbc05', enabled: true },
-            { id: 'aimnews', name: 'AimNews', url: 'https://aimnews.org/wp-json/wp/v2/posts', color: '#fbbc05', enabled: true },
-            { id: 'savana', name: 'Savana Digital', url: 'https://savana.co.mz/wp-json/wp/v2/posts', color: '#ea4335', enabled: true }
-        ],
-        batchSize: 8,
-        maxRetries: 2,
-        debounceDelay: 250,
-        refreshInterval: 300000 // 5 minutos
-    };
-
-    // ===== VARIÁVEIS GLOBAIS =====
-    let allNews = [];
-    let displayedNews = [];
-    let currentPage = 1;
-    let isLoading = false;
-    let hasMore = true;
-    let currentFilter = 'all';
-    let currentSearch = '';
-    let searchTimeout = null;
-    let refreshInterval = null;
-    
-    // Cache otimizado com Map para O(1)
-    const newsCache = new Map();
-    const titleHash = new Set();
-    const urlCache = new Set();
-
-    // ===== ELEMENTOS DOM =====
-    const newsGrid = document.getElementById('news-grid');
-    const loader = document.getElementById('loader');
-    const emptyState = document.getElementById('empty-state');
-    const searchStats = document.getElementById('search-stats');
-    const skeletonLoaders = document.getElementById('skeleton-loaders');
-    const refreshBtn = document.querySelector('.refresh-btn');
-    const searchInput = document.getElementById('search-input');
-
-    // ===== INICIALIZAÇÃO OTIMIZADA =====
-    document.addEventListener('DOMContentLoaded', () => {
-        initApp();
-    });
-
-    async function initApp() {
-        // Carrega cache primeiro
-        await loadFromCache();
-        
-        // Mostra skeleton loaders
-        showSkeletonLoaders(6);
-        
-        // Inicia carregamento das notícias
-        setTimeout(() => loadMoreNews(), 100);
-        
-        // Configura scroll infinito com throttle
-        setupInfiniteScroll();
-        
-        // Configura atualização automática
-        startAutoRefresh();
-        
-        // Pré-carrega notícias guardadas
-        preloadSavedNews();
-    }
-
-    function showSkeletonLoaders(count = 6) {
-        skeletonLoaders.style.display = 'grid';
-        skeletonLoaders.innerHTML = '';
-        for (let i = 0; i < count; i++) {
-            const skeleton = document.createElement('div');
-            skeleton.className = 'skeleton-card';
-            skeletonLoaders.appendChild(skeleton);
-        }
-    }
-
-    function hideSkeletonLoaders() {
-        skeletonLoaders.style.display = 'none';
-    }
-
-    // ===== ARMAZENAMENTO OTIMIZADO =====
-    function saveToStorage(key, data) {
-        try {
-            localStorage.setItem(key, JSON.stringify(data));
-            return true;
-        } catch (e) {
-            console.warn('Erro ao salvar:', e);
-            return false;
-        }
-    }
-
-    function loadFromStorage(key) {
-        try {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
-        } catch (e) {
-            return null;
-        }
-    }
-
-    async function loadFromCache() {
-        const cached = loadFromStorage('cld_news_v4');
-        if (cached?.news?.length > 0) {
-            allNews = cached.news;
-            
-            // Recria os hashes para evitar duplicatas
-            allNews.forEach(news => {
-                titleHash.add(normalizeTitle(news.title));
-                if (news.link) urlCache.add(news.link);
-            });
-            
-            displayedNews = [...allNews].sort((a, b) => b.timestamp - a.timestamp);
-            renderNewsBatch(displayedNews.slice(0, 12));
-        }
-    }
-
-    // ===== SISTEMA DE BUSCA OTIMIZADO =====
-    function debounceSearch(value) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            performSearch(value);
-        }, CONFIG.debounceDelay);
-    }
-
-    function performSearch(query) {
-        const searchTerm = query.toLowerCase().trim();
-        currentSearch = searchTerm;
-        
-        if (searchTerm.length === 0) {
-            searchStats.classList.remove('visible');
-            currentSearch = '';
-            applyFilters();
-            return;
-        }
-        
-        // Busca otimizada usando índice invertido
-        const results = allNews.filter(news => {
-            const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
-            return searchText.includes(searchTerm);
-        });
-        
-        updateSearchStats(results.length, searchTerm);
-        
-        displayedNews = results.sort((a, b) => b.timestamp - a.timestamp);
-        renderNewsBatch(displayedNews);
-    }
-
-    function updateSearchStats(count, term) {
-        searchStats.textContent = count === 0 
-            ? `Nenhum resultado para "${term}"`
-            : `${count} resultado(s) para "${term}"`;
-        searchStats.classList.add('visible');
-    }
-
-    // ===== CARREGAMENTO OTIMIZADO =====
-    async function loadMoreNews() {
-        if (isLoading || !hasMore) return;
-        
-        isLoading = true;
-        loader.style.display = 'block';
-        hideSkeletonLoaders();
-        
-        try {
-            const news = await fetchAllSourcesParallel();
-            
-            if (news.length === 0) {
-                hasMore = false;
-                if (allNews.length === 0) emptyState.style.display = 'block';
-            } else {
-                await processNewsBatch(news);
-                currentPage++;
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            handleLoadError();
-        } finally {
-            isLoading = false;
-            loader.style.display = 'none';
-        }
-    }
-
-    async function fetchAllSourcesParallel() {
-        const activeSources = CONFIG.sources.filter(s => s.enabled);
-        const batchSize = Math.min(CONFIG.batchSize, 5); // Limite por fonte
-        
-        const fetchPromises = activeSources.map(source => 
-            fetchWithTimeout(`${source.url}?per_page=${batchSize}&page=${currentPage}&_embed`, 5000)
-                .then(res => res.ok ? res.json() : [])
-                .then(data => processSourceData(data, source))
-                .catch(() => [])
-        );
-        
-        const results = await Promise.allSettled(fetchPromises);
-        
-        return results
-            .filter(r => r.status === 'fulfilled')
-            .flatMap(r => r.value);
-    }
-
-    async function fetchWithTimeout(url, timeout) {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        
-        try {
-            const response = await fetch(url, { signal: controller.signal });
-            clearTimeout(id);
-            return response;
-        } catch (error) {
-            clearTimeout(id);
-            throw error;
-        }
-    }
-
-    function processSourceData(data, source) {
-        if (!Array.isArray(data)) return [];
-        
-        return data
-            .map(item => createNewsItem(item, source))
-            .filter(item => item && !isDuplicate(item));
-    }
-
-    function createNewsItem(item, source) {
-        try {
-            const title = cleanText(item.title?.rendered || item.title);
-            if (!title || title.length < 10) return null;
-            
-            const content = cleanText(item.content?.rendered || item.content || '');
-            const date = new Date(item.date || new Date());
-            
-            return {
-                id: `${source.id}_${item.id}`,
-                title,
-                excerpt: cleanText(item.excerpt?.rendered || content.substring(0, 200)),
-                content: content.substring(0, 5000),
-                image: getImageUrl(item),
-                source: source.name,
-                sourceId: source.id,
-                date: date.toISOString(),
-                timestamp: date.getTime(),
-                link: item.link || '#',
-                category: detectCategory(title, content),
-                addedAt: Date.now()
-            };
-        } catch (e) {
-            return null;
-        }
-    }
-
-    function isDuplicate(news) {
-        const normalizedTitle = normalizeTitle(news.title);
-        
-        if (titleHash.has(normalizedTitle)) return true;
-        if (news.link && urlCache.has(news.link)) return true;
-        
-        // Adiciona aos hashes
-        titleHash.add(normalizedTitle);
-        if (news.link) urlCache.add(news.link);
-        
-        return false;
-    }
-
-    function normalizeTitle(title) {
-        return title.toLowerCase()
-            .replace(/[^\w\s]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-
-    function getImageUrl(item) {
-        const image = item._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-                     item.jetpack_featured_media_url ||
-                     item.featured_image;
-        
-        return image && image.startsWith('http') 
-            ? image 
-            : `https://via.placeholder.com/600x400/1a73e8/ffffff?text=Notícia`;
-    }
-    // ===== PROCESSAMENTO EM LOTE =====
-    async function processNewsBatch(newsBatch) {
-        // Filtra apenas notícias novas
-        const newNews = newsBatch.filter(news => {
-            const normalized = normalizeTitle(news.title);
-            return !titleHash.has(normalized);
-        });
-        
-        if (newNews.length === 0) return;
-        
-        // Adiciona às coleções
-        allNews.push(...newNews);
-        
-        // Mantém apenas últimas 200 notícias para performance
-        if (allNews.length > 200) {
-            allNews = allNews.slice(-200);
-            titleHash.clear();
-            urlCache.clear();
-            allNews.forEach(n => {
-                titleHash.add(normalizeTitle(n.title));
-                if (n.link) urlCache.add(n.link);
-            });
-        }
-        
-        // Ordena por data
-        allNews.sort((a, b) => b.timestamp - a.timestamp);
-        
-        // Aplica filtros e renderiza
-        applyFilters();
-    }
-
-    // ===== RENDERIZAÇÃO OTIMIZADA =====
-    function renderNewsBatch(newsToRender) {
-        if (!newsToRender?.length) {
-            emptyState.style.display = 'block';
-            newsGrid.innerHTML = '';
-            return;
-        }
-        
-        emptyState.style.display = 'none';
-        
-        // Usa DocumentFragment para melhor performance
-        const fragment = document.createDocumentFragment();
-        
-        newsToRender.slice(0, 24).forEach(news => {
-            const card = createNewsCard(news);
-            fragment.appendChild(card);
-        });
-        
-        newsGrid.innerHTML = '';
-        newsGrid.appendChild(fragment);
-    }
-
-    function createNewsCard(news) {
-        const card = document.createElement('article');
-        card.className = 'news-card';
-        card.setAttribute('data-id', news.id);
-        
-        card.onclick = (e) => {
-            if (!e.target.closest('.save-btn')) {
-                openArticle(news.id);
-            }
+        // ===== CONFIGURAÇÃO =====
+        const CONFIG = {
+            sources: [
+                { id: 'opais', name: 'O País', url: 'https://opais.co.mz/wp-json/wp/v2/posts', color: '#1a73e8' },
+                { id: 'noticias', name: 'Jornal Notícias', url: 'https://jornalnoticias.co.mz/wp-json/wp/v2/posts', color: '#34a853' },
+                { id: 'integrity', name: 'Integrity', url: 'https://integritymagazine.co.mz/wp-json/wp/v2/posts', color: '#fbbc05' },
+                { id: 'canal', name: 'Canal de Moçambique', url: 'https://canal.co.mz/wp-json/wp/v2/posts', color: '#ea4335' },
+                { id: 'aimnews', name: 'AimNews', url: 'https://aimnews.org/wp-json/wp/v2/posts', color: '#1a73e8' },
+                { id: 'savana', name: 'Savana', url: 'https://savana.co.mz/wp-json/wp/v2/posts', color: '#34a853' }
+            ],
+            batchSize: 6,
+            refreshInterval: 30000 // 30 segundos (tempo real)
         };
-        
-        const timeAgo = getTimeAgo(news.date);
-        const sourceColor = CONFIG.sources.find(s => s.id === news.sourceId)?.color || '#1a73e8';
-        const isSaved = checkIfSaved(news.id);
-        
-        card.innerHTML = `
-            <div class="card-image">
-                <img src="${news.image}" 
-                     alt="${escapeHtml(news.title)}"
-                     loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=Notícia'">
-                <span class="category-badge">${getCategoryName(news.category)}</span>
-                <button class="save-btn ${isSaved ? 'saved' : ''}" 
-                        onclick="event.stopPropagation(); toggleSave('${news.id}', this)">
-                    <i class="fas fa-bookmark"></i>
-                </button>
-            </div>
-            <div class="card-content">
-                <h3 class="card-title">${escapeHtml(news.title)}</h3>
-                <p class="card-excerpt">${escapeHtml(news.excerpt)}</p>
-                <div class="card-meta">
-                    <div class="source-info">
-                        <div class="source-icon" style="background: ${sourceColor}">
-                            ${news.source.substring(0, 2).toUpperCase()}
+
+        // ===== VARIÁVEIS GLOBAIS =====
+        let allNews = [];
+        let displayedNews = [];
+        let currentFilter = 'all';
+        let currentSearch = '';
+        let isLoading = false;
+        let searchTimeout = null;
+        let refreshInterval = null;
+
+        // Hashes para evitar duplicatas
+        const newsTitles = new Set();
+        const newsUrls = new Set();
+
+        // Elementos DOM
+        const newsGrid = document.getElementById('news-grid');
+        const loader = document.getElementById('loader');
+        const emptyState = document.getElementById('empty-state');
+        const searchStats = document.getElementById('search-stats');
+        const skeletonLoaders = document.getElementById('skeleton-loaders');
+        const searchInput = document.getElementById('search-input');
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', async () => {
+            showSkeletonLoaders(8);
+            await loadFromCache();
+            await loadNews();
+            startRealTimeRefresh();
+            setupInfiniteScroll();
+        });
+
+        function showSkeletonLoaders(count = 6) {
+            skeletonLoaders.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                skeletonLoaders.innerHTML += `
+                    <div class="skeleton-card">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-content">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line" style="width: 40%;"></div>
                         </div>
-                        <span class="source-name">${escapeHtml(news.source)}</span>
                     </div>
-                    <div class="card-time">
-                        <i class="far fa-clock"></i>
-                        <span>${timeAgo}</span>
+                `;
+            }
+        }
+
+        function hideSkeletonLoaders() {
+            skeletonLoaders.innerHTML = '';
+        }
+
+        // ===== CARREGAMENTO DE NOTÍCIAS =====
+        async function loadNews() {
+            if (isLoading) return;
+            isLoading = true;
+            
+            try {
+                const promises = CONFIG.sources.map(source => 
+                    fetch(`${source.url}?per_page=${CONFIG.batchSize}&_embed`)
+                        .then(res => res.ok ? res.json() : [])
+                        .then(data => processNewsData(data, source))
+                        .catch(() => [])
+                );
+
+                const results = await Promise.all(promises);
+                const allFetchedNews = results.flat();
+
+                if (allFetchedNews.length > 0) {
+                    // Filtra duplicatas
+                    const newNews = allFetchedNews.filter(news => {
+                        const titleKey = news.title.toLowerCase().trim();
+                        if (newsTitles.has(titleKey)) return false;
+                        if (news.link && newsUrls.has(news.link)) return false;
+                        
+                        newsTitles.add(titleKey);
+                        if (news.link) newsUrls.add(news.link);
+                        return true;
+                    });
+
+                    if (newNews.length > 0) {
+                        allNews = [...newNews, ...allNews];
+                        allNews.sort((a, b) => b.timestamp - a.timestamp);
+                        
+                        // Mantém apenas últimas 100 notícias
+                        if (allNews.length > 100) {
+                            allNews = allNews.slice(0, 100);
+                        }
+                        
+                        applyFilters();
+                    }
+                }
+
+                hideSkeletonLoaders();
+                
+                if (allNews.length === 0) {
+                    emptyState.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar:', error);
+                hideSkeletonLoaders();
+                showNotification('Erro ao carregar notícias', 'error');
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function processNewsData(data, source) {
+            if (!Array.isArray(data)) return [];
+
+            return data.map(item => {
+                try {
+                    const title = cleanText(item.title?.rendered || item.title || '');
+                    if (!title || title.length < 5) return null;
+
+                    const content = cleanText(item.content?.rendered || item.content || '');
+                    const date = new Date(item.date || Date.now());
+                    
+                    return {
+                        id: `${source.id}_${item.id || Date.now()}_${Math.random()}`,
+                        title: title,
+                        excerpt: cleanText(item.excerpt?.rendered || content.substring(0, 200) || title),
+                        content: content,
+                        image: getImageUrl(item),
+                        source: source.name,
+                        sourceId: source.id,
+                        date: date.toISOString(),
+                        timestamp: date.getTime(),
+                        link: item.link || '#',
+                        category: detectCategory(title, content)
+                    };
+                } catch (e) {
+                    return null;
+                }
+            }).filter(n => n !== null);
+        }
+
+        function getImageUrl(item) {
+            // Tenta várias fontes de imagem
+            const possibleImages = [
+                item._embedded?.['wp:featuredmedia']?.[0]?.source_url,
+                item.jetpack_featured_media_url,
+                item.featured_image,
+                item.image,
+                item.thumbnail
+            ];
+
+            for (let img of possibleImages) {
+                if (img && typeof img === 'string' && img.startsWith('http')) {
+                    return img;
+                }
+            }
+            // Imagem fallback baseada na categoria
+            const categories = {
+                politics: '🏛️',
+                economy: '📈',
+                sports: '⚽',
+                society: '👥',
+                tech: '💻'
+            };
+            const icon = categories[detectCategory(item.title, item.content)] || '📰';
+            return `https://via.placeholder.com/600x400/1a73e8/ffffff?text=${encodeURIComponent(icon)}`;
+        }
+
+        function detectCategory(title, content) {
+            const text = `${title} ${content}`.toLowerCase();
+            if (/pol[ií]tica|governo|presidente|ministro|eleiç[ãa]o|parlamento|partido/.test(text)) return 'politics';
+            if (/economia|negócio|empresa|investimento|mercado|banco|financeiro/.test(text)) return 'economy';
+            if (/esporte|futebol|jogo|atleta|competição|campeonato|seleção/.test(text)) return 'sports';
+            if (/tecnologia|digital|internet|aplicativo|software|app|tech/.test(text)) return 'tech';
+            return 'society';
+        }
+
+        function cleanText(text) {
+            if (!text) return '';
+            return text
+                .replace(/<[^>]*>/g, '')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/&amp;/g, '&')
+                .replace(/&quot;/g, '"')
+                .replace(/&#[0-9]+;/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        // ===== RENDERIZAÇÃO =====
+        function applyFilters() {
+            displayedNews = allNews.filter(news => {
+                if (currentFilter !== 'all' && news.category !== currentFilter) return false;
+                if (currentSearch) {
+                    const searchText = `${news.title} ${news.excerpt} ${news.source}`.toLowerCase();
+                    return searchText.includes(currentSearch.toLowerCase());
+                }
+                return true;
+            });
+
+            renderNews();
+        }
+
+        function renderNews() {
+            if (displayedNews.length === 0) {
+                emptyState.style.display = 'block';
+                newsGrid.innerHTML = '';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            const fragment = document.createDocumentFragment();
+            
+            displayedNews.forEach(news => {
+                const card = createNewsCard(news);
+                if (card) fragment.appendChild(card);
+            });
+
+            newsGrid.innerHTML = '';
+            newsGrid.appendChild(fragment);
+        }
+
+        function createNewsCard(news) {
+            const card = document.createElement('article');
+            card.className = 'news-card';
+            card.setAttribute('data-id', news.id);
+            
+            card.onclick = (e) => {
+                if (!e.target.closest('.save-btn')) {
+                    openArticle(news.id);
+                }
+            };
+
+            const timeAgo = getTimeAgo(news.date);
+            const source = CONFIG.sources.find(s => s.id === news.sourceId) || { color: '#1a73e8' };
+            const isSaved = checkIfSaved(news.id);
+
+            card.innerHTML = `
+                <div class="card-image">
+                    <img src="${news.image}" 
+                         alt="${escapeHtml(news.title)}"
+                         loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/600x400/1a73e8/ffffff?text=Notícia'">
+                    <span class="category-badge">${getCategoryLabel(news.category)}</span>
+                    <button class="save-btn ${isSaved ? 'saved' : ''}" 
+                            onclick="event.stopPropagation(); toggleSave('${news.id}', this)">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">${escapeHtml(news.title)}</h3>
+                    <p class="card-excerpt">${escapeHtml(news.excerpt.substring(0, 150))}</p>
+                    <div class="card-meta">
+                        <div class="source-info">
+                            <div class="source-icon" style="background: ${source.color}">
+                                ${news.source.substring(0, 2).toUpperCase()}
+                            </div>
+                            <span class="source-name">${escapeHtml(news.source)}</span>
+                        </div>
+                        <div class="card-time">
+                            <i class="far fa-clock"></i>
+                            <span>${timeAgo}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        
-        return card;
-    }
+            `;
 
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+            return card;
+        }
 
-    // ===== FILTROS OTIMIZADOS =====
-    function filterNews(category) {
-        currentFilter = category;
-        currentSearch = '';
-        searchInput.value = '';
-        searchStats.classList.remove('visible');
-        
-        // Atualiza navegação
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        event.target.classList.add('active');
-        
-        applyFilters();
-        scrollToTop();
-    }
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
-    function applyFilters() {
-        displayedNews = allNews.filter(news => {
-            if (currentFilter !== 'all' && news.category !== currentFilter) return false;
-            if (currentSearch) {
-                const searchText = `${news.title} ${news.excerpt} ${news.source} ${news.category}`.toLowerCase();
-                return searchText.includes(currentSearch.toLowerCase());
+        function getCategoryLabel(category) {
+            const labels = {
+                politics: 'Política',
+                economy: 'Economia',
+                sports: 'Esportes',
+                society: 'Sociedade',
+                tech: 'Tecnologia'
+            };
+            return labels[category] || 'Notícia';
+        }
+
+        function getTimeAgo(dateString) {
+            const diff = Date.now() - new Date(dateString).getTime();
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (minutes < 1) return 'Agora';
+            if (minutes < 60) return `${minutes}m`;
+            if (hours < 24) return `${hours}h`;
+            if (days < 7) return `${days}d`;
+            return new Date(dateString).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
+        }
+
+        // ===== ATUALIZAÇÃO EM TEMPO REAL =====
+        function startRealTimeRefresh() {
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(() => {
+                if (!isLoading) {
+                    refreshNews(true);
+                }
+            }, CONFIG.refreshInterval);
+        }
+
+        async function refreshNews(silent = false) {
+            if (!silent) {
+                document.querySelector('.refresh-btn i').style.animation = 'spin 1s linear infinite';
             }
-            return true;
-        });
-        
-        renderNewsBatch(displayedNews);
-    }
 
-    // ===== NOTÍCIAS GUARDADAS =====
-    function checkIfSaved(newsId) {
-        const saved = loadFromStorage('cld_saved') || [];
-        return saved.some(n => n.id === newsId);
-    }
-
-    function toggleSave(newsId, button) {
-        const saved = loadFromStorage('cld_saved') || [];
-        const news = allNews.find(n => n.id === newsId);
-        
-        if (!news) return;
-        
-        const index = saved.findIndex(n => n.id === newsId);
-        
-        if (index === -1) {
-            saved.unshift({...news, savedAt: Date.now()});
-            button.classList.add('saved');
-            showNotification('Notícia guardada');
-        } else {
-            saved.splice(index, 1);
-            button.classList.remove('saved');
-            showNotification('Notícia removida');
-        }
-        
-        saveToStorage('cld_saved', saved);
-    }
-
-    function showSavedNews() {
-        const saved = loadFromStorage('cld_saved') || [];
-        
-        if (!saved.length) {
-            showNotification('Nenhuma notícia guardada');
-            return;
-        }
-        
-        displayedNews = saved.sort((a, b) => b.savedAt - a.savedAt);
-        renderNewsBatch(displayedNews);
-        
-        // Atualiza navegação
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.textContent.includes('Guardadas')) {
-                item.classList.add('active');
+            try {
+                await loadNews();
+                if (!silent) {
+                    showNotification('Notícias atualizadas!', 'success');
+                }
+            } catch (error) {
+                if (!silent) {
+                    showNotification('Erro ao atualizar', 'error');
+                }
+            } finally {
+                document.querySelector('.refresh-btn i').style.animation = '';
             }
-        });
-        
-        currentFilter = 'saved';
-        currentSearch = '';
-        searchInput.value = '';
-        searchStats.classList.remove('visible');
-    }
-
-    // ===== ABERTURA DE ARTIGOS =====
-    function openArticle(newsId) {
-        const news = allNews.find(n => n.id === newsId);
-        if (!news) return;
-        
-        // Salva no histórico
-        const history = loadFromStorage('cld_history') || [];
-        history.unshift({...news, viewedAt: Date.now()});
-        saveToStorage('cld_history', history.slice(0, 50));
-        
-        // Abre article.html
-        window.open(`article.html?id=${encodeURIComponent(newsId)}`, '_blank');
-    }
-    // ===== UTILITÁRIOS =====
-    function getTimeAgo(dateString) {
-        const diff = Date.now() - new Date(dateString).getTime();
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        
-        if (minutes < 60) return `${minutes}m`;
-        if (hours < 24) return `${hours}h`;
-        if (days < 7) return `${days}d`;
-        return new Date(dateString).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
-    }
-
-    function getCategoryName(category) {
-        const names = {
-            politics: 'Política',
-            economy: 'Economia',
-            sports: 'Esportes',
-            society: 'Sociedade',
-            tech: 'Tecnologia'
-        };
-        return names[category] || 'Notícia';
-    }
-
-    function detectCategory(title, content) {
-        const text = `${title} ${content}`.toLowerCase();
-        if (/pol[ií]tica|governo|presidente|ministro|eleiç[ãa]o|parlamento/i.test(text)) return 'politics';
-        if (/economia|negócio|empresa|investimento|mercado|banco/i.test(text)) return 'economy';
-        if (/esporte|futebol|jogo|atleta|competição|campeonato/i.test(text)) return 'sports';
-        if (/sociedade|social|comunidade|educação|família|jovem|mulher/i.test(text)) return 'society';
-        if (/tecnologia|digital|internet|aplicativo|software|startup|inovação/i.test(text)) return 'tech';
-        return 'society';
-    }
-
-    function cleanText(text) {
-        if (!text) return '';
-        return text.replace(/<[^>]*>/g, '')
-                   .replace(/&nbsp;/g, ' ')
-                   .replace(/\s+/g, ' ')
-                   .trim();
-    }
-
-    // ===== SCROLL INFINITO COM THROTTLE =====
-    function setupInfiniteScroll() {
-        let ticking = false;
-        
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
-                        if (!isLoading && hasMore) {
-                            loadMoreNews();
-                        }
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        });
-    }
-
-    // ===== ATUALIZAÇÃO AUTOMÁTICA =====
-    function startAutoRefresh() {
-        if (refreshInterval) clearInterval(refreshInterval);
-        refreshInterval = setInterval(() => {
-            if (!isLoading) {
-                refreshNews(true);
-            }
-        }, CONFIG.refreshInterval);
-    }
-
-    async function refreshNews(silent = false) {
-        if (!silent) {
-            refreshBtn.classList.add('loading');
-            showNotification('Atualizando notícias...');
         }
-        
-        // Limpa cache parcial
-        currentPage = 1;
-        
-        try {
-            const news = await fetchAllSourcesParallel();
-            
-            if (news.length > 0) {
-                await processNewsBatch(news);
-                showNotification(`${news.length} novas notícias carregadas`, 'success');
-            }
-        } catch (error) {
-            if (!silent) showNotification('Erro ao atualizar', 'error');
-        } finally {
-            refreshBtn.classList.remove('loading');
-        }
-    }
 
-    // ===== NOTIFICAÇÕES =====
-    function showNotification(message, type = 'info') {
-        const existing = document.querySelector('.notification');
-        if (existing) existing.remove();
-        
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        
-        const icon = type === 'error' ? 'exclamation-triangle' : 
-                    type === 'success' ? 'check-circle' : 'info-circle';
-        
-        notification.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
-    // ===== FUNÇÕES DO FOOTER =====
-    function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function scrollToContact() {
-        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function showAbout() {
-        showNotification('Notícias CLD - Agregador de notícias moçambicanas');
-    }
-
-    function showPrivacy() {
-        showNotification('Política de Privacidade: Não coletamos dados pessoais');
-    }
-
-    function exportNews() {
-        const data = {
-            news: allNews.slice(0, 50),
-            exportedAt: new Date().toISOString()
-        };
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `noticias-${new Date().toISOString().split('T')[0]}.json`;
-        a.click();
-        
-        showNotification('Notícias exportadas', 'success');
-    }
-
-    function clearCache() {
-        localStorage.clear();
-        titleHash.clear();
-        urlCache.clear();
-        newsCache.clear();
-        showNotification('Cache limpo', 'success');
-        setTimeout(() => location.reload(), 1000);
-    }
-
-    function preloadSavedNews() {
-        // Pré-carrega notícias guardadas para acesso rápido
-        const saved = loadFromStorage('cld_saved') || [];
-        saved.forEach(news => {
-            if (news.id) {
-                titleHash.add(normalizeTitle(news.title));
-                if (news.link) urlCache.add(news.link);
-            }
-        });
-    }
-
-    function handleLoadError() {
-        if (allNews.length === 0) {
-            emptyState.style.display = 'block';
-        }
-    }
-
-    // ===== ATALHOS DE TECLADO =====
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'f') {
-            e.preventDefault();
-            searchInput.focus();
-        }
-        
-        if (e.ctrlKey && e.key === 'r') {
-            e.preventDefault();
-            refreshNews();
-        }
-        
-        if (e.key === 'Escape' && searchInput.value) {
+        // ===== FILTROS =====
+        function filterNews(category) {
+            currentFilter = category;
+            currentSearch = '';
             searchInput.value = '';
-            performSearch('');
+            searchStats.classList.remove('visible');
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyFilters();
+            scrollToTop();
         }
-    });
 
-    // ===== DETECÇÃO DE CONEXÃO =====
-    window.addEventListener('online', () => {
-        showNotification('Conexão restaurada', 'success');
-        refreshNews(true);
-    });
+        // ===== BUSCA =====
+        function debounceSearch(value) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(value);
+            }, 300);
+        }
 
-    window.addEventListener('offline', () => {
-        showNotification('Modo offline', 'error');
-    });
+        function performSearch(query) {
+            currentSearch = query.trim();
+            
+            if (!currentSearch) {
+                searchStats.classList.remove('visible');
+                applyFilters();
+                return;
+            }
+
+            const results = allNews.filter(news => {
+                const searchText = `${news.title} ${news.excerpt} ${news.source}`.toLowerCase();
+                return searchText.includes(currentSearch.toLowerCase());
+            });
+
+            searchStats.textContent = `${results.length} resultado(s) encontrados`;
+            searchStats.classList.add('visible');
+
+            displayedNews = results;
+            renderNews();
+        }
+
+        // ===== NOTÍCIAS GUARDADAS =====
+        function checkIfSaved(newsId) {
+            const saved = loadFromStorage('cld_saved') || [];
+            return saved.some(n => n.id === newsId);
+        }
+
+        function toggleSave(newsId, button) {
+            const saved = loadFromStorage('cld_saved') || [];
+            const news = allNews.find(n => n.id === newsId);
+            
+            if (!news) return;
+
+            const index = saved.findIndex(n => n.id === newsId);
+            
+            if (index === -1) {
+                saved.unshift({...news, savedAt: Date.now()});
+                button.classList.add('saved');
+                showNotification('Notícia guardada!');
+            } else {
+                saved.splice(index, 1);
+                button.classList.remove('saved');
+                showNotification('Notícia removida');
+            }
+
+            saveToStorage('cld_saved', saved);
+        }
+
+        function showSavedNews() {
+            const saved = loadFromStorage('cld_saved') || [];
+            
+            if (saved.length === 0) {
+                showNotification('Nenhuma notícia guardada');
+                return;
+            }
+
+            displayedNews = saved.sort((a, b) => b.savedAt - a.savedAt);
+            renderNews();
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.includes('Guardadas')) {
+                    item.classList.add('active');
+                }
+            });
+
+            currentFilter = 'saved';
+            currentSearch = '';
+            searchInput.value = '';
+            searchStats.classList.remove('visible');
+        }
+
+        // ===== ARMAZENAMENTO =====
+        function saveToStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.warn('Erro ao salvar:', e);
+            }
+        }
+
+        function loadFromStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function loadFromCache() {
+            const cached = loadFromStorage('cld_news');
+            if (cached?.length > 0) {
+                allNews = cached;
+                allNews.forEach(news => {
+                    if (news.title) newsTitles.add(news.title.toLowerCase().trim());
+                    if (news.link) newsUrls.add(news.link);
+                });
+                applyFilters();
+                hideSkeletonLoaders();
+            }
+        }
+      // ===== ABERTURA DE ARTIGOS =====
+        function openArticle(newsId) {
+            const news = allNews.find(n => n.id === newsId);
+            if (!news) return;
+
+            // Salva no histórico
+            const history = loadFromStorage('cld_history') || [];
+            history.unshift({...news, viewedAt: Date.now()});
+            saveToStorage('cld_history', history.slice(0, 50));
+
+            // Abre em nova aba
+            window.open(`article.html?id=${encodeURIComponent(newsId)}`, '_blank');
+        }
+
+        // ===== SCROLL INFINITO =====
+        function setupInfiniteScroll() {
+            let ticking = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000) {
+                            if (!isLoading) {
+                                loadMoreNews();
+                            }
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+
+        async function loadMoreNews() {
+            if (isLoading) return;
+            loader.style.display = 'block';
+            await loadNews();
+            loader.style.display = 'none';
+        }
+
+        // ===== NOTIFICAÇÕES =====
+        function showNotification(message, type = 'info') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = type === 'error' ? 'exclamation-triangle' : 
+                        type === 'success' ? 'check-circle' : 'info-circle';
+            
+            notification.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // ===== UTILITÁRIOS =====
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToContact() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showAbout() {
+            showNotification('Notícias CLD - Agregador de notícias moçambicanas');
+        }
+
+        // ===== ATALHOS DE TECLADO =====
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshNews();
+            }
+            if (e.key === 'Escape' && searchInput.value) {
+                searchInput.value = '';
+                performSearch('');
+            }
+        });
+
+        // ===== DETECÇÃO DE CONEXÃO =====
+        window.addEventListener('online', () => {
+            showNotification('Conexão restaurada', 'success');
+            refreshNews(true);
+        });
+
+        window.addEventListener('offline', () => {
+            showNotification('Modo offline', 'error');
+        });
     </script>
 </body>
 </html>
