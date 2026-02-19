@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitura | Notícias Flash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #e50914; --text: #111; --bg-sec: #f4f4f4; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.8; color: var(--text); padding-bottom: 50px; margin: 0; }
+        .nav { position: sticky; top: 0; background: #fff; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; z-index: 100; align-items: center; }
+        .container { max-width: 750px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 30px; font-weight: 800; line-height: 1.2; margin: 20px 0; }
+        .meta { color: var(--primary); font-weight: 800; text-transform: uppercase; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .main-img { width: 100%; border-radius: 20px; margin-bottom: 30px; aspect-ratio: 16/9; object-fit: cover; }
+        .content { font-size: 19px; color: #333; }
+        .content img { max-width: 100%; border-radius: 10px; height: auto; }
+        .back-btn { text-decoration: none; color: #000; font-weight: 700; }
+
+        /* Estilo do Agregador */
+        .aggregator-section { margin-top: 50px; border-top: 4px solid var(--primary); padding-top: 30px; background: var(--bg-sec); padding-bottom: 40px; }
+        .aggregator-title { max-width: 750px; margin: 0 auto 20px auto; padding: 0 20px; font-size: 22px; font-weight: 800; }
+        .aggregator-grid { max-width: 750px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
+        .agg-item { background: #fff; border-radius: 12px; padding: 10px; text-decoration: none; color: inherit; display: flex; gap: 10px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .agg-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+        .agg-item h4 { font-size: 13px; line-height: 1.3; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        @media (max-width: 600px) { .aggregator-grid { grid-template-columns: 1fr; } }
+        
+        .translating-badge { background: #eee; padding: 2px 8px; border-radius: 4px; font-size: 10px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Voltar</a>
+    <div id="statusTranslate" class="translating-badge">Traduzindo...</div>
+    <i class="fas fa-share-alt" onclick="navigator.share({url: window.location.href})" style="cursor:pointer"></i>
+</div>
+
+<div class="container">
+    <span class="meta" id="artMeta">Carregando...</span>
+    <h1 id="artTitle">...</h1>
+    <img src="" id="artImg" class="main-img">
+    <div class="content" id="artContent"></div>
+</div>
+
+<section class="aggregator-section">
+    <h2 class="aggregator-title">Notícias de Última Hora</h2>
+    <div class="aggregator-grid" id="aggGrid">
+        </div>
+</section>
+
+<script>
+    const APIS = { 
+        'thr': 'https://www.hollywoodreporter.com/wp-json/wp/v2/posts/', 
+        'billboard': 'https://www.billboard.com/wp-json/wp/v2/posts/',
+        'variety': 'https://variety.com/wp-json/wp/v2/posts/',
+        'rollingstone': 'https://www.rollingstone.com/wp-json/wp/v2/posts/'
+    };
+
+    // Função de tradução automática simples
+    async function translateText(text) {
+        if (!text) return "";
+        try {
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=pt&dt=t&q=${encodeURIComponent(text)}`);
+            const data = await res.json();
+            return data[0].map(x => x[0]).join('');
+        } catch (e) {
+            return text; // Fallback se falhar
+        }
+    }
+
+    async function loadArticle() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        const src = urlParams.get('src');
+
+        try {
+            const r = await fetch(`${APIS[src]}${id}?_embed`);
+            const data = await r.json();
+            
+            // Traduzindo Título e Conteúdo
+            const translatedTitle = await translateText(data.title.rendered);
+            const translatedContent = await translateText(data.content.rendered);
+
+            document.title = translatedTitle;
+            document.getElementById('artTitle').innerHTML = translatedTitle;
+            document.getElementById('artImg').src = data._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+            document.getElementById('artContent').innerHTML = translatedContent;
+            document.getElementById('artMeta').innerHTML = `<i class="fas fa-globe"></i> ${src.toUpperCase()}`;
+            document.getElementById('statusTranslate').innerText = "Traduzido para Português";
+        } catch(e) { 
+            document.getElementById('artTitle').innerText = "Erro ao carregar notícia."; 
+        }
+    }
+
+    async function loadAggregator() {
+        const grid = document.getElementById('aggGrid');
+        // Pega as últimas notícias da Billboard como exemplo de "Última Hora"
+        try {
+            const r = await fetch(`https://www.billboard.com/wp-json/wp/v2/posts?per_page=6&_embed`);
+            const posts = await r.json();
+            
+            grid.innerHTML = '';
+            for (const p of posts) {
+                // Traduz apenas o título para o agregador
+                const miniTitle = await translateText(p.title.rendered);
+                const img = p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/100';
+                
+                grid.innerHTML += `
+                    <a href="artigo.html?id=${p.id}&src=billboard" class="agg-item">
+                        <img src="${img}">
+                        <h4>${miniTitle}</h4>
+                    </a>
+                `;
+            }
+        } catch(e) { console.log("Erro no agregador"); }
+    }
+
+    window.onload = () => {
+        loadArticle();
+        loadAggregator();
+    };
+</script>
+</body>
+</html>
