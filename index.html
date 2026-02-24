@@ -1,229 +1,207 @@
 <!DOCTYPE html>
 <html lang="pt-MZ">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notícias CLD</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-
-
-
-
-<!-- Google Analytics GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VC5D7QWE3W"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VC5D7QWE3W');
-</script>
-
-<script data-cfasync="false" type="text/javascript" id="clever-core">
-/* <![CDATA[ */
-    (function (document, window) {
-        var a, c = document.createElement("script"), f = window.frameElement;
-
-        c.id = "CleverCoreLoader100032";
-        c.src = "https://scripts.cleverwebserver.com/d1e6b7d3d1695683eb7bf015aea933c2.js";
-
-        c.async = !0;
-        c.type = "text/javascript";
-        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
-        c.setAttribute("data-callback", "put-your-callback-function-here");
-        c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
-        c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
-
-        try {
-            a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
-        } catch (e) {
-            a = !1;
+    <style>
+        :root {
+            --primary: #0061ff; --bg: #f8fafc; 
+            --card: #ffffff; --text: #0f172a; --text-meta: #64748b; 
+            --border: #e2e8f0; --radius: 20px; --shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
-        a.parentNode.insertBefore(c, a);
-    })(document, window);
-/* ]]> */
-</script>
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 20px; }
 
+        .loader-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--primary); z-index: 10000; width: 0%; transition: 0.3s; }
 
+        /* Header */
+        .header { position: sticky; top: 0; z-index: 1000; background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 16px; box-shadow: var(--shadow); }
+        .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--text); letter-spacing: -1px; text-decoration: none; }
+        .logo span { color: var(--primary); }
+        .btn-saved { color: var(--primary); font-size: 1.2rem; cursor: pointer; text-decoration: none; }
 
+        .search-container { margin: 12px auto 0; max-width: 800px; position: relative; }
+        .search-input { width: 100%; padding: 12px 45px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 15px; }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-meta); }
 
+        /* Categories */
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 15px 0; scrollbar-width: none; max-width: 1200px; margin: 0 auto; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn { padding: 8px 18px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; white-space: nowrap; cursor: pointer; color: var(--text-meta); transition: 0.2s; }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícias CLD | Premium</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --p: #0061ff; --bg: #f8f9fa; --c: #fff; --t: #1a1d23; --s: #677489; }
-        @media (prefers-color-scheme: dark) { :root { --bg: #0f1115; --c: #1a1d23; --t: #f4f7fa; --s: #94a3b8; } }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--t); overscroll-behavior-y: contain; }
-        
-        .nav { position: sticky; top: 0; background: var(--bg); backdrop-filter: blur(12px); z-index: 1000; padding: 12px 20px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .nav-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--t); text-decoration: none; }
-        .logo span { color: var(--p); }
-        
-        .search-bar { background: var(--c); border-radius: 12px; padding: 10px 15px; display: flex; align-items: center; gap: 10px; }
-        .search-bar input { border: none; background: transparent; width: 100%; outline: none; color: var(--t); font-family: inherit; }
-        
-        .filters { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-        .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { padding: 8px 16px; border-radius: 20px; border: none; background: var(--c); color: var(--s); font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 13px; transition: 0.2s; }
-        .filter-btn.active { background: var(--p); color: #fff; }
+        /* Feed */
+        .feed { padding: 0 15px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 16px; }
 
-        .feed { max-width: 700px; margin: 0 auto; padding: 15px; }
-        .card { background: var(--c); border-radius: 24px; margin-bottom: 20px; overflow: hidden; text-decoration: none; color: inherit; display: block; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(0,0,0,0.03); }
-        .card:active { transform: scale(0.98); }
-        
-        .img-box { position: relative; width: 100%; aspect-ratio: 16/9; background: #eee; overflow: hidden; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.4s; }
-        .cat-badge { position: absolute; top: 12px; left: 12px; background: var(--p); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; z-index: 2; }
-        
-        .info { padding: 18px; }
-        .meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 600; }
-        .source { color: var(--p); text-transform: uppercase; }
-        .time { color: var(--s); }
-        .title { font-size: 18px; font-weight: 700; line-height: 1.3; }
+        /* CARD DESTAQUE MENOR */
+        .news-item.featured { grid-column: 1 / -1; flex-direction: column; padding: 0; overflow: hidden; }
+        .news-item.featured .news-img { width: 100%; height: 210px; border-radius: 0; }
+        .news-item.featured .news-info { padding: 15px; }
+        .news-item.featured .news-title { font-size: 1.25rem; }
 
-        #loader { text-align: center; padding: 30px; color: var(--p); }
-        
-        /* Splash Loader */
-        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid rgba(0,97,255,0.1); border-top-color: var(--p); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Cards Normais */
+        .news-item { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 12px; border: 1px solid var(--border); cursor: pointer; text-decoration: none; color: inherit; }
+        .news-img { width: 95px; height: 95px; border-radius: 15px; object-fit: cover; background: #eee; flex-shrink: 0; }
+        .news-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .news-source { font-size: 0.65rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 4px; }
+        .news-title { font-size: 0.95rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .news-meta { font-size: 0.7rem; color: var(--text-meta); margin-top: 8px; display: flex; justify-content: space-between; }
+
+        #splash { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (min-width: 768px) { .feed { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
-<div id="splash">
-    <div class="spinner"></div>
-    <p style="margin-top:20px; font-weight:700">Carregando notícia...</p>
-</div>
+<div id="splash"><div class="spinner"></div><p style="margin-top:15px; font-weight:700">A abrir notícia...</p></div>
+<div class="loader-bar" id="loader-bar"></div>
 
-<nav class="nav">
-    <div class="nav-top">
+<header class="header">
+    <div class="header-top">
         <a href="index.html" class="logo">Notícias <span>CLD</span></a>
-        <a href="?view=saved" style="color: var(--p);"><i class="fas fa-bookmark"></i></a>
+        <a href="?view=saved" class="btn-saved" title="Notícias Guardadas">
+            <i class="fas fa-bookmark"></i>
+        </a>
     </div>
-    <div class="search-bar">
-        <i class="fas fa-search" style="color: var(--s)"></i>
-        <input type="text" id="searchInput" placeholder="Pesquisar..." onkeyup="if(event.key==='Enter') loadNews()">
+    
+    <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" id="search-input" placeholder="Pesquisar notícias..." onkeyup="if(event.key==='Enter') startSearch()">
     </div>
-    <div class="filters" id="catFilters">
-        <button class="filter-btn active" onclick="changeCat(this, '')">Tudo</button>
-        <button class="filter-btn" onclick="changeCat(this, '1')">Política</button>
-        <button class="filter-btn" onclick="changeCat(this, '13')">Economia</button>
-        <button class="filter-btn" onclick="changeCat(this, '11')">Sociedade</button>
-        <button class="filter-btn" onclick="changeCat(this, '18')">Desporto</button>
+
+    <div class="categories">
+        <div class="cat-btn active" onclick="filterCat('', this)">Recentíssimas</div>
+        <div class="cat-btn" onclick="filterCat('1', this)">Política</div>
+        <div class="cat-btn" onclick="filterCat('13', this)">Economia</div>
+        <div class="cat-btn" onclick="filterCat('11', this)">Sociedade</div>
+        <div class="cat-btn" onclick="filterCat('18', this)">Desporto</div>
+        <div class="cat-btn" onclick="filterCat('4', this)">Mundo</div>
+        <div class="cat-btn" onclick="filterCat('17', this)">Cultura</div>
     </div>
-</nav>
+</header>
 
 <main class="feed" id="feed"></main>
-<div id="loader"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
-
-<footer>
-    <p>+258 869 667 677 | claudioarmando001@gmail.com</p>
-</footer>
 
 <script>
-    const SOURCES = [
-        { name: "O País", slug: "opais", api: "https://opais.co.mz/wp-json/wp/v2/posts?_embed" },
-                 { name: "Integrity", slug: "integrity", api: "https://integritymagazine.co.mz/wp-json/wp/v2/posts?_embed" },
-        { name: "Carta MZ", slug: "carta", api: "https://cartamz.com/wp-json/wp/v2/posts?_embed" }
-    ];
-    let page = 1;
-    let loading = false;
-    let currentCat = '';
+const SOURCES = [
+    { name: "O PAÍS", api: "https://opais.co.mz/wp-json/wp/v2/posts?_embed", slug: "opais" },
+    { name: "CARTA MZ", api: "https://cartamz.com/wp-json/wp/v2/posts?_embed", slug: "carta" },
+    { name: "MZNEWS", api: "https://mznews.co.mz/wp-json/wp/v2/posts?_embed", slug: "mznews" }
+];
 
-    function getTimeAgo(d) {
-        const s = Math.floor((new Date() - new Date(d)) / 1000);
-        if (s < 3600) return `Há ${Math.floor(s/60)} min`;
-        if (s < 86400) return `Há ${Math.floor(s/3600)} h`;
-        return new Date(d).toLocaleDateString();
+let currentCat = '';
+let currentSearch = '';
+let page = 1;
+
+// Lógica para tempo relativo ("há 2 horas")
+function formatTime(date) {
+    const diff = Math.floor((new Date() - new Date(date)) / 1000);
+    if (diff < 60) return "agora mesmo";
+    if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
+    if (diff < 86400) return `há ${Math.floor(diff / 3600)} h`;
+    return new Date(date).toLocaleDateString(); // Volta para data normal após 24h
+}
+
+async function loadNews(append = false) {
+    const bar = document.getElementById('loader-bar');
+    bar.style.width = '30%';
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('view') === 'saved') {
+        renderSaved();
+        bar.style.width = '100%';
+        return;
     }
 
-    async function loadNews(append = false) {
-        if(loading) return;
-        loading = true;
-        document.getElementById('loader').style.display = 'block';
-        
-        if(!append) { 
-            document.getElementById('feed').innerHTML = ''; 
-            page = 1; 
-            window.scrollTo(0,0);
-        }
+    if(!append) { document.getElementById('feed').innerHTML = ''; page = 1; }
+    
+    let params = `&per_page=10&page=${page}`;
+    if(currentSearch) params += `&search=${encodeURIComponent(currentSearch)}`;
+    if(currentCat) params += `&categories=${currentCat}`;
 
-        const query = document.getElementById('searchInput').value;
-        // Parâmetros de busca e categoria (ID)
-        let params = `&per_page=6&page=${page}`;
-        if(query) params += `&search=${encodeURIComponent(query)}`;
-        if(currentCat) params += `&categories=${currentCat}`;
+    try {
+        const results = await Promise.all(SOURCES.map(src => 
+            fetch(src.api + params).then(res => res.ok ? res.json() : []).catch(() => [])
+        ));
 
-        try {
-            const results = await Promise.all(SOURCES.map(s => 
-                fetch(s.api + params)
-                .then(r => r.ok ? r.json() : [])
-                .catch(() => [])
-            ));
-
-            const data = results.flat().map(p => ({
-                id: p.id, 
-                title: p.title.rendered, 
-                src: p.link.includes('opais') ? 'O País' : 'Carta MZ',
-                slug: p.link.includes('opais') ? 'opais' : 'carta',
-                img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/400x225?text=Sem+Imagem',
+        const allPosts = results.flat()
+            .filter(p => p.id) 
+            .map(p => ({
+                id: p.id,
+                title: p.title.rendered,
+                src: p.link.includes('opais') ? 'O País' : (p.link.includes('carta') ? 'Carta MZ' : 'MZNews'),
+                slug: p.link.includes('opais') ? 'opais' : (p.link.includes('carta') ? 'carta' : 'mznews'),
+                img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/600x400',
                 date: p.date,
                 cat: p._embedded?.['wp:term']?.[0]?.[0]?.name || 'Geral'
-            })).sort((a,b) => new Date(b.date) - new Date(a.date));
+            }))
+            .sort((a,b) => new Date(b.date) - new Date(a.date));
 
-            if(data.length === 0 && !append) {
-                document.getElementById('feed').innerHTML = '<p style="text-align:center; padding:50px; opacity:0.6">Nenhuma notícia encontrada.</p>';
-            }
-
-            data.forEach(p => {
-                const card = document.createElement('a');
-                card.className = 'card';
-                card.href = `artigo.html?id=${p.id}&src=${p.slug}`;
-                // Aciona o Splash ao clicar
-                card.onclick = () => document.getElementById('splash').style.display = 'flex';
-                card.innerHTML = `
-                    <div class="img-box">
-                        <span class="cat-badge">${p.cat}</span>
-                        <img src="${p.img}" loading="lazy" onload="this.style.opacity=1" style="opacity:0">
-                    </div>
-                    <div class="info">
-                        <div class="meta-row"><span class="source">${p.src}</span><span class="time">${getTimeAgo(p.date)}</span></div>
-                        <h2 class="title">${p.title}</h2>
-                    </div>`;
-                document.getElementById('feed').appendChild(card);
-            });
-        } catch(e) {
-            console.error("Erro ao carregar notícias:", e);
-        }
-        
-        loading = false;
-        document.getElementById('loader').style.display = 'none';
-    }
-
-    function changeCat(btn, catId) {
-        if(loading) return;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCat = catId;
-        loadNews();
-    }
-
-    window.onload = loadNews;
+        renderFeed(allPosts, append);
+    } catch (e) { console.error("Erro na busca"); }
     
-    // Scroll infinito
-    window.onscroll = () => { 
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) { 
-            if(!loading) {
-                page++; 
-                loadNews(true); 
-            }
-        } 
-    };
+    bar.style.width = '100%';
+    setTimeout(() => bar.style.width = '0%', 400);
+}
+
+function renderFeed(posts, append) {
+    const feed = document.getElementById('feed');
+    posts.forEach((p, index) => {
+        const item = document.createElement('a');
+        const isFeatured = (!append && index === 0 && !currentSearch && !currentCat);
+        item.className = `news-item ${isFeatured ? 'featured' : ''}`;
+        item.href = `artigo.html?id=${p.id}&src=${p.slug}`;
+        item.onclick = () => document.getElementById('splash').style.display = 'flex';
+        
+        item.innerHTML = `
+            <img class="news-img" src="${p.img}" loading="lazy">
+            <div class="news-info">
+                <span class="news-source">${p.src}</span>
+                <h3 class="news-title">${p.title}</h3>
+                <div class="news-meta">
+                    <span>${p.cat}</span>
+                    <span style="font-weight:600">${formatTime(p.date)}</span>
+                </div>
+            </div>`;
+        feed.appendChild(item);
+    });
+}
+
+function renderSaved() {
+    const feed = document.getElementById('feed');
+    feed.innerHTML = '<h2 style="grid-column:1/-1; padding:10px 0;">Guardados</h2>';
+    const saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+    if(saved.length === 0) {
+        feed.innerHTML += '<p style="grid-column:1/-1; opacity:0.6;">Ainda não guardou nenhuma notícia.</p>';
+    } else { renderFeed(saved, false); }
+}
+
+function startSearch() { currentSearch = document.getElementById('search-input').value; loadNews(); }
+
+function filterCat(id, btn) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat = id;
+    loadNews();
+}
+
+window.onload = () => loadNews();
+window.onscroll = () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+        page++; loadNews(true);
+    }
+};
 </script>
 </body>
 </html>
