@@ -22,86 +22,101 @@
 
 <style>
 :root {
-    --cor-primaria: inherit;
+    /* Cor de fallback caso o JS não consiga capturar a cor do site */
+    --cor-primaria: #2563eb; 
 }
 
-/* Overlay com fundo mais escuro porém não total */
 .banner-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.85); /* MAIS ESCURO QUE ANTES */
-    backdrop-filter: blur(2px);  /* Efeito moderno */
-    display: none;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    display: none; /* Mantido como none, o JS mudará para flex */
     align-items: center;
     justify-content: center;
-    z-index: 99999;
-    font-family: Arial, sans-serif;
-    transition: background 0.4s ease;
+    z-index: 999999; /* Aumentado para sobrepor TUDO */
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 .banner-box {
     position: relative;
     background: #ffffff;
-    padding: 25px 20px 20px 20px;
+    padding: 30px 25px;
     width: 90%;
-    max-width: 420px;
-    border-radius: 12px;
+    max-width: 400px;
+    border-radius: 16px;
     text-align: center;
-    box-shadow: 0 0 25px rgba(0,0,0,0.6);
-    animation: fadeIn 0.4s ease-in-out;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    animation: surgir 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.banner-box h3 {
+    margin-top: 0;
+    color: #1a1a1a;
+    font-size: 1.4rem;
+    line-height: 1.2;
 }
 
 .fechar-canto {
     position: absolute;
-    top: 8px;
-    right: 10px;
-    background: none;
+    top: 12px;
+    right: 15px;
+    background: #f3f4f6;
     border: none;
-    font-size: 22px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 20px;
     cursor: pointer;
     color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
 }
 
 .fechar-canto:hover {
+    background: #e5e7eb;
     color: #000;
 }
 
 .banner-options button {
     display: block;
     width: 100%;
-    margin: 10px 0;
-    padding: 12px;
+    margin: 12px 0;
+    padding: 14px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     background: var(--cor-primaria);
     color: #fff;
+    font-weight: 600;
     font-size: 16px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: transform 0.2s, filter 0.2s;
 }
 
 .banner-options button:hover {
-    opacity: 0.85;
+    transform: translateY(-2px);
+    filter: brightness(1.1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes surgir {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 </style>
 
-<!-- BANNERS (mantidos iguais) -->
 <div id="banner1" class="banner-overlay">
     <div class="banner-box">
         <button class="fechar-canto" onclick="acaoUsuario(1)">×</button>
         <h3>Como você encontrou nosso site?</h3>
         <div class="banner-options">
             <button onclick="acaoUsuario(1)">Redes Sociais</button>
-            <button onclick="acaoUsuario(1)">Internet</button>
-            <button onclick="acaoUsuario(1)">Amigos</button>
+            <button onclick="acaoUsuario(1)">Google/Internet</button>
+            <button onclick="acaoUsuario(1)">Indicação de Amigos</button>
         </div>
     </div>
 </div>
@@ -111,9 +126,9 @@
         <button class="fechar-canto" onclick="acaoUsuario(2)">×</button>
         <h3>Você está gostando do conteúdo?</h3>
         <div class="banner-options">
-            <button onclick="acaoUsuario(2)">Sim</button>
-            <button onclick="acaoUsuario(2)">Mais ou menos</button>
-            <button onclick="acaoUsuario(2)">Ainda não</button>
+            <button onclick="acaoUsuario(2)">Sim, excelente!</button>
+            <button onclick="acaoUsuario(2)">Pode melhorar</button>
+            <button onclick="acaoUsuario(2)">Ainda não vi tudo</button>
         </div>
     </div>
 </div>
@@ -123,27 +138,37 @@
         <button class="fechar-canto" onclick="acaoUsuario(3)">×</button>
         <h3>Gostaria de ver mais conteúdos como este?</h3>
         <div class="banner-options">
-            <button onclick="acaoUsuario(3)">Com certeza</button>
-            <button onclick="acaoUsuario(3)">Talvez</button>
-            <button onclick="acaoUsuario(3)">Não</button>
+            <button onclick="acaoUsuario(3)">Com certeza!</button>
+            <button onclick="acaoUsuario(3)">Talvez depois</button>
+            <button onclick="acaoUsuario(3)">Não tenho interesse</button>
         </div>
     </div>
 </div>
 
 <script>
-window.onload = function () {
-    let corSite = window.getComputedStyle(document.body).color;
-    document.documentElement.style.setProperty('--cor-primaria', corSite);
+document.addEventListener("DOMContentLoaded", function() {
+    // Tenta capturar a cor principal do site (link ou título)
+    const elementoReferencia = document.querySelector('a, h1, h2');
+    if (elementoReferencia) {
+        const corDetectada = window.getComputedStyle(elementoReferencia).color;
+        // Só aplica se não for transparente ou preto puro (opcional)
+        if(corDetectada !== 'rgba(0, 0, 0, 0)') {
+            document.documentElement.style.setProperty('--cor-primaria', corDetectada);
+        }
+    }
 
+    // Primeiro banner aparece em 4 segundos
     setTimeout(() => mostrarBanner(1), 4000);
-};
+});
 
 function mostrarBanner(numero) {
-    document.getElementById("banner" + numero).style.display = "flex";
+    const banner = document.getElementById("banner" + numero);
+    if (banner) banner.style.display = "flex";
 }
 
 function esconderBanner(numero) {
-    document.getElementById("banner" + numero).style.display = "none";
+    const banner = document.getElementById("banner" + numero);
+    if (banner) banner.style.display = "none";
 }
 
 function acaoUsuario(bannerAtual) {
@@ -151,13 +176,13 @@ function acaoUsuario(bannerAtual) {
 
     if (bannerAtual === 1) {
         setTimeout(() => mostrarBanner(2), 15000);
-    }
-
-    if (bannerAtual === 2) {
+    } else if (bannerAtual === 2) {
         setTimeout(() => mostrarBanner(3), 30000);
     }
 }
 </script>
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     let popunderURL = "https://www.effectivegatecpm.com/qvdzdmrk6?key=c41207cda3bc64bcc9b3569afc89d708"; // Novo link Monetag
