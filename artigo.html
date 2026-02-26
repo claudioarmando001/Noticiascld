@@ -1,475 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-MZ">
 <head>
-
-
-
-
-
-<!-- Google Analytics GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VC5D7QWE3W"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VC5D7QWE3W');
-</script>
-
-
-<script src="https://pl28695997.effectivegatecpm.com/a9/85/b7/a985b775cb5b447da83cce126f4afb9a.js"></script>
-
-
-<style>
-:root {
-    /* Cor de fallback caso o JS não consiga capturar a cor do site */
-    --cor-primaria: #2563eb; 
-}
-
-.banner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(4px);
-    display: none; /* Mantido como none, o JS mudará para flex */
-    align-items: center;
-    justify-content: center;
-    z-index: 999999; /* Aumentado para sobrepor TUDO */
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-}
-
-.banner-box {
-    position: relative;
-    background: #ffffff;
-    padding: 30px 25px;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 16px;
-    text-align: center;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    animation: surgir 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.banner-box h3 {
-    margin-top: 0;
-    color: #1a1a1a;
-    font-size: 1.4rem;
-    line-height: 1.2;
-}
-
-.fechar-canto {
-    position: absolute;
-    top: 12px;
-    right: 15px;
-    background: #f3f4f6;
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-size: 20px;
-    cursor: pointer;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-}
-
-.fechar-canto:hover {
-    background: #e5e7eb;
-    color: #000;
-}
-
-.banner-options button {
-    display: block;
-    width: 100%;
-    margin: 12px 0;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--cor-primaria);
-    color: #fff;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-}
-
-.banner-options button:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
-
-@keyframes surgir {
-    from { opacity: 0; transform: translateY(20px) scale(0.9); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-</style>
-
-<div id="banner1" class="banner-overlay">
-    <div class="banner-box">
-        <button class="fechar-canto" onclick="acaoUsuario(1)">×</button>
-        <h3>Como você encontrou nosso site?</h3>
-        <div class="banner-options">
-            <button onclick="acaoUsuario(1)">Redes Sociais</button>
-            <button onclick="acaoUsuario(1)">Google/Internet</button>
-            <button onclick="acaoUsuario(1)">Indicação de Amigos</button>
-        </div>
-    </div>
-</div>
-
-<div id="banner2" class="banner-overlay">
-    <div class="banner-box">
-        <button class="fechar-canto" onclick="acaoUsuario(2)">×</button>
-        <h3>Você está gostando do conteúdo?</h3>
-        <div class="banner-options">
-            <button onclick="acaoUsuario(2)">Sim, excelente!</button>
-            <button onclick="acaoUsuario(2)">Pode melhorar</button>
-            <button onclick="acaoUsuario(2)">Ainda não vi tudo</button>
-        </div>
-    </div>
-</div>
-
-<div id="banner3" class="banner-overlay">
-    <div class="banner-box">
-        <button class="fechar-canto" onclick="acaoUsuario(3)">×</button>
-        <h3>Gostaria de ver mais conteúdos como este?</h3>
-        <div class="banner-options">
-            <button onclick="acaoUsuario(3)">Com certeza!</button>
-            <button onclick="acaoUsuario(3)">Talvez depois</button>
-            <button onclick="acaoUsuario(3)">Não tenho interesse</button>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Tenta capturar a cor principal do site (link ou título)
-    const elementoReferencia = document.querySelector('a, h1, h2');
-    if (elementoReferencia) {
-        const corDetectada = window.getComputedStyle(elementoReferencia).color;
-        // Só aplica se não for transparente ou preto puro (opcional)
-        if(corDetectada !== 'rgba(0, 0, 0, 0)') {
-            document.documentElement.style.setProperty('--cor-primaria', corDetectada);
-        }
-    }
-
-    // Primeiro banner aparece em 4 segundos
-    setTimeout(() => mostrarBanner(1), 4000);
-});
-
-function mostrarBanner(numero) {
-    const banner = document.getElementById("banner" + numero);
-    if (banner) banner.style.display = "flex";
-}
-
-function esconderBanner(numero) {
-    const banner = document.getElementById("banner" + numero);
-    if (banner) banner.style.display = "none";
-}
-
-function acaoUsuario(bannerAtual) {
-    esconderBanner(bannerAtual);
-
-    if (bannerAtual === 1) {
-        setTimeout(() => mostrarBanner(2), 15000);
-    } else if (bannerAtual === 2) {
-        setTimeout(() => mostrarBanner(3), 30000);
-    }
-}
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    let popunderURL = "https://www.effectivegatecpm.com/qvdzdmrk6?key=c41207cda3bc64bcc9b3569afc89d708"; // Novo link Monetag
-    let lastPopTime = 0;
-    let minInterval = 10000; // Tempo mínimo entre popunders (10s)
-
-    function openPopunder() {
-        let now = new Date().getTime();
-        if (now - lastPopTime >= minInterval) {
-            let newWindow = window.open(popunderURL, "_blank");
-
-            if (newWindow) {
-                newWindow.blur();
-                window.focus();
-                lastPopTime = now;
-                console.log("Popunder aberto!");
-            } else {
-                console.log("Popunder bloqueado pelo navegador.");
-            }
-        } else {
-            console.log("Aguardando intervalo mínimo...");
-        }
-    }
-
-    function triggerPop() {
-        openPopunder(); // Popunder abre imediatamente
-    }
-
-    document.addEventListener("click", triggerPop);
-
-    document.addEventListener("mouseleave", function(event) {
-        if (event.clientY <= 0) {
-            triggerPop();
-        }
-    });
-
-    document.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") {
-            triggerPop();
-        }
-    });
-});
-</script>
-<script data-cfasync="false" type="text/javascript" id="clever-core">
-/* <![CDATA[ */
-    (function (document, window) {
-        var a, c = document.createElement("script"), f = window.frameElement;
-
-        c.id = "CleverCoreLoader100032";
-        c.src = "https://scripts.cleverwebserver.com/d1e6b7d3d1695683eb7bf015aea933c2.js";
-
-        c.async = !0;
-        c.type = "text/javascript";
-        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
-        c.setAttribute("data-callback", "put-your-callback-function-here");
-        c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
-        c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
-
-        try {
-            a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
-        } catch (e) {
-            a = !1;
-        }
-
-        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
-        a.parentNode.insertBefore(c, a);
-    })(document, window);
-/* ]]> */
-</script>
-
-
-
-
-
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title id="meta-title">Notícias CLD</title>
-    <meta name="description" content="Leia as últimas notícias de Moçambique no Notícias CLD">
-    <meta property="og:type" content="article">
-    <meta property="og:title" content="Notícias CLD | Premium">
-    <meta property="og:image" id="og-img" content="https://via.placeholder.com/600x400">
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <title>Leitura | CLD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Lora:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root { --p: #0061ff; --t: #1a1d23; --bg: #ffffff; --s: #64748b; }
-        @media (prefers-color-scheme: dark) { :root { --bg: #0f1115; --t: #f4f7fa; } }
-        
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--t); margin: 0; padding-top: 60px; transition: 0.3s; }
-
-        .top { position: fixed; top: 0; width: 100%; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.05); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-sizing: border-box; backdrop-filter: blur(10px); }
-        .art-container { max-width: 800px; margin: 0 auto; padding: 20px; }
-
-        .main-img { 
-            width: 100%; height: auto; max-height: 450px; 
-            object-fit: cover; border-radius: 24px; 
-            margin-bottom: 25px; display: none; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-
-        .body-text { font-family: 'Lora', serif; font-size: 1.2rem; line-height: 1.8; color: var(--t); display: none; }
-        
-        /* Imagens e vídeos flexíveis dentro da notícia */
-        .body-text img { max-width: 100% !important; height: auto !important; border-radius: 18px; margin: 25px 0; display: block; }
-        .body-text iframe { width: 100% !important; aspect-ratio: 16/9; border-radius: 18px; border: none; margin: 20px 0; }
-        .body-text p { margin-bottom: 1.5rem; }
-
-        .actions { display: flex; gap: 10px; margin: 25px 0; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .btn { border: none; padding: 12px 22px; border-radius: 30px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: 'Plus Jakarta Sans'; transition: 0.2s; white-space: nowrap; }
-        .audio-btn { background: var(--p); color: #fff; }
-        .audio-btn.playing { background: #ff4757; }
-        .save-btn { background: rgba(0,0,0,0.05); color: var(--t); }
-        .save-btn.active { background: #ffd700; color: #000; }
-
-        .ag-item { display: flex; gap: 12px; text-decoration: none; color: inherit; margin-bottom: 20px; align-items: center; padding: 10px; border-radius: 15px; transition: 0.2s; }
-        .ag-item:active { background: rgba(0,0,0,0.05); }
-        .ag-item img { width: 85px; height: 85px; border-radius: 15px; object-fit: cover; flex-shrink: 0; background: #eee; }
-        
-        footer { padding: 40px; text-align: center; opacity: 0.5; font-size: 13px; }
+        :root { --p: #0061ff; --bg: #ffffff; --text: #0f172a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-top: 70px; }
+        .header { position: fixed; top: 0; width: 100%; background: var(--bg); padding: 12px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; z-index: 100; box-sizing: border-box; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 1.8rem; line-height: 1.2; font-weight: 800; margin-bottom: 15px; }
+        .controls { display: flex; gap: 10px; margin-bottom: 25px; }
+        .btn { border: none; padding: 12px 22px; border-radius: 30px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; transition: 0.3s; }
+        .btn-audio { background: var(--p); color: white; }
+        .btn-audio.playing { background: #ff4757; }
+        .body-text { font-family: 'Lora', serif; font-size: 1.25rem; line-height: 1.8; }
+        .body-text img { width: 100%; border-radius: 15px; margin: 20px 0; }
+        .main-img { width: 100%; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
-<div class="top">
-    <a href="index.html" style="text-decoration:none; color:var(--t); font-weight:700; display:flex; align-items:center; gap:8px">
-        <i class="fas fa-chevron-left"></i> Voltar
-    </a>
-    <div style="display:flex; gap:20px">
-        <i class="fas fa-share-alt" onclick="share()" style="cursor:pointer"></i>
-    </div>
+<div class="header">
+    <a href="index.html" style="text-decoration:none; color:var(--text); font-weight:700"><i class="fas fa-chevron-left"></i> Voltar</a>
+    <i class="fas fa-share-alt" onclick="navigator.share({url: location.href})"></i>
 </div>
 
-<main class="art-container">
-    <h1 id="title" style="font-size: 32px; line-height: 1.2; margin-bottom: 15px; font-weight: 800;">A carregar...</h1>
-    
-    <div class="actions" id="action-bar" style="display:none">
-        <button id="audioBtn" class="btn audio-btn" onclick="toggleAudio()">
-            <i class="fas fa-play"></i> <span>Ouvir notícia</span>
+<main class="container">
+    <h1 id="title">Processando conteúdo...</h1>
+    <div class="controls">
+        <button id="voiceBtn" class="btn btn-audio" onclick="toggleSpeech()">
+            <i class="fas fa-play"></i> <span>Ouvir</span>
         </button>
-        <button id="saveBtn" class="btn save-btn" onclick="toggleSave()">
-            <i class="far fa-bookmark"></i> <span>Guardar</span>
+        <button class="btn" style="background:#f1f5f9" onclick="save()">
+            <i class="far fa-bookmark"></i>
         </button>
     </div>
-
-    <img id="mainImg" class="main-img">
+    <img id="feat-img" class="main-img" style="display:none">
     <div id="content" class="body-text"></div>
-
-    <div id="ag-box" style="margin-top:60px; display:none; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 30px;">
-        <h3 style="margin-bottom:20px; font-weight: 800;">Mais notícias recentes</h3>
-        <div id="miniFeed"></div>
-    </div>
 </main>
 
-<footer>
-    Notícias CLD &copy; 2024<br>claudioarmando001@gmail.com
-</footer>
-
 <script>
-    const APIS = { 
-        'opais': 'https://opais.co.mz/wp-json/wp/v2/posts/', 
-        'carta': 'https://cartamz.com/wp-json/wp/v2/posts/',
-        'integrity': 'https://integritymagazine.co.mz/wp-json/wp/v2/posts/',
-        'mznews': 'https://mznews.co.mz/wp-json/wp/v2/posts/'
-    };
-    
-    let currentPost = null;
-    let isReading = false;
+    const APIS = { 'opais': 'https://opais.co.mz/wp-json/wp/v2/posts/', 'carta': 'https://cartamz.com/wp-json/wp/v2/posts/', 'mznews': 'https://mznews.co.mz/wp-json/wp/v2/posts/' };
+    let synth = window.speechSynthesis;
+    let isSpeaking = false;
 
     async function load() {
-        const p = new URLSearchParams(window.location.search);
-        const id = p.get('id'), src = p.get('src');
-
+        const urlP = new URLSearchParams(window.location.search);
         try {
-            const r = await fetch(`${APIS[src]}${id}?_embed`);
-            const data = await r.json();
-            
-            // Preparar dados para o sistema de Guardados
-            currentPost = {
-                id: data.id,
-                title: data.title.rendered,
-                src: src === 'opais' ? 'O País' : (src === 'carta' ? 'Carta MZ' : 'MZNews'),
-                slug: src,
-                img: data._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
-                date: data.date,
-                cat: data._embedded?.['wp:term']?.[0]?.[0]?.name || 'Geral'
-            };
-
-            // Preencher a página
-            document.title = data.title.rendered;
+            const res = await fetch(`${APIS[urlP.get('src')]}${urlP.get('id')}?_embed`);
+            const data = await res.json();
             document.getElementById('title').innerHTML = data.title.rendered;
-            
-            if(currentPost.img) {
-                const mImg = document.getElementById('mainImg');
-                mImg.src = currentPost.img;
-                mImg.style.display = 'block';
-                document.getElementById('og-img').content = currentPost.img; // Para redes sociais
-            }
-
             document.getElementById('content').innerHTML = data.content.rendered;
-            document.getElementById('content').style.display = 'block';
-            document.getElementById('action-bar').style.display = 'flex';
-            document.getElementById('ag-box').style.display = 'block';
-            
-            checkSavedStatus();
-            loadMini(src);
-        } catch(e) {
-            document.getElementById('title').innerText = "Erro ao carregar notícia.";
-        }
+            const img = data._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+            if(img) { 
+                const el = document.getElementById('feat-img');
+                el.src = img; el.style.display = 'block'; 
+            }
+        } catch(e) { document.getElementById('title').innerText = "Erro ao carregar."; }
     }
 
-    // LÓGICA DE GUARDAR (Integra com a página principal)
-    function toggleSave() {
-        let saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        const index = saved.findIndex(p => p.id === currentPost.id && p.slug === currentPost.slug);
-        const btn = document.getElementById('saveBtn');
-
-        if (index > -1) {
-            saved.splice(index, 1);
-            btn.classList.remove('active');
-            btn.innerHTML = '<i class="far fa-bookmark"></i> Guardar';
-        } else {
-            saved.push(currentPost);
-            btn.classList.add('active');
-            btn.innerHTML = '<i class="fas fa-bookmark"></i> Guardado';
-        }
-        localStorage.setItem('cld_saved', JSON.stringify(saved));
-    }
-
-    function checkSavedStatus() {
-        let saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        if (saved.some(p => p.id === currentPost.id && p.slug === currentPost.slug)) {
-            const btn = document.getElementById('saveBtn');
-            btn.classList.add('active');
-            btn.innerHTML = '<i class="fas fa-bookmark"></i> Guardado';
-        }
-    }
-
-    // ÁUDIO
-    function toggleAudio() {
-        const btn = document.getElementById('audioBtn');
-        if (isReading) {
-            window.speechSynthesis.cancel();
-            btn.innerHTML = '<i class="fas fa-play"></i> Ouvir notícia';
-            btn.classList.remove('playing');
-            isReading = false;
-        } else {
+    function toggleSpeech() {
+        const btn = document.getElementById('voiceBtn');
+        if (!isSpeaking) {
             const text = document.getElementById('content').innerText;
-            const ut = new SpeechSynthesisUtterance(text);
-            ut.lang = 'pt-PT';
-            ut.onend = () => { isReading = false; btn.classList.remove('playing'); btn.innerHTML = '<i class="fas fa-play"></i> Ouvir notícia'; };
-            window.speechSynthesis.speak(ut);
-            btn.innerHTML = '<i class="fas fa-stop"></i> Parar leitura';
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'pt-PT';
+            msg.onend = () => { isSpeaking = false; btn.classList.remove('playing'); btn.querySelector('span').innerText = "Ouvir"; btn.querySelector('i').className = "fas fa-play"; };
+            
+            synth.speak(msg);
+            isSpeaking = true;
             btn.classList.add('playing');
-            isReading = true;
-        }
-    }
-
-    async function loadMini(src) {
-        try {
-            const r = await fetch(`${APIS[src]}?per_page=5&_embed`);
-            const posts = await r.json();
-            document.getElementById('miniFeed').innerHTML = posts.map(n => `
-                <a href="artigo.html?id=${n.id}&src=${src}" class="ag-item">
-                    <img src="${n._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/100'}">
-                    <div>
-                        <h4 style="font-size:15px; margin:0; line-height:1.4;">${n.title.rendered}</h4>
-                        <span style="font-size:12px; color:var(--s)">${src.toUpperCase()}</span>
-                    </div>
-                </a>`).join('');
-        } catch(e) {}
-    }
-
-    function share() {
-        if (navigator.share) {
-            navigator.share({ title: document.title, url: window.location.href });
+            btn.querySelector('span').innerText = "Parar";
+            btn.querySelector('i').className = "fas fa-stop";
         } else {
-            alert("Copiado para a área de transferência!");
-            navigator.clipboard.writeText(window.location.href);
+            synth.cancel();
+            isSpeaking = false;
+            btn.classList.remove('playing');
+            btn.querySelector('span').innerText = "Ouvir";
+            btn.querySelector('i').className = "fas fa-play";
         }
     }
 
     window.onload = load;
+    window.onbeforeunload = () => synth.cancel();
 </script>
 </body>
 </html>
