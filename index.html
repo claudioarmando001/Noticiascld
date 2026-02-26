@@ -1,57 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-MZ">
 <head>
-
-
-
-
-
-<script src="https://pl28695997.effectivegatecpm.com/a9/85/b7/a985b775cb5b447da83cce126f4afb9a.js"></script>
-<!-- Google Analytics GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VC5D7QWE3W"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VC5D7QWE3W');
-</script>
-
-<script data-cfasync="false" type="text/javascript" id="clever-core">
-/* <![CDATA[ */
-    (function (document, window) {
-        var a, c = document.createElement("script"), f = window.frameElement;
-
-        c.id = "CleverCoreLoader100032";
-        c.src = "https://scripts.cleverwebserver.com/d1e6b7d3d1695683eb7bf015aea933c2.js";
-
-        c.async = !0;
-        c.type = "text/javascript";
-        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
-        c.setAttribute("data-callback", "put-your-callback-function-here");
-        c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
-        c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
-
-        try {
-            a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
-        } catch (e) {
-            a = !1;
-        }
-
-        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
-        a.parentNode.insertBefore(c, a);
-    })(document, window);
-/* ]]> */
-</script>
-
-
-
-
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Notícias CLD</title>
+    <title>Notícias CLD | Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -59,198 +11,181 @@
 
     <style>
         :root {
-            --primary: #0061ff; --bg: #f8fafc; 
-            --card: #ffffff; --text: #0f172a; --text-meta: #64748b; 
-            --border: #e2e8f0; --radius: 20px; --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --primary: #0061ff; --bg: #f8fafc; --card: #ffffff;
+            --text: #0f172a; --text-meta: #64748b; --border: #e2e8f0;
+            --radius: 20px; --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 20px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 50px; }
 
-        .loader-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--primary); z-index: 10000; width: 0%; transition: 0.3s; }
-
-        /* Header */
-        .header { position: sticky; top: 0; z-index: 1000; background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 16px; box-shadow: var(--shadow); }
-        .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
+        /* Navbar */
+        .navbar { position: sticky; top: 0; background: var(--card); z-index: 1000; padding: 12px 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow); }
+        .nav-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
         .logo { font-weight: 800; font-size: 1.4rem; color: var(--text); letter-spacing: -1px; text-decoration: none; }
         .logo span { color: var(--primary); }
-        .btn-saved { color: var(--primary); font-size: 1.2rem; cursor: pointer; text-decoration: none; }
+        .btn-icon { font-size: 1.3rem; color: var(--text); cursor: pointer; background: none; border: none; }
 
-        .search-container { margin: 12px auto 0; max-width: 800px; position: relative; }
-        .search-input { width: 100%; padding: 12px 45px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 15px; }
-        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-meta); }
+        /* Search */
+        .search-bar { margin: 12px auto 0; max-width: 800px; position: relative; }
+        .search-bar input { width: 100%; padding: 12px 44px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); font-family: inherit; font-size: 0.95rem; }
+        .search-bar i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-meta); }
 
-        /* Categories */
-        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 15px 0; scrollbar-width: none; max-width: 1200px; margin: 0 auto; }
+        /* Categories Expandidas */
+        .categories { display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; max-width: 1200px; margin: 0 auto; }
         .categories::-webkit-scrollbar { display: none; }
-        .cat-btn { padding: 8px 18px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); font-size: 0.8rem; font-weight: 700; white-space: nowrap; cursor: pointer; color: var(--text-meta); transition: 0.2s; }
-        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .cat-item { padding: 8px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; font-weight: 700; color: var(--text-meta); white-space: nowrap; cursor: pointer; transition: 0.2s; }
+        .cat-item.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* Feed */
-        .feed { padding: 0 15px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 16px; }
+        /* Feed Grid */
+        .feed { padding: 0 16px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 16px; }
 
-        /* CARD DESTAQUE MENOR */
-        .news-item.featured { grid-column: 1 / -1; flex-direction: column; padding: 0; overflow: hidden; }
-        .news-item.featured .news-img { width: 100%; height: 210px; border-radius: 0; }
-        .news-item.featured .news-info { padding: 15px; }
-        .news-item.featured .news-title { font-size: 1.25rem; }
+        /* Card Destaque */
+        .news-card.featured { grid-column: 1 / -1; flex-direction: column; padding: 0; border: none; background: transparent; }
+        .news-card.featured .news-img { width: 100%; height: 210px; border-radius: var(--radius); }
+        .news-card.featured .news-title { font-size: 1.35rem; margin-top: 12px; font-weight: 800; }
 
         /* Cards Normais */
-        .news-item { background: var(--card); border-radius: var(--radius); padding: 12px; display: flex; gap: 12px; border: 1px solid var(--border); cursor: pointer; text-decoration: none; color: inherit; }
-        .news-img { width: 95px; height: 95px; border-radius: 15px; object-fit: cover; background: #eee; flex-shrink: 0; }
-        .news-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .news-source { font-size: 0.65rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 4px; }
-        .news-title { font-size: 0.95rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .news-meta { font-size: 0.7rem; color: var(--text-meta); margin-top: 8px; display: flex; justify-content: space-between; }
+        .news-card { display: flex; gap: 14px; background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
+        .news-img { width: 95px; height: 95px; border-radius: 15px; object-fit: cover; flex-shrink: 0; background: #eee; }
+        .news-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .news-tag { font-size: 0.65rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        .news-title { font-size: 0.95rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 4px 0; }
+        .news-meta { font-size: 0.7rem; color: var(--text-meta); }
 
-        #splash { position: fixed; inset: 0; background: #fff; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Loader de Scroll */
+        .loading-trigger { text-align: center; padding: 30px; grid-column: 1/-1; color: var(--primary); font-size: 1.2rem; }
 
         @media (min-width: 768px) { .feed { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
-<div id="splash"><div class="spinner"></div><p style="margin-top:15px; font-weight:700">A abrir notícia...</p></div>
-<div class="loader-bar" id="loader-bar"></div>
-
-<header class="header">
-    <div class="header-top">
-        <a href="index.html" class="logo">Notícias <span>CLD</span></a>
-        <a href="?view=saved" class="btn-saved" title="Notícias Guardadas">
-            <i class="fas fa-bookmark"></i>
-        </a>
+<nav class="navbar">
+    <div class="nav-top">
+        <a href="index.html" class="logo">Notícias<span>CLD</span></a>
+        <button class="btn-icon" onclick="toggleSaved()"><i class="far fa-bookmark"></i></button>
     </div>
-    
-    <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" id="search-input" placeholder="Pesquisar notícias..." onkeyup="if(event.key==='Enter') startSearch()">
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="O que queres ler hoje?" onkeyup="if(event.key==='Enter') resetAndLoad()">
     </div>
-
-    <div class="categories">
-        <div class="cat-btn active" onclick="filterCat('', this)">Recentíssimas</div>
-        <div class="cat-btn" onclick="filterCat('1', this)">Política</div>
-        <div class="cat-btn" onclick="filterCat('13', this)">Economia</div>
-        <div class="cat-btn" onclick="filterCat('11', this)">Sociedade</div>
-        <div class="cat-btn" onclick="filterCat('18', this)">Desporto</div>
-        <div class="cat-btn" onclick="filterCat('4', this)">Mundo</div>
-        <div class="cat-btn" onclick="filterCat('17', this)">Cultura</div>
+    <div class="categories" id="cat-list">
+        <div class="cat-item active" onclick="filterCat('', this)">Recentíssimas</div>
+        <div class="cat-item" onclick="filterCat('1', this)">Política</div>
+        <div class="cat-item" onclick="filterCat('13', this)">Economia</div>
+        <div class="cat-item" onclick="filterCat('11', this)">Sociedade</div>
+        <div class="cat-item" onclick="filterCat('18', this)">Desporto</div>
+        <div class="cat-item" onclick="filterCat('4', this)">Mundo</div>
+        <div class="cat-item" onclick="filterCat('17', this)">Cultura</div>
+        <div class="cat-item" onclick="filterCat('19', this)">Tecnologia</div>
+        <div class="cat-item" onclick="filterCat('20', this)">Saúde</div>
     </div>
-</header>
+</nav>
 
 <main class="feed" id="feed"></main>
+<div id="scroll-anchor" class="loading-trigger"><i class="fas fa-circle-notch fa-spin"></i></div>
 
 <script>
 const SOURCES = [
     { name: "O PAÍS", api: "https://opais.co.mz/wp-json/wp/v2/posts?_embed", slug: "opais" },
     { name: "CARTA MZ", api: "https://cartamz.com/wp-json/wp/v2/posts?_embed", slug: "carta" },
-    { name: "Integrity", api: "https://integritymagazine.co.mz/wp-json/wp/v2/posts?_embed", slug: "integrity" },
     { name: "MZNEWS", api: "https://mznews.co.mz/wp-json/wp/v2/posts?_embed", slug: "mznews" }
 ];
 
-let currentCat = '';
-let currentSearch = '';
-let page = 1;
+let allPosts = [];
+let currentPage = 1;
+let isFetching = false;
+let currentCategory = '';
 
-// Lógica para tempo relativo ("há 2 horas")
-function formatTime(date) {
+// Formatação de Tempo Relativo
+function getRelativeTime(date) {
     const diff = Math.floor((new Date() - new Date(date)) / 1000);
-    if (diff < 60) return "agora mesmo";
     if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
     if (diff < 86400) return `há ${Math.floor(diff / 3600)} h`;
-    return new Date(date).toLocaleDateString(); // Volta para data normal após 24h
+    return new Date(date).toLocaleDateString();
 }
 
-async function loadNews(append = false) {
-    const bar = document.getElementById('loader-bar');
-    bar.style.width = '30%';
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.get('view') === 'saved') {
-        renderSaved();
-        bar.style.width = '100%';
-        return;
+async function loadNews() {
+    if (isFetching) return;
+    isFetching = true;
+
+    const query = document.getElementById('search-input').value;
+    let filterParams = `&per_page=6&page=${currentPage}`;
+    if (currentCategory) filterParams += `&categories=${currentCategory}`;
+    if (query) filterParams += `&search=${encodeURIComponent(query)}`;
+
+    // Carregamento progressivo (uma por uma)
+    for (const src of SOURCES) {
+        try {
+            const response = await fetch(src.api + filterParams);
+            const data = await response.json();
+            
+            if (data.length > 0) {
+                const newPosts = data.map(p => ({
+                    id: p.id,
+                    title: p.title.rendered,
+                    date: p.date,
+                    srcName: src.name,
+                    srcSlug: src.slug,
+                    img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/400x250',
+                    link: `artigo.html?id=${p.id}&src=${src.slug}`
+                }));
+
+                allPosts = [...allPosts, ...newPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
+                renderFeed();
+            }
+        } catch (e) { console.error("Erro na fonte " + src.name); }
     }
 
-    if(!append) { document.getElementById('feed').innerHTML = ''; page = 1; }
-    
-    let params = `&per_page=10&page=${page}`;
-    if(currentSearch) params += `&search=${encodeURIComponent(currentSearch)}`;
-    if(currentCat) params += `&categories=${currentCat}`;
-
-    try {
-        const results = await Promise.all(SOURCES.map(src => 
-            fetch(src.api + params).then(res => res.ok ? res.json() : []).catch(() => [])
-        ));
-
-        const allPosts = results.flat()
-            .filter(p => p.id) 
-            .map(p => ({
-                id: p.id,
-                title: p.title.rendered,
-                src: p.link.includes('opais') ? 'O País' : (p.link.includes('carta') ? 'Carta MZ' : 'MZNews'),
-                slug: p.link.includes('opais') ? 'opais' : (p.link.includes('carta') ? 'carta' : 'mznews'),
-                img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/600x400',
-                date: p.date,
-                cat: p._embedded?.['wp:term']?.[0]?.[0]?.name || 'Geral'
-            }))
-            .sort((a,b) => new Date(b.date) - new Date(a.date));
-
-        renderFeed(allPosts, append);
-    } catch (e) { console.error("Erro na busca"); }
-    
-    bar.style.width = '100%';
-    setTimeout(() => bar.style.width = '0%', 400);
+    isFetching = false;
+    currentPage++;
 }
 
-function renderFeed(posts, append) {
+function renderFeed() {
     const feed = document.getElementById('feed');
-    posts.forEach((p, index) => {
-        const item = document.createElement('a');
-        const isFeatured = (!append && index === 0 && !currentSearch && !currentCat);
-        item.className = `news-item ${isFeatured ? 'featured' : ''}`;
-        item.href = `artigo.html?id=${p.id}&src=${p.slug}`;
-        item.onclick = () => document.getElementById('splash').style.display = 'flex';
-        
-        item.innerHTML = `
+    feed.innerHTML = '';
+    
+    allPosts.forEach((p, index) => {
+        const isFeatured = (index === 0 && !currentCategory && !document.getElementById('search-input').value);
+        const card = document.createElement('a');
+        card.className = `news-card ${isFeatured ? 'featured' : ''}`;
+        card.href = p.link;
+        card.innerHTML = `
             <img class="news-img" src="${p.img}" loading="lazy">
-            <div class="news-info">
-                <span class="news-source">${p.src}</span>
+            <div class="news-content">
+                <span class="news-tag">${p.srcName}</span>
                 <h3 class="news-title">${p.title}</h3>
-                <div class="news-meta">
-                    <span>${p.cat}</span>
-                    <span style="font-weight:600">${formatTime(p.date)}</span>
-                </div>
+                <div class="news-meta">${getRelativeTime(p.date)}</div>
             </div>`;
-        feed.appendChild(item);
+        feed.appendChild(card);
     });
 }
 
-function renderSaved() {
-    const feed = document.getElementById('feed');
-    feed.innerHTML = '<h2 style="grid-column:1/-1; padding:10px 0;">Guardados</h2>';
-    const saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-    if(saved.length === 0) {
-        feed.innerHTML += '<p style="grid-column:1/-1; opacity:0.6;">Ainda não guardou nenhuma notícia.</p>';
-    } else { renderFeed(saved, false); }
+function filterCat(id, btn) {
+    document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory = id;
+    resetAndLoad();
 }
 
-function startSearch() { currentSearch = document.getElementById('search-input').value; loadNews(); }
-
-function filterCat(id, btn) {
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentCat = id;
+function resetAndLoad() {
+    allPosts = [];
+    currentPage = 1;
+    document.getElementById('feed').innerHTML = '';
     loadNews();
 }
 
-window.onload = () => loadNews();
-window.onscroll = () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
-        page++; loadNews(true);
+// Lógica de Scroll Infinito
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !isFetching) {
+        loadNews();
     }
-};
+}, { threshold: 0.1 });
+
+observer.observe(document.getElementById('scroll-anchor'));
+
+window.onload = loadNews;
 </script>
 </body>
 </html>
