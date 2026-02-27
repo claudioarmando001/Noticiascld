@@ -16,72 +16,101 @@
         .btn { border: none; padding: 12px 22px; border-radius: 30px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; transition: 0.3s; }
         .btn-audio { background: var(--p); color: white; }
         .btn-audio.playing { background: #ff4757; }
+        .btn-save.active { background: #ffd700; color: #000; }
         .body-text { font-family: 'Lora', serif; font-size: 1.25rem; line-height: 1.8; }
         .body-text img { width: 100%; border-radius: 15px; margin: 20px 0; }
-        .main-img { width: 100%; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .main-img { width: 100%; border-radius: 20px; margin-bottom: 20px; }
+        .mini-agregador { margin-top: 50px; border-top: 1px solid #eee; padding-top: 30px; }
+        .mini-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
+        .mini-card { display: flex; gap: 10px; text-decoration: none; color: inherit; align-items: center; }
+        .mini-card img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
+        .mini-card h4 { font-size: 0.9rem; line-height: 1.2; }
     </style>
 </head>
 <body>
-
 <div class="header">
     <a href="index.html" style="text-decoration:none; color:var(--text); font-weight:700"><i class="fas fa-chevron-left"></i> Voltar</a>
     <i class="fas fa-share-alt" onclick="navigator.share({url: location.href})"></i>
 </div>
-
 <main class="container">
-    <h1 id="title">Processando conteúdo...</h1>
+    <h1 id="title">Carregando...</h1>
     <div class="controls">
-        <button id="voiceBtn" class="btn btn-audio" onclick="toggleSpeech()">
-            <i class="fas fa-play"></i> <span>Ouvir</span>
-        </button>
-        <button class="btn" style="background:#f1f5f9" onclick="save()">
-            <i class="far fa-bookmark"></i>
-        </button>
+        <button id="voiceBtn" class="btn btn-audio" onclick="toggleSpeech()"><i class="fas fa-play"></i> <span>Ouvir</span></button>
+        <button id="saveBtn" class="btn btn-save" style="background:#f1f5f9" onclick="toggleSave()"><i class="far fa-bookmark"></i> <span>Guardar</span></button>
     </div>
     <img id="feat-img" class="main-img" style="display:none">
     <div id="content" class="body-text"></div>
+    
+    <section class="mini-agregador">
+        <h3>Mais notícias</h3>
+        <div id="mini-feed" class="mini-grid"></div>
+    </section>
 </main>
 
 <script>
     const APIS = { 'opais': 'https://opais.co.mz/wp-json/wp/v2/posts/', 'carta': 'https://cartamz.com/wp-json/wp/v2/posts/', 'mznews': 'https://mznews.co.mz/wp-json/wp/v2/posts/' };
-    let synth = window.speechSynthesis;
-    let isSpeaking = false;
+    let synth = window.speechSynthesis, isSpeaking = false, currentData = null;
 
     async function load() {
         const urlP = new URLSearchParams(window.location.search);
+        const src = urlP.get('src'), id = urlP.get('id');
         try {
-            const res = await fetch(`${APIS[urlP.get('src')]}${urlP.get('id')}?_embed`);
+            const res = await fetch(`${APIS[src]}${id}?_embed`);
             const data = await res.json();
+            currentData = {
+                id: data.id, title: data.title.rendered, date: data.date, srcSlug: src,
+                srcName: src.toUpperCase(), img: data._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+                link: location.href
+            };
             document.getElementById('title').innerHTML = data.title.rendered;
             document.getElementById('content').innerHTML = data.content.rendered;
-            const img = data._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-            if(img) { 
-                const el = document.getElementById('feat-img');
-                el.src = img; el.style.display = 'block'; 
+            if(currentData.img) { 
+                const el = document.getElementById('feat-img'); el.src = currentData.img; el.style.display = 'block'; 
             }
-        } catch(e) { document.getElementById('title').innerText = "Erro ao carregar."; }
+            updateSaveBtn();
+            loadMini(src);
+        } catch(e) {}
+    }
+
+    function toggleSave() {
+        let saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const idx = saved.findIndex(p => p.id === currentData.id);
+        if(idx > -1) saved.splice(idx, 1);
+        else saved.push(currentData);
+        localStorage.setItem('cld_saved', JSON.stringify(saved));
+        updateSaveBtn();
+    }
+
+    function updateSaveBtn() {
+        const saved = JSON.parse(localStorage.getItem('cld_saved') || '[]');
+        const isSaved = saved.some(p => p.id === currentData.id);
+        const btn = document.getElementById('saveBtn');
+        btn.classList.toggle('active', isSaved);
+        btn.querySelector('span').innerText = isSaved ? 'Guardado' : 'Guardar';
+        btn.querySelector('i').className = isSaved ? 'fas fa-bookmark' : 'far fa-bookmark';
+    }
+
+    async function loadMini(src) {
+        const res = await fetch(`${APIS[src]}?per_page=6&_embed`);
+        const data = await res.json();
+        document.getElementById('mini-feed').innerHTML = data.map(p => `
+            <a href="artigo.html?id=${p.id}&src=${src}" class="mini-card">
+                <img src="${p._embedded?.['wp:featuredmedia']?.[0]?.source_url || ''}">
+                <h4>${p.title.rendered}</h4>
+            </a>`).join('');
     }
 
     function toggleSpeech() {
         const btn = document.getElementById('voiceBtn');
         if (!isSpeaking) {
-            const text = document.getElementById('content').innerText;
-            const msg = new SpeechSynthesisUtterance(text);
-            msg.lang = 'pt-PT';
-            msg.onend = () => { isSpeaking = false; btn.classList.remove('playing'); btn.querySelector('span').innerText = "Ouvir"; btn.querySelector('i').className = "fas fa-play"; };
-            
-            synth.speak(msg);
+            const ut = new SpeechSynthesisUtterance(document.getElementById('content').innerText);
+            ut.lang = 'pt-PT';
+            ut.onend = () => { isSpeaking = false; btn.classList.remove('playing'); btn.querySelector('span').innerText = "Ouvir"; };
+            synth.speak(ut);
             isSpeaking = true;
             btn.classList.add('playing');
             btn.querySelector('span').innerText = "Parar";
-            btn.querySelector('i').className = "fas fa-stop";
-        } else {
-            synth.cancel();
-            isSpeaking = false;
-            btn.classList.remove('playing');
-            btn.querySelector('span').innerText = "Ouvir";
-            btn.querySelector('i').className = "fas fa-play";
-        }
+        } else { synth.cancel(); isSpeaking = false; btn.classList.remove('playing'); btn.querySelector('span').innerText = "Ouvir"; }
     }
 
     window.onload = load;
