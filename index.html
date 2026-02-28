@@ -64,67 +64,106 @@
 
 
 
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Notícias CLD</title>
+    <title>Notícias CLD | Premium</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #0061ff; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --text-meta: #64748b; --border: #e2e8f0; --radius: 20px; }
+        :root {
+            --primary: #0061ff; --bg: #f8fafc; --card: #ffffff;
+            --text: #0f172a; --text-meta: #64748b; --border: #e2e8f0;
+            --radius: 20px; --shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 50px; }
-        .navbar { position: sticky; top: 0; background: var(--card); z-index: 1000; padding: 12px 16px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 50px; }
+
+        /* Navbar */
+        .navbar { position: sticky; top: 0; background: var(--card); z-index: 1000; padding: 12px 16px; border-bottom: 1px solid var(--border); box-shadow: var(--shadow); }
         .nav-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-        .logo { font-weight: 800; font-size: 1.4rem; color: var(--text); text-decoration: none; }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--text); letter-spacing: -1px; text-decoration: none; }
         .logo span { color: var(--primary); }
         .btn-icon { font-size: 1.3rem; color: var(--text); cursor: pointer; background: none; border: none; }
-        .btn-icon.active { color: var(--primary); }
+
+        /* Search */
         .search-bar { margin: 12px auto 0; max-width: 800px; position: relative; }
-        .search-bar input { width: 100%; padding: 12px 44px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); font-family: inherit; }
+        .search-bar input { width: 100%; padding: 12px 44px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg); font-family: inherit; font-size: 0.95rem; }
         .search-bar i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-meta); }
+
+        /* Categories Expandidas */
         .categories { display: flex; gap: 8px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; max-width: 1200px; margin: 0 auto; }
         .categories::-webkit-scrollbar { display: none; }
-        .cat-item { padding: 8px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; font-weight: 700; color: var(--text-meta); white-space: nowrap; cursor: pointer; }
+        .cat-item { padding: 8px 18px; background: var(--card); border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; font-weight: 700; color: var(--text-meta); white-space: nowrap; cursor: pointer; transition: 0.2s; }
         .cat-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Feed Grid */
         .feed { padding: 0 16px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 16px; }
-        .news-card { display: flex; gap: 14px; background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
+
+        /* Card Destaque */
         .news-card.featured { grid-column: 1 / -1; flex-direction: column; padding: 0; border: none; background: transparent; }
         .news-card.featured .news-img { width: 100%; height: 210px; border-radius: var(--radius); }
+        .news-card.featured .news-title { font-size: 1.35rem; margin-top: 12px; font-weight: 800; }
+
+        /* Cards Normais */
+        .news-card { display: flex; gap: 14px; background: var(--card); padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
         .news-img { width: 95px; height: 95px; border-radius: 15px; object-fit: cover; flex-shrink: 0; background: #eee; }
         .news-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .news-tag { font-size: 0.65rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
         .news-title { font-size: 0.95rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 4px 0; }
         .news-meta { font-size: 0.7rem; color: var(--text-meta); }
-        .loading-trigger { text-align: center; padding: 30px; grid-column: 1/-1; color: var(--primary); }
+
+        /* Loader de Scroll */
+        .loading-trigger { text-align: center; padding: 30px; grid-column: 1/-1; color: var(--primary); font-size: 1.2rem; }
+
         @media (min-width: 768px) { .feed { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
+
 <nav class="navbar">
     <div class="nav-top">
-        <a href="index.html" class="logo" onclick="isSavedView=false; resetAndLoad()">Notícias<span>CLD</span></a>
-        <button id="bookmark-nav" class="btn-icon" onclick="toggleSavedView()"><i class="far fa-bookmark"></i></button>
+        <a href="index.html" class="logo">Notícias<span>CLD</span></a>
+        <button class="btn-icon" onclick="toggleSaved()"><i class="far fa-bookmark"></i></button>
     </div>
-    <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="search-input" placeholder="Pesquisar..." onkeyup="if(event.key==='Enter') resetAndLoad()"></div>
-    <div class="categories">
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="O que queres ler hoje?" onkeyup="if(event.key==='Enter') resetAndLoad()">
+    </div>
+    <div class="categories" id="cat-list">
         <div class="cat-item active" onclick="filterCat('', this)">Recentíssimas</div>
         <div class="cat-item" onclick="filterCat('1', this)">Política</div>
         <div class="cat-item" onclick="filterCat('13', this)">Economia</div>
+        <div class="cat-item" onclick="filterCat('11', this)">Sociedade</div>
         <div class="cat-item" onclick="filterCat('18', this)">Desporto</div>
+        <div class="cat-item" onclick="filterCat('4', this)">Mundo</div>
+        <div class="cat-item" onclick="filterCat('17', this)">Cultura</div>
+        <div class="cat-item" onclick="filterCat('19', this)">Tecnologia</div>
+        <div class="cat-item" onclick="filterCat('20', this)">Saúde</div>
     </div>
 </nav>
+
 <main class="feed" id="feed"></main>
 <div id="scroll-anchor" class="loading-trigger"><i class="fas fa-circle-notch fa-spin"></i></div>
 
 <script>
 const SOURCES = [
     { name: "O PAÍS", api: "https://opais.co.mz/wp-json/wp/v2/posts?_embed", slug: "opais" },
-    { name: "Integrity", api: "https://integritymagazine.co.mz/wp-json/wp/v2/posts/?_embed", slug: "integrity" },
     { name: "CARTA MZ", api: "https://cartamz.com/wp-json/wp/v2/posts?_embed", slug: "carta" },
     { name: "MZNEWS", api: "https://mznews.co.mz/wp-json/wp/v2/posts?_embed", slug: "mznews" }
 ];
-let allPosts = [], currentPage = 1, isFetching = false, currentCategory = '', isSavedView = false;
 
+let allPosts = [];
+let currentPage = 1;
+let isFetching = false;
+let currentCategory = '';
+
+// Formatação de Tempo Relativo
 function getRelativeTime(date) {
     const diff = Math.floor((new Date() - new Date(date)) / 1000);
     if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
@@ -133,73 +172,84 @@ function getRelativeTime(date) {
 }
 
 async function loadNews() {
-    if (isFetching || isSavedView) return;
+    if (isFetching) return;
     isFetching = true;
-    const query = document.getElementById('search-input').value;
-    let params = `&per_page=6&page=${currentPage}`;
-    if (currentCategory) params += `&categories=${currentCategory}`;
-    if (query) params += `&search=${encodeURIComponent(query)}`;
 
+    const query = document.getElementById('search-input').value;
+    let filterParams = `&per_page=6&page=${currentPage}`;
+    if (currentCategory) filterParams += `&categories=${currentCategory}`;
+    if (query) filterParams += `&search=${encodeURIComponent(query)}`;
+
+    // Carregamento progressivo (uma por uma)
     for (const src of SOURCES) {
         try {
-            const res = await fetch(src.api + params);
-            const data = await res.json();
+            const response = await fetch(src.api + filterParams);
+            const data = await response.json();
+            
             if (data.length > 0) {
                 const newPosts = data.map(p => ({
-                    id: p.id, title: p.title.rendered, date: p.date, srcName: src.name, srcSlug: src.slug,
+                    id: p.id,
+                    title: p.title.rendered,
+                    date: p.date,
+                    srcName: src.name,
+                    srcSlug: src.slug,
                     img: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'https://via.placeholder.com/400x250',
                     link: `artigo.html?id=${p.id}&src=${src.slug}`
                 }));
+
                 allPosts = [...allPosts, ...newPosts].sort((a, b) => new Date(b.date) - new Date(a.date));
                 renderFeed();
             }
-        } catch (e) {}
+        } catch (e) { console.error("Erro na fonte " + src.name); }
     }
+
     isFetching = false;
     currentPage++;
 }
 
 function renderFeed() {
     const feed = document.getElementById('feed');
-    feed.innerHTML = isSavedView && allPosts.length === 0 ? '<p style="grid-column:1/-1;text-align:center;padding:40px;opacity:0.5;">Nenhuma notícia guardada.</p>' : '';
+    feed.innerHTML = '';
+    
     allPosts.forEach((p, index) => {
-        const isFeatured = (index === 0 && !currentCategory && !isSavedView);
+        const isFeatured = (index === 0 && !currentCategory && !document.getElementById('search-input').value);
         const card = document.createElement('a');
         card.className = `news-card ${isFeatured ? 'featured' : ''}`;
         card.href = p.link;
-        card.innerHTML = `<img class="news-img" src="${p.img}"><div class="news-content"><span class="news-tag">${p.srcName}</span><h3 class="news-title">${p.title}</h3><div class="news-meta">${getRelativeTime(p.date)}</div></div>`;
+        card.innerHTML = `
+            <img class="news-img" src="${p.img}" loading="lazy">
+            <div class="news-content">
+                <span class="news-tag">${p.srcName}</span>
+                <h3 class="news-title">${p.title}</h3>
+                <div class="news-meta">${getRelativeTime(p.date)}</div>
+            </div>`;
         feed.appendChild(card);
     });
 }
 
-function toggleSavedView() {
-    isSavedView = !isSavedView;
-    const btn = document.getElementById('bookmark-nav');
-    document.getElementById('scroll-anchor').style.display = isSavedView ? 'none' : 'block';
-    if (isSavedView) {
-        btn.classList.add('active');
-        btn.innerHTML = '<i class="fas fa-bookmark"></i>';
-        allPosts = JSON.parse(localStorage.getItem('cld_saved') || '[]');
-        renderFeed();
-    } else {
-        btn.classList.remove('active');
-        btn.innerHTML = '<i class="far fa-bookmark"></i>';
-        resetAndLoad();
-    }
-}
-
 function filterCat(id, btn) {
-    isSavedView = false;
-    document.getElementById('bookmark-nav').classList.remove('active');
     document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
     btn.classList.add('active');
     currentCategory = id;
     resetAndLoad();
 }
 
-function resetAndLoad() { allPosts = []; currentPage = 1; loadNews(); }
-const observer = new IntersectionObserver((entries) => { if (entries[0].isIntersecting) loadNews(); });
+function resetAndLoad() {
+    allPosts = [];
+    currentPage = 1;
+    document.getElementById('feed').innerHTML = '';
+    loadNews();
+}
+
+// Lógica de Scroll Infinito
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !isFetching) {
+        loadNews();
+    }
+}, { threshold: 0.1 });
+
 observer.observe(document.getElementById('scroll-anchor'));
+
 window.onload = loadNews;
 </script>
 </body>
