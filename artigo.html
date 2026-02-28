@@ -235,7 +235,7 @@ function esconderBanner(n) {
 
 function acaoUsuario(atual) {
     esconderBanner(atual);
-    
+
     // Mantendo os intervalos originais para os próximos
     if (atual === 1) {
         setTimeout(() => mostrarBanner(2), 15000);
@@ -244,9 +244,6 @@ function acaoUsuario(atual) {
     }
 }
 </script>
-
-
-
 
 
 
@@ -263,6 +260,8 @@ function acaoUsuario(atual) {
     });
   }
 </script>
+
+
 
 
 
@@ -306,7 +305,7 @@ function acaoUsuario(atual) {
     </div>
     <img id="feat-img" class="main-img" style="display:none">
     <div id="content" class="body-text"></div>
-    
+
     <section class="mini-agregador">
         <h3>Mais notícias</h3>
         <div id="mini-feed" class="mini-grid"></div>
@@ -314,8 +313,7 @@ function acaoUsuario(atual) {
 </main>
 
 <script>
-    const APIS = { 'opais': 'https://opais.co.mz/wp-json/wp/v2/posts/', 'carta': 'https://cartamz.com/wp-json/wp/v2/posts/', 'mznews':
-'https://integritymagazine.co.mz/wp-json/wp/v2/posts/': 'https://mznews.co.mz/wp-json/wp/v2/posts/' };
+    const APIS = { 'opais': 'https://opais.co.mz/wp-json/wp/v2/posts/', 'carta': 'https://cartamz.com/wp-json/wp/v2/posts/', 'mznews': 'https://mznews.co.mz/wp-json/wp/v2/posts/' };
     let synth = window.speechSynthesis, isSpeaking = false, currentData = null;
 
     async function load() {
